@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="LES-web">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="postgresql-9.4.1212.jre7.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib//home/veronica/Downloads/postgresql-9.4.1212.jre7.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="GCT-core.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/LES-core/LES-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="GCT-dominio.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/LES-dominio/LES-dominio">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="java-output-path" value="/LES-web/build/classes"/>
+        <property name="context-root" value="LES-web"/>
+    </wb-module>
+</project-modules>
