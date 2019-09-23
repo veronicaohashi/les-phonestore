@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import les.control.web.vh.IViewHelper;
 import les.core.application.Result;
 import les.domain.DomainEntity;
+import les.domain.client.Client;
 import les.domain.product.Brand;
 import les.domain.product.Capacity;
 import les.domain.product.Color;
@@ -68,8 +69,6 @@ public class PhoneViewHelper implements IViewHelper{
 		}
 		
 		if ( action.equals("UPDATE")) {
-			System.out.println(costPrice);
-			System.out.println(salePrice);
 			if(! salePrice.equals("")) {
 				phone.setSalePrice(Double.parseDouble(salePrice));			
 			}
@@ -186,6 +185,8 @@ public class PhoneViewHelper implements IViewHelper{
 		String action = request.getParameter("action");
 		String isJson = request.getParameter("json");
 		
+		Client client = (Client)request.getSession().getAttribute("user");
+		
 		RequestDispatcher rd = null;
 		
 		List<String> headers = new ArrayList<String>();
@@ -207,8 +208,13 @@ public class PhoneViewHelper implements IViewHelper{
 				} else {
 					request.setAttribute("headers", headers);
 					request.setAttribute("phones", result.getEntities());	
-					rd = request.getRequestDispatcher("Phones.jsp");
 					
+					if(client != null && client.getUser().getLevel() == 2) {
+						rd = request.getRequestDispatcher("Phones.jsp");						
+					} else {
+						
+						rd = request.getRequestDispatcher("IndexPhone.jsp");
+					}					
 				}			
 			} else if (action.equals("SAVE")) {
 				result.setMsg("Celular cadastrado com sucesso!");
@@ -217,7 +223,12 @@ public class PhoneViewHelper implements IViewHelper{
 				
 			} else if (action.equals("CONSULT")) {
 				request.setAttribute("phone", result.getEntities().get(0));
-				rd = request.getRequestDispatcher("PhoneFormUpdate.jsp");	
+				
+				if(client != null && client.getUser().getLevel() == 2) {
+					rd = request.getRequestDispatcher("PhoneFormUpdate.jsp");						
+				} else {
+					rd = request.getRequestDispatcher("PhoneDetails.jsp");
+				}
 				
 			} else if (action.equals("UPDATE")) {
 				result.setMsg("Celular alterado com sucesso!");

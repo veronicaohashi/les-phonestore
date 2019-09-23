@@ -34,12 +34,10 @@ public class BrandDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Brand brand = (Brand)  entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM brands ";
 
 		if (brand.getId() != null) {
-			sql = "SELECT * FROM brands WHERE id=?";
-		} else {
-			sql = "SELECT * FROM brands";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

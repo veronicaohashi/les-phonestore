@@ -34,12 +34,10 @@ public class CapacityDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Capacity capacity = (Capacity)entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM capacities ";
 
 		if (capacity.getId() != null) {
-			sql = "SELECT * FROM capacities WHERE id=?";
-		} else {
-			sql = "SELECT * FROM capacities";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

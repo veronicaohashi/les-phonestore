@@ -53,8 +53,7 @@ public class EntryDAO extends AbstractJdbcDAO{
 				new_sql.append("INSERT INTO entry_items(quantity, price, phone_reference_id, entry_id, created_at, updated_at)");
 				new_sql.append(" VALUES (?,?,?,?,?,?)");
 			
-				List<Entryi> items = new ArrayList<Entryi>();
-				items = entry.getItems();
+				List<Entryi> items = entry.getItems();
 			
 				PreparedStatement ps = null;
 				for(Entryi e : items) {

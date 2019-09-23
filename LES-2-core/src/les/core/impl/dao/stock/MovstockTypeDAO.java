@@ -32,12 +32,10 @@ public class MovstockTypeDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		MovstockType movstockType = (MovstockType)entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM movstock_types ";
 
 		if (movstockType.getId() != null) {
-			sql = "SELECT * FROM movstock_types WHERE id=?";
-		} else {
-			sql = "SELECT * FROM movstock_types";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

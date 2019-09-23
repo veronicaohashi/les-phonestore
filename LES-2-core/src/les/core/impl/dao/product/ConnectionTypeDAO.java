@@ -80,14 +80,12 @@ public class ConnectionTypeDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		ConnectionType connectionType = (ConnectionType)entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM connection_types ";
 		
 		if (connectionType.getId() != null) {
-			sql = "SELECT * FROM connection_types WHERE id=?";
+			sql += "WHERE id=?";
 		} else if (connectionType.getPhone() != null) {
-			sql = "SELECT * FROM connection_types_phones WHERE phone_id=?";			
-		} else {		
-			sql = "SELECT * FROM connection_types";
+			sql += "WHERE phone_id=?";			
 		}
 
 		// executa consulta

@@ -32,12 +32,10 @@ public class SupplierDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Supplier supplier = (Supplier)entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM suppliers ";
 
 		if (supplier.getId() != null) {
-			sql = "SELECT * FROM suppliers WHERE id=?";
-		} else {
-			sql = "SELECT * FROM suppliers";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

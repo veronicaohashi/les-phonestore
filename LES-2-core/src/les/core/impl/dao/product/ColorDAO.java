@@ -34,12 +34,10 @@ public class ColorDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Color color = (Color) entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM colors ";
 
 		if (color.getId() != null) {
-			sql = "SELECT * FROM colors WHERE id=?";
-		} else {
-			sql = "SELECT * FROM colors";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

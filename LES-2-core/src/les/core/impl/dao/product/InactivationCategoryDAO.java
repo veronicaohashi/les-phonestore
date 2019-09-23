@@ -34,12 +34,10 @@ public class InactivationCategoryDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		InactivationCategory ic = (InactivationCategory)entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM inactivation_categories ";
 
 		if (ic.getId() != null) {
-			sql = "SELECT * FROM inactivation_categories WHERE id=?";
-		} else {
-			sql = "SELECT * FROM inactivation_categories";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

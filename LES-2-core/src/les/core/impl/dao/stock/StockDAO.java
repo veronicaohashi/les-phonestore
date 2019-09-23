@@ -30,18 +30,17 @@ public class StockDAO extends AbstractJdbcDAO{
 		try {
 			connection.setAutoCommit(false);
 			StringBuilder sql = new StringBuilder();			
-			sql.append("INSERT INTO stocks(quantity, avaiable_quantity, supplier_id, phone_reference_id,"
+			sql.append("INSERT INTO stocks(quantity, supplier_id, phone_reference_id,"
 					+ "created_at, updated_at)");
-			sql.append(" VALUES (?,?,?,?,?,?)");
+			sql.append(" VALUES (?,?,?,?,?)");
 			
 			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			pst.setDouble(1, stock.getQuantity());
-			pst.setDouble(2, stock.getAvaiable());
-			pst.setInt(3, stock.getSupplier().getId());
-			pst.setInt(4, stock.getReference().getId());
+			pst.setInt(2, stock.getSupplier().getId());
+			pst.setInt(3, stock.getReference().getId());
 			Timestamp time = new Timestamp(System.currentTimeMillis());
+			pst.setTimestamp(4, time);
 			pst.setTimestamp(5, time);
-			pst.setTimestamp(6, time);
 
 			pst.executeUpdate();				
 			ResultSet rs = pst.getGeneratedKeys();
@@ -79,12 +78,12 @@ public class StockDAO extends AbstractJdbcDAO{
 		try {
 			connection.setAutoCommit(false);					
 			StringBuilder sql = new StringBuilder();
-			sql.append("UPDATE stocks SET quantity=?, avaiable_quantity=?, supplier_id=?, phone_reference_id=?, updated_at=?");
+			sql.append("UPDATE stocks SET quantity=?, reserved_quantity=?, supplier_id=?, phone_reference_id=?, updated_at=?");
 			sql.append("WHERE id=?");							
 
 			pst = connection.prepareStatement(sql.toString());
 			pst.setDouble(1, stock.getQuantity());
-			pst.setDouble(2, stock.getAvaiable());
+			pst.setDouble(2, stock.getReserved());
 			pst.setInt(3, stock.getSupplier().getId());
 			pst.setInt(4, stock.getReference().getId());
 			Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -118,14 +117,12 @@ public class StockDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Stock stock = (Stock) entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM stocks ";
 
 		if(stock.getReference() != null){
-			sql = "SELECT * FROM stocks WHERE phone_reference_id=?";
+			sql += "WHERE phone_reference_id=?";
 		} else if (stock.getId() != null) {
-			sql = "SELECT * FROM stocks WHERE id=?";
-		} else {
-			sql = "SELECT * FROM stocks";
+			sql += "WHERE id=?";
 		}
 		
 		// executa consulta
@@ -147,6 +144,8 @@ public class StockDAO extends AbstractJdbcDAO{
 
 				s.setId(rs.getInt("id"));	
 				s.setQuantity(rs.getInt("quantity"));	
+				s.setReserved(rs.getInt("reserved_quantity"));
+				s.setAvaiable(s.getQuantity() - s.getReserved());
 				
 				ReferenceDAO referenceDAO = new ReferenceDAO();
 				Reference reference = new Reference();

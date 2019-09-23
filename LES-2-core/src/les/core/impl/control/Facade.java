@@ -11,6 +11,18 @@ import les.core.IDAO;
 import les.core.IFacade;
 import les.core.IStrategy;
 import les.core.application.Result;
+import les.core.impl.business.client.CPFUniqueValidation;
+import les.core.impl.business.client.CityValidation;
+import les.core.impl.business.client.DecryptedPasswordValidation;
+import les.core.impl.business.client.EncryptedPasswordValidation;
+import les.core.impl.business.client.MainAddressUniqueValidation;
+import les.core.impl.business.client.PasswordValidation;
+import les.core.impl.business.client.RequiredFieldAddressValidation;
+import les.core.impl.business.client.RequiredFieldClientValidation;
+import les.core.impl.business.client.RequiredFieldCreditCardValidation;
+import les.core.impl.business.client.RequiredFieldUserValidation;
+import les.core.impl.business.client.ResidenceTypeValidation;
+import les.core.impl.business.client.UserUniqueValidation;
 import les.core.impl.business.product.BrandValidation;
 import les.core.impl.business.product.ConnectionTypeInsertValidation;
 import les.core.impl.business.product.ConnectionTypeValidation;
@@ -23,12 +35,23 @@ import les.core.impl.business.product.ReferenceValidation;
 import les.core.impl.business.product.RequiredFieldValidation;
 import les.core.impl.business.product.SOValidation;
 import les.core.impl.business.product.UniqueReferenceValidation;
+import les.core.impl.business.sale.AvaiableQtdValidation;
+import les.core.impl.business.sale.CartNewItemValidation;
+import les.core.impl.business.sale.CartRemoveItemValidation;
+import les.core.impl.business.sale.CartValidation;
+import les.core.impl.business.sale.OrderFirstStatusValidation;
+import les.core.impl.business.sale.ReserveItemValidation;
 import les.core.impl.business.stock.GenerateMovstockValidation;
 import les.core.impl.business.stock.GeneratePriceValidation;
 import les.core.impl.business.stock.GenerateStockValidation;
 import les.core.impl.business.stock.SupplierValidation;
 import les.core.impl.business.stock.TotalPriceValidation;
 import les.core.impl.business.stock.TotalQuantityValidation;
+import les.core.impl.dao.client.AddressDAO;
+import les.core.impl.dao.client.ClientDAO;
+import les.core.impl.dao.client.CreditCardDAO;
+import les.core.impl.dao.client.ResidenceTypeDAO;
+import les.core.impl.dao.client.UserDAO;
 import les.core.impl.dao.product.BrandDAO;
 import les.core.impl.dao.product.CapacityDAO;
 import les.core.impl.dao.product.ColorDAO;
@@ -39,12 +62,21 @@ import les.core.impl.dao.product.PricingGroupDAO;
 import les.core.impl.dao.product.ProcessorDAO;
 import les.core.impl.dao.product.ReferenceDAO;
 import les.core.impl.dao.product.SODAO;
+import les.core.impl.dao.sale.OrderDAO;
+import les.core.impl.dao.sale.PaymentDAO;
+import les.core.impl.dao.sale.ReservedStockDAO;
+import les.core.impl.dao.sale.StatusDAO;
 import les.core.impl.dao.stock.EntryDAO;
 import les.core.impl.dao.stock.MovstockDAO;
 import les.core.impl.dao.stock.MovstockTypeDAO;
 import les.core.impl.dao.stock.StockDAO;
 import les.core.impl.dao.stock.SupplierDAO;
 import les.domain.DomainEntity;
+import les.domain.client.Address;
+import les.domain.client.Client;
+import les.domain.client.CreditCard;
+import les.domain.client.ResidenceType;
+import les.domain.client.User;
 import les.domain.product.Brand;
 import les.domain.product.Capacity;
 import les.domain.product.Color;
@@ -55,6 +87,10 @@ import les.domain.product.PricingGroup;
 import les.domain.product.Processor;
 import les.domain.product.Reference;
 import les.domain.product.SO;
+import les.domain.sale.Cart;
+import les.domain.sale.Order;
+import les.domain.sale.Payment;
+import les.domain.sale.Status;
 import les.domain.stock.Entry;
 import les.domain.stock.Movstock;
 import les.domain.stock.MovstockType;
@@ -106,8 +142,29 @@ public class Facade implements IFacade {
 		daos.put(Supplier.class.getName(), supplierDAO);
 		daos.put(Entry.class.getName(), entryDAO);
 		daos.put(Movstock.class.getName(), movstockDAO);
-		daos.put(MovstockType.class.getName(), movstockTypeDAO);
-		
+		daos.put(MovstockType.class.getName(), movstockTypeDAO);		
+
+//		SALE
+		ReservedStockDAO reservedStockDAO = new ReservedStockDAO();
+		StatusDAO statusDAO = new StatusDAO();
+		OrderDAO orderDAO = new OrderDAO();
+		PaymentDAO paymentDAO = new PaymentDAO();
+		daos.put(Cart.class.getName(), reservedStockDAO);
+		daos.put(Status.class.getName(), statusDAO);
+		daos.put(Order.class.getName(), orderDAO);
+		daos.put(Payment.class.getName(), paymentDAO);
+
+//		CLIENT
+		ClientDAO clientDAO = new ClientDAO();
+		ResidenceTypeDAO residenceTypeDAO = new ResidenceTypeDAO(); 
+		UserDAO userDAO = new UserDAO();
+		AddressDAO addressDAO = new AddressDAO();
+		CreditCardDAO creditCardDAO = new CreditCardDAO();
+		daos.put(Client.class.getName(), clientDAO);	
+		daos.put(ResidenceType.class.getName(), residenceTypeDAO);	
+		daos.put(User.class.getName(), userDAO);	
+		daos.put(Address.class.getName(), addressDAO);		
+		daos.put(CreditCard.class.getName(), creditCardDAO);			
 		
 //		PRODUCT
 		RequiredFieldValidation requiredFieldValidation = new RequiredFieldValidation();
@@ -151,8 +208,6 @@ public class Facade implements IFacade {
 		Map<String, List<IStrategy>> rnsPhoneAfter = new HashMap<String, List<IStrategy>>();	
 		rnsPhoneAfter.put("SAVE", rnsSavePhoneAfter);
 		rnsAfter.put(Phone.class.getName(), rnsPhoneAfter);
-		
-		
 		
 //		REFERENCE
 		ReferenceQtdValidation referenceQtdValidation = new ReferenceQtdValidation();
@@ -198,7 +253,114 @@ public class Facade implements IFacade {
 		rnsEntryAfter.put("SAVE", rnsSaveEntryAfter);
 		
 		rnsAfter.put(Entry.class.getName(), rnsEntryAfter);
+		
+//		CART
+		CartValidation cartValidation = new CartValidation();
+		AvaiableQtdValidation avaiableQtdValidation = new AvaiableQtdValidation();
+		CartNewItemValidation cartNewItemValidation = new CartNewItemValidation();
+		ReserveItemValidation reserveItemValidation = new ReserveItemValidation();
+		
+		List<IStrategy> rnsSaveCart = new ArrayList<IStrategy>();
+		rnsSaveCart.add(cartValidation);
+		rnsSaveCart.add(avaiableQtdValidation);
+		rnsSaveCart.add(reserveItemValidation);
+		rnsSaveCart.add(cartNewItemValidation);
+		
+		CartRemoveItemValidation cartRemoveItemValidation = new CartRemoveItemValidation();
+		List<IStrategy> rnsDeleteCart = new ArrayList<IStrategy>();
+		rnsDeleteCart.add(cartRemoveItemValidation);
+		
+		Map<String, List<IStrategy>> rnsCart = new HashMap<String, List<IStrategy>>();	
+		rnsCart.put("SAVE", rnsSaveCart);
+		rnsCart.put("DELETE", rnsDeleteCart);
+		
+		rns.put(Cart.class.getName(), rnsCart);		
+		
+//		CLIENT
+		RequiredFieldClientValidation requiredFieldClientValidation = new RequiredFieldClientValidation();
+		CPFUniqueValidation CPFUniqueValidation = new CPFUniqueValidation();
+		UserUniqueValidation userUniqueValidation = new UserUniqueValidation();
+		PasswordValidation passwordValidation = new PasswordValidation();
+		EncryptedPasswordValidation encryptedPasswordValidation = new EncryptedPasswordValidation();
 
+		List<IStrategy> rnsSaveClient = new ArrayList<IStrategy>();
+		rnsSaveClient.add(requiredFieldClientValidation);
+		rnsSaveClient.add(CPFUniqueValidation);
+		rnsSaveClient.add(userUniqueValidation);
+		rnsSaveClient.add(passwordValidation);
+		rnsSaveClient.add(encryptedPasswordValidation);
+		
+		List<IStrategy> rnsUpdateClient = new ArrayList<IStrategy>();
+		rnsUpdateClient.add(requiredFieldClientValidation);
+		rnsUpdateClient.add(userUniqueValidation);
+		rnsSaveClient.add(passwordValidation);
+
+
+		Map<String, List<IStrategy>> rnsClient = new HashMap<String, List<IStrategy>>();	
+		rnsClient.put("SAVE", rnsSaveClient);
+		rnsClient.put("UPDATE", rnsUpdateClient);
+		
+		
+		rns.put(Client.class.getName(), rnsClient);	
+		
+//		USER
+		RequiredFieldUserValidation requiredFieldUserValidation = new RequiredFieldUserValidation();
+		
+		List<IStrategy> rnsConsultUser = new ArrayList<IStrategy>();
+		rnsConsultUser.add(requiredFieldUserValidation);
+		
+		Map<String, List<IStrategy>> rnsUser = new HashMap<String, List<IStrategy>>();	
+		rnsUser.put("CONSULT", rnsSaveClient);
+		
+		rns.put(User.class.getName(), rnsUser);	
+		
+		DecryptedPasswordValidation decryptedPasswordValidation = new DecryptedPasswordValidation();
+		List<IStrategy> rnsConsultUserAfter = new ArrayList<IStrategy>();
+		rnsConsultUserAfter.add(decryptedPasswordValidation);
+		
+		Map<String, List<IStrategy>> rnsUserAfter = new HashMap<String, List<IStrategy>>();	
+		rnsUserAfter.put("CONSULT", rnsConsultUserAfter);
+		
+		rnsAfter.put(User.class.getName(), rnsUserAfter);		
+		
+//		ADDRESS
+		RequiredFieldAddressValidation requiredFieldAddressValidation = new RequiredFieldAddressValidation();
+		CityValidation cityValidation = new CityValidation();
+		ResidenceTypeValidation residenceTypeValidation = new ResidenceTypeValidation();
+		MainAddressUniqueValidation mainAddressUniqueValidation = new MainAddressUniqueValidation();
+
+		List<IStrategy> rnsSaveAddress = new ArrayList<IStrategy>();
+		rnsSaveAddress.add(requiredFieldAddressValidation);
+		rnsSaveAddress.add(cityValidation);
+		rnsSaveAddress.add(residenceTypeValidation);
+		rnsSaveAddress.add(mainAddressUniqueValidation);
+
+		Map<String, List<IStrategy>> rnsAddress = new HashMap<String, List<IStrategy>>();	
+		rnsAddress.put("SAVE", rnsSaveAddress);
+		
+		rns.put(Address.class.getName(), rnsAddress);	
+		
+//		CREDIT CARD
+		RequiredFieldCreditCardValidation requiredFieldCreditCardValidation = new RequiredFieldCreditCardValidation();
+		
+		List<IStrategy> rnsSaveCreditCard = new ArrayList<IStrategy>();
+		rnsSaveCreditCard.add(requiredFieldCreditCardValidation);
+		
+		Map<String, List<IStrategy>> rnsCreditCard = new HashMap<String, List<IStrategy>>();	
+		rnsCreditCard.put("SAVE", rnsSaveCreditCard);
+		
+		rns.put(CreditCard.class.getName(), rnsCreditCard);
+		
+//		ORDER
+		OrderFirstStatusValidation orderFirstStatusValidation = new OrderFirstStatusValidation();
+
+		List<IStrategy> rnsSaveOrder = new ArrayList<IStrategy>();
+		rnsSaveOrder.add(orderFirstStatusValidation);
+
+		Map<String, List<IStrategy>> rnsOrder = new HashMap<String, List<IStrategy>>();	
+		rnsOrder.put("SAVE", rnsSaveOrder);
+		
+		rns.put(Order.class.getName(), rnsOrder);
 	}
 	
 	@Override

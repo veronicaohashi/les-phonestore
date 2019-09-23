@@ -41,6 +41,11 @@ public class Phone extends DomainEntity{
 		this.model = model;
 	}
 	
+	public Phone(String model, double salePrice) {
+		this.model = model;
+		this.salePrice = salePrice;
+	}
+	
 	public String getModel() {
 		return model;
 	}

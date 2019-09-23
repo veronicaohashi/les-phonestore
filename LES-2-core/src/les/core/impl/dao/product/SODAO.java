@@ -34,12 +34,10 @@ public class SODAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		SO so = (SO)entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM sos ";
 
 		if (so.getId() != null) {
-			sql = "SELECT * FROM sos WHERE id=?";
-		} else {
-			sql = "SELECT * FROM sos";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

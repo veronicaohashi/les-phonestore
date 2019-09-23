@@ -34,12 +34,10 @@ public class ProcessorDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Processor processor = (Processor)  entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM processors ";
 
 		if (processor.getId() != null) {
-			sql = "SELECT * FROM processors WHERE id=?";
-		} else {
-			sql = "SELECT * FROM processors";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

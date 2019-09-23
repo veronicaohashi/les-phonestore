@@ -10,16 +10,25 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import les.control.web.vh.IViewHelper;
 import les.core.application.Result;
 import les.domain.DomainEntity;
+import les.domain.product.Reference;
 import les.domain.stock.Stock;
 
 public class StockViewHelper implements IViewHelper{
 
 	public DomainEntity getEntity(HttpServletRequest request) {
 		Stock stock = new Stock();
-		
+
+		String reference_id = request.getParameter("reference_id");
+		if( reference_id != null ) {
+			Reference reference = new Reference();			
+			reference.setId(Integer.parseInt(reference_id));
+			stock.setReference(reference);
+		}		
 		return stock;
 	}	
 	
@@ -41,13 +50,23 @@ public class StockViewHelper implements IViewHelper{
 				request.setAttribute("headers", headers);
 				request.setAttribute("stockItems", result.getEntities());	
 				rd = request.getRequestDispatcher("Stock.jsp");	
+				
+			} else if (action.equals("CONSULT")) {
+				List<DomainEntity> references = result.getEntities();  
+
+				String json = new Gson().toJson(references);
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(json);	
 			}
 		} else {
 			request.setAttribute("response", result.getMsg());
 			rd = request.getRequestDispatcher("Response.jsp");
 		}
-		
-		rd.forward(request, response);	
+
+		if(rd != null) {	
+			rd.forward(request, response);	
+		}
 	}
 
 

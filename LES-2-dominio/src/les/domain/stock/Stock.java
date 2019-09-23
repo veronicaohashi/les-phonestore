@@ -6,9 +6,18 @@ import les.domain.product.Reference;
 public class Stock extends DomainEntity{
 	private double price;
 	private Integer quantity;
-	private Integer avaiable;
+	private Integer reserved;
 	private Supplier supplier;
 	private Reference reference;
+	private Integer avaiable;
+	
+	public Stock() {
+		
+	}
+	
+	public Stock(Reference reference) {
+		this.reference = reference;
+	}
 	
 	public double getPrice() {
 		return price;
@@ -22,11 +31,11 @@ public class Stock extends DomainEntity{
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
-	public Integer getAvaiable() {
-		return avaiable;
+	public Integer getReserved() {
+		return reserved;
 	}
-	public void setAvaiable(Integer avaiable) {
-		this.avaiable = avaiable;
+	public void setReserved(Integer reserved) {
+		this.reserved = reserved;
 	}
 	public Supplier getSupplier() {
 		return supplier;
@@ -39,5 +48,11 @@ public class Stock extends DomainEntity{
 	}
 	public void setReference(Reference reference) {
 		this.reference = reference;
+	}
+	public Integer getAvaiable() {
+		return avaiable;
+	}
+	public void setAvaiable(Integer avaiable) {
+		this.avaiable = avaiable;
 	}
 }

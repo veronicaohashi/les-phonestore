@@ -34,12 +34,10 @@ public class PricingGroupDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		PricingGroup pricing = (PricingGroup)  entity;
 		PreparedStatement pst = null;
-		String sql = null;
+		String sql = "SELECT * FROM pricing_groups ";
 
 		if (pricing.getId() != null) {
-			sql = "SELECT * FROM pricing_groups WHERE id=?";
-		} else {
-			sql = "SELECT * FROM pricing_groups";
+			sql += "WHERE id=?";
 		}
 
 		// executa consulta

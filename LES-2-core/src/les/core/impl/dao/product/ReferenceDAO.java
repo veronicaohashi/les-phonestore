@@ -118,6 +118,7 @@ public class ReferenceDAO extends AbstractJdbcDAO{
 				", colors.description as color_description " + 
 				", capacities.description as capacity_description " + 
 				", phones.model as phone_model " + 
+				", phones.sale_price as sale_price " + 
 				"FROM phone_references " + 
 				"INNER JOIN capacities ON capacities.id = phone_references.capacity_id " + 
 				"INNER JOIN colors ON colors.id = phone_references.color_id " + 
@@ -155,7 +156,7 @@ public class ReferenceDAO extends AbstractJdbcDAO{
 				r.setName(rs.getString("name"));
 				r.setCapacity(new Capacity(rs.getInt("capacity_id"), rs.getString("capacity_description")));
 				r.setColor(new Color(rs.getInt("color_id"), rs.getString("color_description")));
-				r.setPhone(new Phone(rs.getString("phone_model")));
+				r.setPhone(new Phone(rs.getString("phone_model"), rs.getDouble("sale_price")));
 
 				all.add(r);
 			}

@@ -196,9 +196,7 @@ public class PhoneDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Phone phone = (Phone) entity;
 		PreparedStatement pst = null;
-		String sql = null;
-		
-		sql = "SELECT * , brands.description as brand_description " + 
+		String sql = "SELECT * , brands.description as brand_description " + 
 				", processors.description as processor_description " + 
 				", sos.description as so_description " + 
 				", pricing_groups.description as pricing_group_description " + 

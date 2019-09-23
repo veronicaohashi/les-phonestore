@@ -53,6 +53,14 @@
       <param-name>categories</param-name>
       <param-value>/LES-web/ConsultInactivationCategory</param-value>
     </init-param>
+    <init-param>
+      <param-name>residenceTypes</param-name>
+      <param-value>/LES-web/ConsultResidenceTypes</param-value>
+    </init-param>
+    <init-param>
+      <param-name>status</param-name>
+      <param-value>/LES-web/ConsultStatus</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>Servlet</servlet-name>
@@ -77,5 +85,37 @@
   <servlet-mapping>
     <servlet-name>Servlet</servlet-name>
     <url-pattern>/Entry</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Cart</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Clients</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Users</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Addresses</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/CreditCards</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Logout</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Orders</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Payments</url-pattern>
   </servlet-mapping>
 </web-app>

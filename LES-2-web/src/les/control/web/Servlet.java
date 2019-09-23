@@ -14,6 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import les.control.web.command.ICommand;
 import les.control.web.command.impl.UpdateCommand;
 import les.control.web.vh.IViewHelper;
+import les.control.web.vh.impl.client.AddressViewHelper;
+import les.control.web.vh.impl.client.ClientViewHelper;
+import les.control.web.vh.impl.client.CreditCardViewHelper;
+import les.control.web.vh.impl.client.ResidenceTypeViewHelper;
+import les.control.web.vh.impl.client.UserViewHelper;
 import les.control.web.vh.impl.product.BrandViewHelper;
 import les.control.web.vh.impl.product.CapacityViewHelper;
 import les.control.web.vh.impl.product.ColorViewHelper;
@@ -24,6 +29,10 @@ import les.control.web.vh.impl.product.PricingGroupViewHelper;
 import les.control.web.vh.impl.product.ProcessorViewHelper;
 import les.control.web.vh.impl.product.ReferenceViewHelper;
 import les.control.web.vh.impl.product.SOViewHelper;
+import les.control.web.vh.impl.sale.CartViewHelper;
+import les.control.web.vh.impl.sale.OrderViewHelper;
+import les.control.web.vh.impl.sale.PaymentViewHelper;
+import les.control.web.vh.impl.sale.StatusViewHelper;
 import les.control.web.vh.impl.stock.EntryViewHelper;
 import les.control.web.vh.impl.stock.StockViewHelper;
 import les.control.web.vh.impl.stock.SupplierViewHelper;
@@ -32,7 +41,6 @@ import les.control.web.command.impl.ConsultCommand;
 import les.control.web.command.impl.DeleteCommand;
 import les.control.web.command.impl.SaveCommand;
 import les.domain.DomainEntity;
-import les.domain.product.PricingGroup;
 
 public class Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -79,7 +87,15 @@ public class Servlet extends HttpServlet {
     	vhs.put("/LES-web/References", new ReferenceViewHelper());    
     	vhs.put("/LES-web/Stocks", new StockViewHelper());      
     	vhs.put("/LES-web/Entry", new EntryViewHelper());     
-
+    	vhs.put("/LES-web/Cart", new CartViewHelper());     
+    	vhs.put("/LES-web/Clients", new ClientViewHelper());     
+    	vhs.put("/LES-web/Users", new UserViewHelper());       
+    	vhs.put("/LES-web/Addresses", new AddressViewHelper());    
+    	vhs.put("/LES-web/CreditCards", new CreditCardViewHelper());    
+    	vhs.put("/LES-web/Logout", new UserViewHelper());       
+    	vhs.put("/LES-web/Orders", new OrderViewHelper());      
+    	vhs.put("/LES-web/Payments", new PaymentViewHelper());    
+    	
     	vhs.put("/LES-web/ConsultBrand", new BrandViewHelper());
     	vhs.put("/LES-web/ConsultColor", new ColorViewHelper());
     	vhs.put("/LES-web/ConsultCapacity", new CapacityViewHelper());
@@ -89,6 +105,8 @@ public class Servlet extends HttpServlet {
     	vhs.put("/LES-web/ConsultSO", new SOViewHelper());
     	vhs.put("/LES-web/ConsultSupplier", new SupplierViewHelper());
     	vhs.put("/LES-web/ConsultInactivationCategory", new InactivationCategoryViewHelper());
+    	vhs.put("/LES-web/ConsultResidenceTypes", new ResidenceTypeViewHelper());
+    	vhs.put("/LES-web/ConsultStatus", new StatusViewHelper());
     }      
     
     @Override
@@ -117,7 +135,6 @@ public class Servlet extends HttpServlet {
 
 		vh = vhs.get(uri);
 		DomainEntity entity = vh.getEntity(request);
-
 		if (request == null) {
 			action = "CONSULT";
 		} else {

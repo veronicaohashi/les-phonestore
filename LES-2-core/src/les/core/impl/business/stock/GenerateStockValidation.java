@@ -26,7 +26,6 @@ public class GenerateStockValidation implements IStrategy {
 					stock.setReference(i.getReference());
 					stock.setQuantity(i.getQuantity());
 					stock.setSupplier(entry.getSupplier());
-					stock.setAvaiable(i.getQuantity());
 										
 					try {
 						List<DomainEntity> stocks = dao.consult(stock);
@@ -38,7 +37,6 @@ public class GenerateStockValidation implements IStrategy {
 
 							Integer newQuantity = s.getQuantity() + i.getQuantity();
 							stock.setQuantity(newQuantity);
-							stock.setAvaiable(newQuantity);
 							stock.setId(s.getId());
 							
 							dao.update(stock);							

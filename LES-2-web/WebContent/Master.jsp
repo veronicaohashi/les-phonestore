@@ -1,3 +1,5 @@
+<%@page import="les.domain.client.Client"%>
+<%@page import="les.domain.client.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -9,14 +11,17 @@
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
+     	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		
    		<title>CELULARES</title>
-     	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	    
 	    <style>
+		.btn-primary{
+	    	background-color: #e67e22 !important;
+	    	border-color: #e67e22;
+		}
+		
 		html{
-			font-size:20px;
+			font-size:18px;
 		}	
 		
 		.navbar-brand {
@@ -99,10 +104,14 @@
 		    border-color: #e67e22;
 		}
 		
-		.btn-outline-primary:hover {
-		    color: #ffff;
+		.btn-primary:hover {
+		    border-color: #e67e22 !important;
+		}
+		
+		.btn-outline-primary:hover {		
+    		color: #fff !important;
 		    background-color: #e67e22;
-		    border-color: #e67e22;
+		    border-color: #e67e22 !important;
 		}
 
 		.btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle {
@@ -110,52 +119,83 @@
 		    background-color: #fff !important;
 		    border-color: #fff !importante;
 		}
+		
+		.left {
+		    text-align: left;
+		}
+		.right {
+		    text-align: right;
+		    padding-right: 15px;
+		}
+		.left, .right {
+		    display: inline-block;
+		    width: 50%;
+		}
+		div.admin-title{
+			display: flex;
+			justify-content: center;
+			position: relative;
+		}
+		a.admin-button{
+			position: absolute; 
+			right: 0;
+		}
 	  </style>
 	</head>
 	<body>
-		<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-	    	<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="index.jsp">CELULARES</a>
-		    <input class="form-control form-control-dark w-100" type="text" placeholder="Pesquisar" aria-label="Search">
-		    <ul class="navbar-nav px-3">
-	      		<li class="nav-item text-nowrap">
-		        	<a class="nav-link" href="Logout">Sair</a>
-	      		</li>
-	    	</ul>
-		</nav>	 
-  		<div class="container-fluid">
-    		<div class="row">
-      			<nav class="col-md-2 d-none d-md-block bg-light sidebar">
-        			<div class="sidebar-sticky">
-          				<ul class="nav flex-column">
-          				 <%
-  	
-							out.println("<li class='nav-item'>");
-					    		out.println("<a class='nav-link active' href='#'>");
-								out.println("<i class='material-icons feather feather-home'>person</i>");
-					    		out.println("Perfil <span class='sr-only'>(current)</span>");
-					    		out.println("</a>");
-							out.println("</li>");
-							out.println("<li class='nav-item'>");
-					    		out.println("<a class='nav-link active' href='Phones?action=LIST'>");
-								out.println("<i class='material-icons feather feather-home'>phone</i>");
-					    		out.println("Celulares <span class='sr-only'>(current)</span>");
-					    		out.println("</a>");
-							out.println("</li>");
-							out.println("<li class='nav-item'>");
-					    		out.println("<a class='nav-link active' href='Stocks?action=LIST'>");
-								out.println("<i class='material-icons feather feather-home'>inbox</i>");
-					    		out.println("Estoque <span class='sr-only'>(current)</span>");
-					    		out.println("</a>");
-							out.println("</li>");
-						%>
-         				</ul>
-       				</div>
-     			</nav>      			
-    		</div>
-  		</div> 
+	
+		<% 		
+			if(session.getAttribute("user") != null) {
+				Client client = (Client) session.getAttribute("user");
+				
+				if(client.getUser().getLevel() == 1) {	
+		%>
+	  	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">CELULARES</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="ClientFormUpdate.jsp">Perfil</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Cartões de Crédito</a>	    	
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Endereços</a>	
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Meus Pedidos</a>
+	    	
+      		<div class="btn-group mr-2">
+				<span>Bem vindo(a), <%= client.getFirstname()%></span>
+			</div>
+      		<div class="btn-group mr-2">
+				<a class="btn btn-outline-primary" href="Cart.jsp">Carrinho</a>
+			</div>
+			<a class="btn btn-outline-primary" href="Logout">Sair</a>
+		</div>
+  		<% } else if (client.getUser().getLevel() == 2) { %>
+  		
+	  	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="ClientFormUpdate.jsp">Perfil</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Phones?action=LIST">Celulares</a>	    	
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Stocks?action=LIST">Estoque</a>	
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Orders?action=LIST&status_id=1">Pedidos</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Trocas</a>
+	    	
+      		<div class="btn-group mr-2">
+				<span>Bem vindo(a), <%= client.getFirstname()%></span>
+			</div>
+      		<div class="btn-group mr-2">
+				<a class="btn btn-outline-primary" href="Cart.jsp">Carrinho</a>
+			</div>
+			<a class="btn btn-outline-primary" href="Logout">Sair</a>
+		</div>
+		
+  		
+		<% } }else { %>
+	  	
+	  	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">CELULARES</a>
+      		<div class="btn-group mr-2">
+				<a class="btn btn-outline-primary" href="Cart.jsp">Carrinho</a>
+			</div>
+			<a class="btn btn-outline-primary" href="Login.jsp">Entrar</a>
+		</div>
+		<% } %>	
 	</body>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
- 
 </html>
