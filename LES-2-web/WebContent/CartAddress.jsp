@@ -11,7 +11,7 @@
 
 <%@ include file="Master.jsp"%>
 <div class="container-fluid py-3">
-	<form action="Addresses" method="post">
+	<form action="OrderAddresses" method="post">
 
 		<%
 			Address address = (Address) request.getAttribute("address");

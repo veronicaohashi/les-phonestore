@@ -19,6 +19,7 @@ import les.control.web.vh.impl.client.ClientViewHelper;
 import les.control.web.vh.impl.client.CreditCardViewHelper;
 import les.control.web.vh.impl.client.ResidenceTypeViewHelper;
 import les.control.web.vh.impl.client.UserViewHelper;
+import les.control.web.vh.impl.product.ActivationCategoryViewHelper;
 import les.control.web.vh.impl.product.BrandViewHelper;
 import les.control.web.vh.impl.product.CapacityViewHelper;
 import les.control.web.vh.impl.product.ColorViewHelper;
@@ -30,6 +31,7 @@ import les.control.web.vh.impl.product.ProcessorViewHelper;
 import les.control.web.vh.impl.product.ReferenceViewHelper;
 import les.control.web.vh.impl.product.SOViewHelper;
 import les.control.web.vh.impl.sale.CartViewHelper;
+import les.control.web.vh.impl.sale.OrderAddressViewHelper;
 import les.control.web.vh.impl.sale.OrderViewHelper;
 import les.control.web.vh.impl.sale.PaymentViewHelper;
 import les.control.web.vh.impl.sale.StatusViewHelper;
@@ -94,7 +96,8 @@ public class Servlet extends HttpServlet {
     	vhs.put("/LES-web/CreditCards", new CreditCardViewHelper());    
     	vhs.put("/LES-web/Logout", new UserViewHelper());       
     	vhs.put("/LES-web/Orders", new OrderViewHelper());      
-    	vhs.put("/LES-web/Payments", new PaymentViewHelper());    
+    	vhs.put("/LES-web/Payments", new PaymentViewHelper());
+    	vhs.put("/LES-web/OrderAddresses", new OrderAddressViewHelper());        
     	
     	vhs.put("/LES-web/ConsultBrand", new BrandViewHelper());
     	vhs.put("/LES-web/ConsultColor", new ColorViewHelper());
@@ -107,6 +110,7 @@ public class Servlet extends HttpServlet {
     	vhs.put("/LES-web/ConsultInactivationCategory", new InactivationCategoryViewHelper());
     	vhs.put("/LES-web/ConsultResidenceTypes", new ResidenceTypeViewHelper());
     	vhs.put("/LES-web/ConsultStatus", new StatusViewHelper());
+    	vhs.put("/LES-web/ConsultActivationCategory", new ActivationCategoryViewHelper());
     }      
     
     @Override

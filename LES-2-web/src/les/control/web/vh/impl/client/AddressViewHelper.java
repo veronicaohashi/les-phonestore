@@ -9,7 +9,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import les.control.web.vh.IViewHelper;
 import les.core.application.Result;
@@ -24,6 +23,7 @@ public class AddressViewHelper implements IViewHelper{
 	public DomainEntity getEntity(HttpServletRequest request) {
 		Address address = new Address();
 		String action = request.getParameter("action");
+		Client client = new Client();
 
 		String id = request.getParameter("id");
 		String name = request.getParameter("txtName");
@@ -40,7 +40,6 @@ public class AddressViewHelper implements IViewHelper{
 		String client_id = request.getParameter("client_id");
 		
 		if(client_id != null) {
-			Client client = new Client();
 			client.setId(Integer.parseInt(client_id));
 			address.setClient(client);
 		}
@@ -90,51 +89,37 @@ public class AddressViewHelper implements IViewHelper{
 
 		if (result.getMsg() == null) {	
 			String page = request.getParameter("page");		
-			Client client = (Client)request.getSession().getAttribute("user");
 			
 			if(action.equals("CONSULT")) {	
 				if(page != null) {
 					if(page.equals("CART")) {	
 						request.setAttribute("address", result.getEntities().get(0));
 						rd = request.getRequestDispatcher("CartAddress.jsp");
-					} else if(page.equals("PAYMENT")) {
 						
-						HttpSession session = request.getSession();
-						session.setAttribute("address", result.getEntities().get(0));	
-						rd = request.getRequestDispatcher("/CreditCards?action=CONSULT&lmain=true&page=CART&client_id=" + client.getId());
+					} else if(page.equals("")) {						
+						// ENDEREÇOS DO CLIENTE
 					}
 				} else {
 					rd = request.getRequestDispatcher("index.jsp");
 				}		
 				
 			} else if(action.equals("LIST")) {
+				request.setAttribute("headers", headers);
+				request.setAttribute("addresses", result.getEntities());
+				
 				if(page != null) {
 					if(page.equals("CART")) {
-						request.setAttribute("headers", headers);
-						request.setAttribute("addresses", result.getEntities());
-						rd = request.getRequestDispatcher("CartAddressList.jsp");
+						rd = request.getRequestDispatcher("CartAddressList.jsp");					
 					}
 				} else {
-					rd = request.getRequestDispatcher("index.jsp");
+					rd = request.getRequestDispatcher("Addresses.jsp");
 				}		
 				
-			} else if (action.equals("SAVE")) {		
-				if(page != null) {
-					if(page.equals("CART")) {
-						HttpSession session = request.getSession();
-						session.setAttribute("address", result.getEntities().get(0));						
-						rd = request.getRequestDispatcher("/CreditCards?action=CONSULT&lmain=true&page=CART&client_id=" + client.getId());
-						
-					} else if (page.equals("")) {
+			} else if (action.equals("SAVE")) {	
 						// salvar e redirecionar para o painel administrativo
-					}
-				}
+					
 			}
 		} else {
-			if (action.equals("SAVE")) {
-				request.setAttribute("response", result.getMsg());
-				rd = request.getRequestDispatcher("CartAddressForm.jsp");
-			}
 		}
 	
 		rd.forward(request, response);	

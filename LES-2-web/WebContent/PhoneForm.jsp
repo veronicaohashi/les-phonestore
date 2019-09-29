@@ -254,6 +254,8 @@
 						class="btn btn-primary btn-block">Cancelar</a>
 					</div>
 					<div class="col-2">				
+					
+					    <input type="hidden" id="lactive" name="lactive" value="true">
 						<input type="hidden" name="action" id="action" value="SAVE" />
 						<input class="btn btn-primary btn-block" type="submit" value="Salvar" />
 					</div>

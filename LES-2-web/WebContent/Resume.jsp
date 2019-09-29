@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="les.domain.sale.OrderAddress"%>
 <%@page import="les.domain.sale.PaymentData"%>
 <%@page import="les.domain.sale.Payment"%>
 <%@page import="les.domain.client.CreditCard"%>
@@ -25,7 +26,7 @@
 	%>
 	<%
 		Cart cart = (Cart) session.getAttribute("cart"); 
-		Address address = (Address) session.getAttribute("address");
+		OrderAddress orderAddress = (OrderAddress) session.getAttribute("address");
 		CreditCard card = (CreditCard) session.getAttribute("card");
 		Payment payment = (Payment) session.getAttribute("payment");
 	%>
@@ -41,10 +42,10 @@
 	               				</ul> 
 					  			<div class="row">
 					  				<div class="col-10">
-					  					<p class="text"><b><%=address.getName()%></b></p>
-					  					<p class="text"><b>Logradouro: </b><%=address.getStreet()%>, <%=address.getNumber()%>,
-					  					 <%=address.getDistrict()%> - <%=address.getCity().getName()%>/<%=address.getCity().getState().getName()%> -
-					  					 <%=address.getPostalCode()%></p>
+					  					<p class="text"><b><%= orderAddress.getAddress().getName()%></b></p>
+					  					<p class="text"><b>Logradouro: </b><%= orderAddress.getAddress().getStreet()%>, <%= orderAddress.getAddress().getNumber()%>,
+					  					 <%= orderAddress.getAddress().getDistrict()%> -
+					  					 <%= orderAddress.getAddress().getPostalCode()%></p>
 					  				</div>
 					  			</div>
 						  	</div>

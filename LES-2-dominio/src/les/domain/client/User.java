@@ -5,6 +5,7 @@ import les.domain.DomainEntity;
 public class User extends DomainEntity {
 	public String email;
 	public String password;
+	public String passwordConfirmation;
 	public Integer level;
 	
 	public User() {
@@ -41,5 +42,11 @@ public class User extends DomainEntity {
 	}
 	public void setLevel(Integer level) {
 		this.level = level;
+	}
+	public String getPasswordConfirmation() {
+		return passwordConfirmation;
+	}
+	public void setPasswordConfirmation(String passwordConfirmation) {
+		this.passwordConfirmation = passwordConfirmation;
 	}
 }

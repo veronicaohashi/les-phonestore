@@ -132,7 +132,7 @@ $(document).ready(function() {
 		options=options+"<option value='"+ i +"'>"+ i + " x de R$ "+ (price / i).toFixed(2) +"</option>";
 	}
 
-	$("#cbInstallment").append(options);	
+	$("#cbInstallmentQuantity").append(options);	
 	
 	$('#txtNumber').on("input",function(){
 		var cardnumber = this.value.replace(/[^0-9]+/g, '');

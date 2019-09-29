@@ -9,7 +9,16 @@ public class Orderi extends DomainEntity {
 	private Reference reference;
 	private Order sale;
 	private Status status;
-	
+	public Orderi() {
+		
+	}
+	public Orderi(Integer id, Double price, Integer quantity, Status status, Reference reference) {
+		super(id);
+		this.price = price;
+		this.quantity = quantity;
+		this.status = status;
+		this.reference = reference;
+	}
 	public double getPrice() {
 		return price;
 	}

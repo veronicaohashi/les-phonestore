@@ -50,7 +50,7 @@
       <param-value>/LES-web/ConsultSupplier</param-value>
     </init-param>
     <init-param>
-      <param-name>categories</param-name>
+      <param-name>inactivationCategory</param-name>
       <param-value>/LES-web/ConsultInactivationCategory</param-value>
     </init-param>
     <init-param>
@@ -60,6 +60,10 @@
     <init-param>
       <param-name>status</param-name>
       <param-value>/LES-web/ConsultStatus</param-value>
+    </init-param>
+    <init-param>
+      <param-name>activationCategory</param-name>
+      <param-value>/LES-web/ConsultActivationCategory</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -117,5 +121,9 @@
   <servlet-mapping>
     <servlet-name>Servlet</servlet-name>
     <url-pattern>/Payments</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/OrderAddresses</url-pattern>
   </servlet-mapping>
 </web-app>

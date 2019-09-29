@@ -17,7 +17,7 @@
 			out.println(request.getAttribute("response") + "</div>");
 		}	
 	%>
-	<form action="Addresses" method="post">
+	<form action="OrderAddresses" method="post">
 		<div class="row">
        		<div class="col-md-8 mx-auto">
            		<div class="card card-body">
@@ -118,7 +118,6 @@
 									Client client = (Client) session.getAttribute("user");
 
 									out.println("<input type='hidden' name='lmain' id='lmain' value='false' />");
-									out.println("<input type='hidden' name='client_id' id='client_id' value='"+ client.getId() +"' />");
 								%>
 								
 								<div class="row">

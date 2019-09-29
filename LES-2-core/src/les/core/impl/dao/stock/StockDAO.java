@@ -119,7 +119,9 @@ public class StockDAO extends AbstractJdbcDAO{
 		PreparedStatement pst = null;
 		String sql = "SELECT * FROM stocks ";
 
-		if(stock.getReference() != null){
+		if(stock.getReference() != null && stock.getSupplier() != null){
+			sql += "WHERE phone_reference_id=? AND supplier_id=?";
+		} else if(stock.getReference() != null){
 			sql += "WHERE phone_reference_id=?";
 		} else if (stock.getId() != null) {
 			sql += "WHERE id=?";
@@ -129,8 +131,12 @@ public class StockDAO extends AbstractJdbcDAO{
 		try {
 			openConnection();
 			pst = connection.prepareStatement(sql);
-			
-			if(stock.getReference() != null){
+
+			if(stock.getReference() != null && stock.getSupplier() != null){
+				pst.setInt(1, stock.getReference().getId());
+				pst.setInt(2, stock.getSupplier().getId());
+				
+			} else if(stock.getReference() != null){
 				pst.setInt(1, stock.getReference().getId());				
 			} else if (stock.getId() != null) {
 				pst.setInt(1, stock.getId());				

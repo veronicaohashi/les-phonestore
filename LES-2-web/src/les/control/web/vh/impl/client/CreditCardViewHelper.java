@@ -16,8 +16,6 @@ import les.core.application.Result;
 import les.domain.DomainEntity;
 import les.domain.client.Client;
 import les.domain.client.CreditCard;
-import les.domain.sale.Order;
-import les.domain.sale.Payment;
 import les.domain.sale.PaymentData;
 
 public class CreditCardViewHelper implements IViewHelper{
@@ -134,36 +132,24 @@ public class CreditCardViewHelper implements IViewHelper{
 					
 				}				
 			} else if (action.equals("SAVE")) {		
-				if(page != null) {
-					if(page.equals("CART")) {
-						HttpSession session = request.getSession();
-						session.setAttribute("card", result.getEntities().get(0));						
-						rd = request.getRequestDispatcher("Resume.jsp");
-						
-					} else if (page.equals("")) {
-						// salvar e redirecionar para o painel administrativo
-					}
-				}
+				// salvar e redirecionar para o painel administrativo
 			} else if(action.equals("LIST")) {
+				request.setAttribute("headers", headers);
+				request.setAttribute("cards", result.getEntities());
+				
 				if(page != null) {
 					if(page.equals("CART")) {
-						request.setAttribute("headers", headers);
-						request.setAttribute("cards", result.getEntities());
-						rd = request.getRequestDispatcher("CartPaymentList.jsp");
+						rd = request.getRequestDispatcher("CartPaymentList.jsp");						
 					} else if(page.equals("2CARDS")) {
-						request.setAttribute("cards", result.getEntities());
-						rd = request.getRequestDispatcher("CartPaymentCards.jsp");
-						
+						rd = request.getRequestDispatcher("CartPaymentCards.jsp");					
 					}
 				} else {
 					rd = request.getRequestDispatcher("index.jsp");
-				}		
-				
+				}				
 			}	
 		} else {
 			if (action.equals("SAVE")) {
-				request.setAttribute("response", result.getMsg());
-				rd = request.getRequestDispatcher("CartPaymentForm.jsp");
+				// salvar e redirecionar para o painel administrativo
 			}
 		}
 		

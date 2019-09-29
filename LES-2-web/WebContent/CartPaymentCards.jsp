@@ -16,7 +16,12 @@
 <%
 	Cart cart = (Cart) session.getAttribute("cart");
 	out.println("<input type='hidden' name='price' id='price' value='" + cart.getPrice() + "' />");
-%>
+
+	if(request.getAttribute("response") != null){
+		out.println("<div class='alert alert-primary' role='alert' id='response'>");
+		out.println(request.getAttribute("response") + "</div>");
+	}	
+%>		
 <div class="container-fluid py-3">
 	<form action="Payments" method="post">
 		<div class="row">
@@ -100,7 +105,8 @@
 								href="CreditCards?action=CONSULT&client_id=<%=client.getId()%>&page=CART"
 								class="btn btn-primary btn-block">Cancelar</a>
 						</div>
-						<div class="col-2">
+						<div class="col-2">				                   		
+							<input type="hidden" name="page" id="page" value="2CARDS" /> 						
 							<input type="hidden" name="action" id="action" value="CONSULT" />
 							<input class="btn btn-primary btn-block" type="submit" value="Próximo" />
 						</div>

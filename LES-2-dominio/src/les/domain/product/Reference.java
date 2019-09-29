@@ -23,6 +23,14 @@ public class Reference extends DomainEntity{
 		this.color = color;
 		this.capacity = capacity;
 	}
+
+	public Reference(int id, String name,  Color color, Capacity capacity, Phone phone) {
+		super(id);
+		this.name = name;
+		this.color = color;
+		this.capacity = capacity;
+		this.phone = phone;
+	}
 	
 	public String getName() {
 		return name;

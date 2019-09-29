@@ -124,7 +124,7 @@ public class ClientDAO extends AbstractJdbcDAO{
 		String sql = "SELECT clients.*, users.* FROM clients JOIN users ON users.id = clients.users_id ";
 
 		if (client.getId() != null) {
-			sql += "WHERE id=?";
+			sql += "WHERE clients.id=?";
 		} else if (client.getCpf() != null) {
 			sql += "WHERE cpf=?";
 		} else if(client.getUser().getId() != null) {

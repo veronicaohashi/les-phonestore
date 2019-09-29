@@ -8,7 +8,7 @@
 
 <%@ include file="Master.jsp"%>
 <div class="container-fluid py-3">
-	<form action="Addresses" method="post">
+	<form action="OrderAddresses" method="post">
 		<div class="row">
        		<div class="col-md-12 mx-auto">
            		<div class="card card-body">

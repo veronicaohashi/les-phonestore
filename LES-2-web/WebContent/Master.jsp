@@ -154,7 +154,7 @@
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">CELULARES</a>
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="ClientFormUpdate.jsp">Perfil</a>
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Cartões de Crédito</a>	    	
-	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Endereços</a>	
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Addresses?action=LIST&client_id=<%=client.getId()%>">Endereços</a>	
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Meus Pedidos</a>
 	    	
       		<div class="btn-group mr-2">

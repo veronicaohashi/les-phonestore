@@ -16,6 +16,7 @@ import les.control.web.vh.IViewHelper;
 import les.core.application.Result;
 import les.domain.DomainEntity;
 import les.domain.client.Client;
+import les.domain.product.ActivationCategory;
 import les.domain.product.Brand;
 import les.domain.product.Capacity;
 import les.domain.product.Color;
@@ -33,7 +34,7 @@ public class PhoneViewHelper implements IViewHelper{
 		Phone phone = new Phone();
 		String action = request.getParameter("action");
 		
-		String id_phone = request.getParameter("id");
+		String id = request.getParameter("id");
 		String model = request.getParameter("txtModel");
 		String id_brand = request.getParameter("cbBrand");
 		String id_so = request.getParameter("cbSO");
@@ -55,11 +56,21 @@ public class PhoneViewHelper implements IViewHelper{
 		String packageContent = request.getParameter("txtPackage");
 		String note = request.getParameter("txtNote");
 		String id_inactivationCategory = request.getParameter("cbInactivationCategory");
+		String id_activationCategory = request.getParameter("cbActivationCategory");
 		String costPrice = request.getParameter("txtCostPrice");
 		String salePrice = request.getParameter("txtSalePrice");
+		String lactive = request.getParameter("lactive");
+		
+		if(action.equals("LIST")) {
+			if(lactive != null) {
+				phone.setLactive(Boolean.parseBoolean(lactive));
+			}
+		}
 		
 		if ( action.equals("CONSULT") || action.equals("UPDATE") || action.equals("DELETE") ) {
-			phone.setId(Integer.parseInt(id_phone));
+			if(id != null) {
+				phone.setId(Integer.parseInt(id));
+			}
 			
 			if(id_inactivationCategory != null) {
 				InactivationCategory i = new InactivationCategory();
@@ -69,11 +80,16 @@ public class PhoneViewHelper implements IViewHelper{
 		}
 		
 		if ( action.equals("UPDATE")) {
-			if(! salePrice.equals("")) {
+			if(salePrice != null && ! salePrice.equals("")) {
 				phone.setSalePrice(Double.parseDouble(salePrice));			
 			}
-			if(! costPrice.equals("")) {
+			if(costPrice != null && ! costPrice.equals("")) {
 				phone.setCostPrice(Double.parseDouble(costPrice));			
+			}
+			if(id_activationCategory != null) {
+				ActivationCategory a = new ActivationCategory();
+				a.setId(Integer.parseInt(id_activationCategory));
+				phone.setActivationCategory(a);
 			}
 		}
 
@@ -81,38 +97,41 @@ public class PhoneViewHelper implements IViewHelper{
 			phone.setModel(model);
 			phone.setPackageContent(packageContent);
 			phone.setNote(note);
-
-			if(! expandability.equals("")) {
+			
+			if(lactive != null) {
+				phone.setLactive(Boolean.parseBoolean(lactive));
+			}
+			if(expandability != null && ! expandability.equals("")) {
 				phone.setExpandability(Integer.parseInt(expandability));
 			}
-			if(! screenSize.equals("")) {
+			if(screenSize != null && ! screenSize.equals("")) {
 				phone.setScreenSize(Double.parseDouble(screenSize));
 			}
-			if(! screenResol.equals("")) {
+			if(screenResol != null && ! screenResol.equals("")) {
 				phone.setScreenResol(Double.parseDouble(screenResol));
 			}
-			if(! rCameraResol.equals("")) {
+			if(rCameraResol != null && ! rCameraResol.equals("")) {
 				phone.setRcameraResol(Double.parseDouble(rCameraResol));
 			}
-			if(! fCameraResol.equals("")) {
+			if(fCameraResol != null && ! fCameraResol.equals("")) {
 				phone.setFcameraResol(Double.parseDouble(fCameraResol));
 			}
-			if(! camcorderResol.equals("")) {
+			if(camcorderResol != null && ! camcorderResol.equals("")) {
 				phone.setCamcorderResol(Double.parseDouble(camcorderResol));
 			}
-			if(! height.equals("")) {
+			if(height != null && ! height.equals("")) {
 				phone.setHeight(Double.parseDouble(height));
 			}
-			if(! width.equals("")) {
+			if(width != null && ! width.equals("")) {
 				phone.setWidth(Double.parseDouble(width));
 			}
-			if(! depth.equals("")) {
+			if(depth != null && ! depth.equals("")) {
 				phone.setDepth(Double.parseDouble(depth));
 			}
-			if(! weight.equals("")) {
+			if(weight != null && ! weight.equals("")) {
 				phone.setWeight(Double.parseDouble(weight));
 			}
-			if(! ram.equals("")) {
+			if(ram != null && ! ram.equals("")) {
 				phone.setRamMemory(Integer.parseInt(ram));
 			}
 			if(id_brand != null) {
@@ -135,15 +154,15 @@ public class PhoneViewHelper implements IViewHelper{
 				pricingGroup.setId(Integer.parseInt(id_pricing_group));
 				phone.setPricingGroup(pricingGroup);				
 			}
-			if(! chips.equals("")) {
+			if(chips != null && ! chips.equals("")) {
 				phone.setChip(Integer.parseInt(chips));		
 			}
 			if(connection != null) {
 				List<ConnectionType> connections = new ArrayList<>();
-				for(String id : connection){
-					ConnectionType c = new ConnectionType();
-					c.setId(Integer.parseInt(id));
-					connections.add(c);
+				for(String c : connection){
+					ConnectionType ct = new ConnectionType();
+					ct.setId(Integer.parseInt(c));
+					connections.add(ct);
 				}
 
 				phone.setConnectionType(connections);
@@ -162,9 +181,9 @@ public class PhoneViewHelper implements IViewHelper{
 					color.setId(Integer.parseInt(id_color));
 					
 					List<Capacity> capacities = new ArrayList<>();
-					for(String id : ids_capacity){
+					for(String c : ids_capacity){
 						Capacity capacity = new Capacity();
-						capacity.setId(Integer.parseInt(id));
+						capacity.setId(Integer.parseInt(c));
 						capacities.add(capacity);
 					}
 					i++;			

@@ -11,47 +11,54 @@ import les.core.IDAO;
 import les.core.IFacade;
 import les.core.IStrategy;
 import les.core.application.Result;
-import les.core.impl.business.client.CPFUniqueValidation;
-import les.core.impl.business.client.CityValidation;
-import les.core.impl.business.client.DecryptedPasswordValidation;
-import les.core.impl.business.client.EncryptedPasswordValidation;
-import les.core.impl.business.client.MainAddressUniqueValidation;
-import les.core.impl.business.client.PasswordValidation;
-import les.core.impl.business.client.RequiredFieldAddressValidation;
-import les.core.impl.business.client.RequiredFieldClientValidation;
-import les.core.impl.business.client.RequiredFieldCreditCardValidation;
-import les.core.impl.business.client.RequiredFieldUserValidation;
-import les.core.impl.business.client.ResidenceTypeValidation;
-import les.core.impl.business.client.UserUniqueValidation;
-import les.core.impl.business.product.BrandValidation;
-import les.core.impl.business.product.ConnectionTypeInsertValidation;
-import les.core.impl.business.product.ConnectionTypeValidation;
-import les.core.impl.business.product.InactivationCategoryValidation;
-import les.core.impl.business.product.PricingGroupValidation;
-import les.core.impl.business.product.ProcessorValidation;
+import les.core.impl.business.client.ClientCpfUniqueValidation;
+import les.core.impl.business.client.AddressCityValidation;
+import les.core.impl.business.client.ClientUserDecryptedPasswordValidation;
+import les.core.impl.business.client.ClientUserEncryptedPasswordValidation;
+import les.core.impl.business.client.AddressUniqueMainValidation;
+import les.core.impl.business.client.ClientUserPasswordValidation;
+import les.core.impl.business.client.AddressRequiredFieldValidation;
+import les.core.impl.business.client.ClientRequiredFieldValidation;
+import les.core.impl.business.client.CreditCardRequiredFieldValidation;
+import les.core.impl.business.client.UserRequiredFieldValidation;
+import les.core.impl.business.client.AddressResidenceTypeValidation;
+import les.core.impl.business.client.ClientUniqueUserValidation;
+import les.core.impl.business.product.ProductActivationCategoryValidation;
+import les.core.impl.business.product.ProductBrandValidation;
+import les.core.impl.business.product.ProductConnectionTypeInsertValidation;
+import les.core.impl.business.product.ProductConnectionTypeValidation;
+import les.core.impl.business.product.ProductInactivationCategoryValidation;
+import les.core.impl.business.product.ProductPricingGroupValidation;
+import les.core.impl.business.product.ProductProcessorValidation;
 import les.core.impl.business.product.ReferenceQtdValidation;
 import les.core.impl.business.product.ReferenceStockValidation;
-import les.core.impl.business.product.ReferenceValidation;
-import les.core.impl.business.product.RequiredFieldValidation;
-import les.core.impl.business.product.SOValidation;
-import les.core.impl.business.product.UniqueReferenceValidation;
-import les.core.impl.business.sale.AvaiableQtdValidation;
+import les.core.impl.business.product.ProductReferenceValidation;
+import les.core.impl.business.product.ProductRequiredFieldValidation;
+import les.core.impl.business.product.ProductSOValidation;
+import les.core.impl.business.product.ProductUniqueReferenceValidation;
+import les.core.impl.business.sale.CartAvaiableQtdValidation;
 import les.core.impl.business.sale.CartNewItemValidation;
 import les.core.impl.business.sale.CartRemoveItemValidation;
 import les.core.impl.business.sale.CartValidation;
 import les.core.impl.business.sale.OrderFirstStatusValidation;
-import les.core.impl.business.sale.ReserveItemValidation;
-import les.core.impl.business.stock.GenerateMovstockValidation;
-import les.core.impl.business.stock.GeneratePriceValidation;
-import les.core.impl.business.stock.GenerateStockValidation;
-import les.core.impl.business.stock.SupplierValidation;
-import les.core.impl.business.stock.TotalPriceValidation;
-import les.core.impl.business.stock.TotalQuantityValidation;
+import les.core.impl.business.sale.PaymentRequiredFieldValidation;
+import les.core.impl.business.sale.CartReserveItemValidation;
+import les.core.impl.business.sale.OrderUpdateStatusValidation;
+import les.core.impl.business.stock.EntryRequiredFieldValidation;
+import les.core.impl.business.stock.EntryMovstockValidation;
+import les.core.impl.business.stock.EntryPriceValidation;
+import les.core.impl.business.stock.EntryStockValidation;
+import les.core.impl.business.stock.EntryReferenceValidation;
+import les.core.impl.business.stock.EntrySupplierValidation;
+import les.core.impl.business.stock.EntryTotalPriceValidation;
+import les.core.impl.business.stock.EntryTotalQuantityValidation;
+import les.core.impl.business.stock.OrderMovstockValidation;
 import les.core.impl.dao.client.AddressDAO;
 import les.core.impl.dao.client.ClientDAO;
 import les.core.impl.dao.client.CreditCardDAO;
 import les.core.impl.dao.client.ResidenceTypeDAO;
 import les.core.impl.dao.client.UserDAO;
+import les.core.impl.dao.product.ActivationCategoryDAO;
 import les.core.impl.dao.product.BrandDAO;
 import les.core.impl.dao.product.CapacityDAO;
 import les.core.impl.dao.product.ColorDAO;
@@ -62,6 +69,7 @@ import les.core.impl.dao.product.PricingGroupDAO;
 import les.core.impl.dao.product.ProcessorDAO;
 import les.core.impl.dao.product.ReferenceDAO;
 import les.core.impl.dao.product.SODAO;
+import les.core.impl.dao.sale.OrderAddressDAO;
 import les.core.impl.dao.sale.OrderDAO;
 import les.core.impl.dao.sale.PaymentDAO;
 import les.core.impl.dao.sale.ReservedStockDAO;
@@ -77,6 +85,7 @@ import les.domain.client.Client;
 import les.domain.client.CreditCard;
 import les.domain.client.ResidenceType;
 import les.domain.client.User;
+import les.domain.product.ActivationCategory;
 import les.domain.product.Brand;
 import les.domain.product.Capacity;
 import les.domain.product.Color;
@@ -89,6 +98,7 @@ import les.domain.product.Reference;
 import les.domain.product.SO;
 import les.domain.sale.Cart;
 import les.domain.sale.Order;
+import les.domain.sale.OrderAddress;
 import les.domain.sale.Payment;
 import les.domain.sale.Status;
 import les.domain.stock.Entry;
@@ -121,6 +131,7 @@ public class Facade implements IFacade {
 		SODAO soDAO = new SODAO();
 		ReferenceDAO referenceDAO = new ReferenceDAO();
 		InactivationCategoryDAO inactivationCategoryDAO = new InactivationCategoryDAO();
+		ActivationCategoryDAO activationCategoryDAO = new ActivationCategoryDAO();
 		daos.put(Brand.class.getName(), brandDAO);
 		daos.put(Phone.class.getName(), phoneDAO);
 		daos.put(Color.class.getName(), colorDAO);
@@ -131,7 +142,8 @@ public class Facade implements IFacade {
 		daos.put(SO.class.getName(), soDAO);
 		daos.put(Reference.class.getName(), referenceDAO);
 		daos.put(InactivationCategory.class.getName(), inactivationCategoryDAO);
-
+		daos.put(ActivationCategory.class.getName(), activationCategoryDAO);
+		
 //		STOCK
 		StockDAO stockDAO = new StockDAO();
 		SupplierDAO supplierDAO = new SupplierDAO();
@@ -149,10 +161,12 @@ public class Facade implements IFacade {
 		StatusDAO statusDAO = new StatusDAO();
 		OrderDAO orderDAO = new OrderDAO();
 		PaymentDAO paymentDAO = new PaymentDAO();
+		OrderAddressDAO orderAddressDAO = new OrderAddressDAO();
 		daos.put(Cart.class.getName(), reservedStockDAO);
 		daos.put(Status.class.getName(), statusDAO);
 		daos.put(Order.class.getName(), orderDAO);
 		daos.put(Payment.class.getName(), paymentDAO);
+		daos.put(OrderAddress.class.getName(), orderAddressDAO);
 
 //		CLIENT
 		ClientDAO clientDAO = new ClientDAO();
@@ -167,32 +181,34 @@ public class Facade implements IFacade {
 		daos.put(CreditCard.class.getName(), creditCardDAO);			
 		
 //		PRODUCT
-		RequiredFieldValidation requiredFieldValidation = new RequiredFieldValidation();
-		BrandValidation brandValidation = new BrandValidation();
-		PricingGroupValidation pricingGroupValidation = new PricingGroupValidation();
-		ProcessorValidation processorValidation = new ProcessorValidation();
-		SOValidation soValidation = new SOValidation();
-		ReferenceValidation referenceValidation = new ReferenceValidation();
-		UniqueReferenceValidation uniqueReferenceValidation = new UniqueReferenceValidation();
-		ConnectionTypeValidation connectionTypeValidation = new ConnectionTypeValidation();
-		ConnectionTypeInsertValidation connectionTypeInsertValidation = new ConnectionTypeInsertValidation();
-		InactivationCategoryValidation inactivationCategoryValidation = new InactivationCategoryValidation();
+		ProductRequiredFieldValidation productRequiredFieldValidation = new ProductRequiredFieldValidation();
+		ProductBrandValidation productBrandValidation = new ProductBrandValidation();
+		ProductPricingGroupValidation productPricingGroupValidation = new ProductPricingGroupValidation();
+		ProductProcessorValidation productProcessorValidation = new ProductProcessorValidation();
+		ProductSOValidation productSOValidation = new ProductSOValidation();
+		ProductReferenceValidation productReferenceValidation = new ProductReferenceValidation();
+		ProductUniqueReferenceValidation productUniqueReferenceValidation = new ProductUniqueReferenceValidation();
+		ProductConnectionTypeValidation productConnectionTypeValidation = new ProductConnectionTypeValidation();
+		ProductConnectionTypeInsertValidation productConnectionTypeInsertValidation = new ProductConnectionTypeInsertValidation();
+		ProductInactivationCategoryValidation productInactivationCategoryValidation = new ProductInactivationCategoryValidation();
+		ProductActivationCategoryValidation productActivationCategoryValidation = new ProductActivationCategoryValidation();
 		
 		List<IStrategy> rnsSavePhone = new ArrayList<IStrategy>();
-		rnsSavePhone.add(requiredFieldValidation);
-		rnsSavePhone.add(brandValidation);
-		rnsSavePhone.add(pricingGroupValidation);
-		rnsSavePhone.add(processorValidation);
-		rnsSavePhone.add(soValidation);
-		rnsSavePhone.add(referenceValidation);
-		rnsSavePhone.add(connectionTypeValidation);		
+		rnsSavePhone.add(productRequiredFieldValidation);
+		rnsSavePhone.add(productBrandValidation);
+		rnsSavePhone.add(productPricingGroupValidation);
+		rnsSavePhone.add(productProcessorValidation);
+		rnsSavePhone.add(productSOValidation);
+		rnsSavePhone.add(productReferenceValidation);
+		rnsSavePhone.add(productConnectionTypeValidation);		
 
 		List<IStrategy> rnsUpdatePhone = new ArrayList<IStrategy>();
-		rnsUpdatePhone.add(requiredFieldValidation);
-		rnsUpdatePhone.add(uniqueReferenceValidation);
+		rnsUpdatePhone.add(productRequiredFieldValidation);
+		rnsUpdatePhone.add(productUniqueReferenceValidation);
+		rnsUpdatePhone.add(productActivationCategoryValidation);
 		
 		List<IStrategy> rnsDeletePhone = new ArrayList<IStrategy>();
-		rnsDeletePhone.add(inactivationCategoryValidation);
+		rnsDeletePhone.add(productInactivationCategoryValidation);
 		
 		Map<String, List<IStrategy>> rnsPhone= new HashMap<String, List<IStrategy>>();	
 		rnsPhone.put("SAVE", rnsSavePhone);
@@ -202,8 +218,8 @@ public class Facade implements IFacade {
 				
 		
 		List<IStrategy> rnsSavePhoneAfter = new ArrayList<IStrategy>();
-		rnsSavePhoneAfter.add(uniqueReferenceValidation);
-		rnsSavePhoneAfter.add(connectionTypeInsertValidation);		
+		rnsSavePhoneAfter.add(productUniqueReferenceValidation);
+		rnsSavePhoneAfter.add(productInactivationCategoryValidation);		
 		
 		Map<String, List<IStrategy>> rnsPhoneAfter = new HashMap<String, List<IStrategy>>();	
 		rnsPhoneAfter.put("SAVE", rnsSavePhoneAfter);
@@ -222,32 +238,32 @@ public class Facade implements IFacade {
 		rns.put(Reference.class.getName(), rnsReference);
 		
 //		ENTRY
-		RequiredFieldValidation requiredFieldValidationEntry = new RequiredFieldValidation();
-		ReferenceValidation referenceValidationEntry = new ReferenceValidation();
-		SupplierValidation supplierValidation = new SupplierValidation();
-		TotalPriceValidation totalPriceValidation = new TotalPriceValidation();
-		TotalQuantityValidation totalQuantityValidation = new TotalQuantityValidation();
+		EntryRequiredFieldValidation entryRequiredFieldValidation = new EntryRequiredFieldValidation();
+		EntryReferenceValidation entryReferenceValidation = new EntryReferenceValidation();
+		EntrySupplierValidation entrySupplierValidation = new EntrySupplierValidation();
+		EntryTotalQuantityValidation entryTotalQuantityValidation = new EntryTotalQuantityValidation();
+		EntryTotalPriceValidation entryTotalPriceValidation = new EntryTotalPriceValidation();
 		
 		List<IStrategy> rnsSaveEntry = new ArrayList<IStrategy>();
-		rnsSaveEntry.add(requiredFieldValidationEntry);
-		rnsSaveEntry.add(referenceValidationEntry);
-		rnsSaveEntry.add(supplierValidation);
-		rnsSaveEntry.add(totalQuantityValidation);
-		rnsSaveEntry.add(totalPriceValidation);
+		rnsSaveEntry.add(entryRequiredFieldValidation);
+		rnsSaveEntry.add(entryReferenceValidation);
+		rnsSaveEntry.add(entrySupplierValidation);
+		rnsSaveEntry.add(entryTotalQuantityValidation);
+		rnsSaveEntry.add(entryTotalPriceValidation);
 
 		Map<String, List<IStrategy>> rnsEntry = new HashMap<String, List<IStrategy>>();	
 		rnsEntry.put("SAVE", rnsSaveEntry);
 		
 		rns.put(Entry.class.getName(), rnsEntry);		
 
-		GenerateMovstockValidation generateMovstockValidation = new GenerateMovstockValidation(); 
-		GenerateStockValidation generateStockValidation = new GenerateStockValidation();  
-		GeneratePriceValidation generatePriceValidation = new GeneratePriceValidation();
+		EntryMovstockValidation entryMovstockValidation = new EntryMovstockValidation(); 
+		EntryStockValidation entryStockValidation = new EntryStockValidation();  
+		EntryPriceValidation entryPriceValidation = new EntryPriceValidation();
 		
 		List<IStrategy> rnsSaveEntryAfter = new ArrayList<IStrategy>();
-		rnsSaveEntryAfter.add(generateMovstockValidation);		
-		rnsSaveEntryAfter.add(generateStockValidation);		
-		rnsSaveEntryAfter.add(generatePriceValidation);		
+		rnsSaveEntryAfter.add(entryMovstockValidation);		
+		rnsSaveEntryAfter.add(entryStockValidation);		
+		rnsSaveEntryAfter.add(entryPriceValidation);		
 		
 		Map<String, List<IStrategy>> rnsEntryAfter = new HashMap<String, List<IStrategy>>();	
 		rnsEntryAfter.put("SAVE", rnsSaveEntryAfter);
@@ -256,14 +272,14 @@ public class Facade implements IFacade {
 		
 //		CART
 		CartValidation cartValidation = new CartValidation();
-		AvaiableQtdValidation avaiableQtdValidation = new AvaiableQtdValidation();
+		CartAvaiableQtdValidation cartAvaiableQtdValidation = new CartAvaiableQtdValidation();
 		CartNewItemValidation cartNewItemValidation = new CartNewItemValidation();
-		ReserveItemValidation reserveItemValidation = new ReserveItemValidation();
+		CartReserveItemValidation cartReserveItemValidation = new CartReserveItemValidation();
 		
 		List<IStrategy> rnsSaveCart = new ArrayList<IStrategy>();
 		rnsSaveCart.add(cartValidation);
-		rnsSaveCart.add(avaiableQtdValidation);
-		rnsSaveCart.add(reserveItemValidation);
+		rnsSaveCart.add(cartAvaiableQtdValidation);
+		rnsSaveCart.add(cartReserveItemValidation);
 		rnsSaveCart.add(cartNewItemValidation);
 		
 		CartRemoveItemValidation cartRemoveItemValidation = new CartRemoveItemValidation();
@@ -277,23 +293,23 @@ public class Facade implements IFacade {
 		rns.put(Cart.class.getName(), rnsCart);		
 		
 //		CLIENT
-		RequiredFieldClientValidation requiredFieldClientValidation = new RequiredFieldClientValidation();
-		CPFUniqueValidation CPFUniqueValidation = new CPFUniqueValidation();
-		UserUniqueValidation userUniqueValidation = new UserUniqueValidation();
-		PasswordValidation passwordValidation = new PasswordValidation();
-		EncryptedPasswordValidation encryptedPasswordValidation = new EncryptedPasswordValidation();
+		ClientRequiredFieldValidation clientRequiredFieldValidation = new ClientRequiredFieldValidation();
+		ClientCpfUniqueValidation clientCpfUniqueValidation = new ClientCpfUniqueValidation();
+		ClientUniqueUserValidation clientUniqueUserValidation = new ClientUniqueUserValidation();
+		ClientUserPasswordValidation clientUserPasswordValidation = new ClientUserPasswordValidation();
+		ClientUserEncryptedPasswordValidation clientUserEncryptedPasswordValidation = new ClientUserEncryptedPasswordValidation();
 
 		List<IStrategy> rnsSaveClient = new ArrayList<IStrategy>();
-		rnsSaveClient.add(requiredFieldClientValidation);
-		rnsSaveClient.add(CPFUniqueValidation);
-		rnsSaveClient.add(userUniqueValidation);
-		rnsSaveClient.add(passwordValidation);
-		rnsSaveClient.add(encryptedPasswordValidation);
+		rnsSaveClient.add(clientRequiredFieldValidation);
+		rnsSaveClient.add(clientCpfUniqueValidation);
+		rnsSaveClient.add(clientUniqueUserValidation);
+		rnsSaveClient.add(clientUserPasswordValidation);
+		rnsSaveClient.add(clientUserEncryptedPasswordValidation);
 		
 		List<IStrategy> rnsUpdateClient = new ArrayList<IStrategy>();
-		rnsUpdateClient.add(requiredFieldClientValidation);
-		rnsUpdateClient.add(userUniqueValidation);
-		rnsSaveClient.add(passwordValidation);
+		rnsUpdateClient.add(clientRequiredFieldValidation);
+		rnsUpdateClient.add(clientUniqueUserValidation);
+		rnsUpdateClient.add(clientUserPasswordValidation);
 
 
 		Map<String, List<IStrategy>> rnsClient = new HashMap<String, List<IStrategy>>();	
@@ -304,19 +320,19 @@ public class Facade implements IFacade {
 		rns.put(Client.class.getName(), rnsClient);	
 		
 //		USER
-		RequiredFieldUserValidation requiredFieldUserValidation = new RequiredFieldUserValidation();
+		UserRequiredFieldValidation userRequiredFieldValidation = new UserRequiredFieldValidation();
 		
 		List<IStrategy> rnsConsultUser = new ArrayList<IStrategy>();
-		rnsConsultUser.add(requiredFieldUserValidation);
+		rnsConsultUser.add(userRequiredFieldValidation);
 		
 		Map<String, List<IStrategy>> rnsUser = new HashMap<String, List<IStrategy>>();	
 		rnsUser.put("CONSULT", rnsSaveClient);
 		
 		rns.put(User.class.getName(), rnsUser);	
 		
-		DecryptedPasswordValidation decryptedPasswordValidation = new DecryptedPasswordValidation();
+		ClientUserDecryptedPasswordValidation clientUserDecryptedPasswordValidation = new ClientUserDecryptedPasswordValidation();
 		List<IStrategy> rnsConsultUserAfter = new ArrayList<IStrategy>();
-		rnsConsultUserAfter.add(decryptedPasswordValidation);
+		rnsConsultUserAfter.add(clientUserDecryptedPasswordValidation);
 		
 		Map<String, List<IStrategy>> rnsUserAfter = new HashMap<String, List<IStrategy>>();	
 		rnsUserAfter.put("CONSULT", rnsConsultUserAfter);
@@ -324,43 +340,80 @@ public class Facade implements IFacade {
 		rnsAfter.put(User.class.getName(), rnsUserAfter);		
 		
 //		ADDRESS
-		RequiredFieldAddressValidation requiredFieldAddressValidation = new RequiredFieldAddressValidation();
-		CityValidation cityValidation = new CityValidation();
-		ResidenceTypeValidation residenceTypeValidation = new ResidenceTypeValidation();
-		MainAddressUniqueValidation mainAddressUniqueValidation = new MainAddressUniqueValidation();
+		AddressRequiredFieldValidation addressRequiredFieldValidation = new AddressRequiredFieldValidation();
+		AddressCityValidation addressCityValidation = new AddressCityValidation();
+		AddressResidenceTypeValidation addressResidenceTypeValidation = new AddressResidenceTypeValidation();
+		AddressUniqueMainValidation addressUniqueMainValidation = new AddressUniqueMainValidation();
 
 		List<IStrategy> rnsSaveAddress = new ArrayList<IStrategy>();
-		rnsSaveAddress.add(requiredFieldAddressValidation);
-		rnsSaveAddress.add(cityValidation);
-		rnsSaveAddress.add(residenceTypeValidation);
-		rnsSaveAddress.add(mainAddressUniqueValidation);
+		rnsSaveAddress.add(addressRequiredFieldValidation);
+		rnsSaveAddress.add(addressCityValidation);
+		rnsSaveAddress.add(addressResidenceTypeValidation);
+		rnsSaveAddress.add(addressUniqueMainValidation);
 
 		Map<String, List<IStrategy>> rnsAddress = new HashMap<String, List<IStrategy>>();	
-		rnsAddress.put("SAVE", rnsSaveAddress);
-		
+		rnsAddress.put("SAVE", rnsSaveAddress);		
 		rns.put(Address.class.getName(), rnsAddress);	
 		
 //		CREDIT CARD
-		RequiredFieldCreditCardValidation requiredFieldCreditCardValidation = new RequiredFieldCreditCardValidation();
+		CreditCardRequiredFieldValidation creditCardRequiredFieldValidation = new CreditCardRequiredFieldValidation();
 		
 		List<IStrategy> rnsSaveCreditCard = new ArrayList<IStrategy>();
-		rnsSaveCreditCard.add(requiredFieldCreditCardValidation);
+		rnsSaveCreditCard.add(creditCardRequiredFieldValidation);
 		
 		Map<String, List<IStrategy>> rnsCreditCard = new HashMap<String, List<IStrategy>>();	
-		rnsCreditCard.put("SAVE", rnsSaveCreditCard);
-		
+		rnsCreditCard.put("SAVE", rnsSaveCreditCard);		
 		rns.put(CreditCard.class.getName(), rnsCreditCard);
+		
+//		PAYMENT		
+		PaymentRequiredFieldValidation paymentRequiredFieldValidation = new PaymentRequiredFieldValidation();
+		
+		List<IStrategy> rnsSavePayment = new ArrayList<IStrategy>();
+		rnsSavePayment.add(creditCardRequiredFieldValidation);
+		rnsSavePayment.add(paymentRequiredFieldValidation);		
+
+		List<IStrategy> rnsConsultPayment = new ArrayList<IStrategy>();
+		rnsConsultPayment.add(paymentRequiredFieldValidation);
+		
+		Map<String, List<IStrategy>> rnsPayment = new HashMap<String, List<IStrategy>>();	
+		rnsPayment.put("SAVE", rnsSavePayment);		
+		rnsPayment.put("CONSULT", rnsConsultPayment);		
+		rns.put(Payment.class.getName(), rnsPayment);
+		
+//		ORDER ADDRESS
+		List<IStrategy> rnsSaveOrderAddress = new ArrayList<IStrategy>();
+		rnsSaveOrderAddress.add(addressRequiredFieldValidation);
+		rnsSaveOrderAddress.add(addressCityValidation);
+		rnsSaveOrderAddress.add(addressResidenceTypeValidation);
+
+		Map<String, List<IStrategy>> rnsOrderAddress = new HashMap<String, List<IStrategy>>();	
+		rnsOrderAddress.put("SAVE", rnsSaveOrderAddress);		
+		rns.put(OrderAddress.class.getName(), rnsOrderAddress);	
 		
 //		ORDER
 		OrderFirstStatusValidation orderFirstStatusValidation = new OrderFirstStatusValidation();
+		OrderUpdateStatusValidation orderUpdateStatusValidation = new OrderUpdateStatusValidation();
 
 		List<IStrategy> rnsSaveOrder = new ArrayList<IStrategy>();
 		rnsSaveOrder.add(orderFirstStatusValidation);
+		
+		List<IStrategy> rnsUpdateOrder = new ArrayList<IStrategy>();
+		rnsUpdateOrder.add(orderUpdateStatusValidation);
 
 		Map<String, List<IStrategy>> rnsOrder = new HashMap<String, List<IStrategy>>();	
-		rnsOrder.put("SAVE", rnsSaveOrder);
-		
+		rnsOrder.put("SAVE", rnsSaveOrder);			
+		rnsOrder.put("UPDATE", rnsUpdateOrder);		
 		rns.put(Order.class.getName(), rnsOrder);
+
+		OrderMovstockValidation orderMovstockValidation = new OrderMovstockValidation();
+		
+		List<IStrategy> rnsSaveOrderAfter = new ArrayList<IStrategy>();
+		rnsSaveOrderAfter.add(orderMovstockValidation);		
+		
+		Map<String, List<IStrategy>> rnsOrderAfter = new HashMap<String, List<IStrategy>>();	
+		rnsOrderAfter.put("SAVE", rnsSaveOrderAfter);
+		
+		rnsAfter.put(Order.class.getName(), rnsOrderAfter);
 	}
 	
 	@Override

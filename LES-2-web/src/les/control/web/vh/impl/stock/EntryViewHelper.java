@@ -40,34 +40,41 @@ public class EntryViewHelper  implements IViewHelper{
 			
 			List<Entryi> items = new ArrayList<>();	
 			int i = 0;
+			if(! references.equals("")) {			
+				do {
+					String quantity = request.getParameter("txtQuantity"+i);
+					String price = request.getParameter("txtPrice"+i);
+					String id_reference = request.getParameter("txtReference"+i);
+					String id_phone = request.getParameter("cbPhones");
+					
+					if(quantity == null || quantity.equals(""))
+						quantity = "0";
+					
+					if(price == null || price.equals(""))
+						price = "0";
+					
+					if(! quantity.equals("0") || ! price.equals("0")) {
+									
+						Entryi entryi = new Entryi();
+						entryi.setPrice(Double.parseDouble(price));
+						entryi.setQuantity(Integer.parseInt(quantity));
 						
-			do {
-				String quantity = request.getParameter("txtQuantity"+i);
-				String price = request.getParameter("txtPrice"+i);
-				String id_reference = request.getParameter("txtReference"+i);
-				String id_phone = request.getParameter("cbPhones");
-
-				if(! quantity.equals("") && ! price.equals("")) {
-			
-					Entryi entryi = new Entryi();
-					entryi.setPrice(Double.parseDouble(price));
-					entryi.setQuantity(Integer.parseInt(quantity));
+						Reference reference = new Reference();
+						reference.setId(Integer.parseInt(id_reference));
+						
+						Phone phone = new Phone();
+						phone.setId(Integer.parseInt(id_phone));
+						reference.setPhone(phone);
+						
+						entryi.setReference(reference);
+						
+						items.add(entryi);	
+					}
 					
-					Reference reference = new Reference();
-					reference.setId(Integer.parseInt(id_reference));
-					
-					Phone phone = new Phone();
-					phone.setId(Integer.parseInt(id_phone));
-					reference.setPhone(phone);
-					
-					entryi.setReference(reference);
-					
-					items.add(entryi);					
-				}
-				i++;	
-			
-			} while( i < Integer.parseInt(references));
-		
+					i++;	
+				
+				} while( i < Integer.parseInt(references));
+			}
 			entry.setItems(items);
 		}
 		return entry;

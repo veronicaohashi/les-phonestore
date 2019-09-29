@@ -31,6 +31,7 @@ public class Phone extends DomainEntity{
 	private double costPrice;
 	private double salePrice;
 	private InactivationCategory inactivationCategory;
+	private ActivationCategory activationCategory;
 
 	public Phone() {
 		this.references = new ArrayList<Reference>();
@@ -201,5 +202,12 @@ public class Phone extends DomainEntity{
 	}
 	public void setInactivationCategory(InactivationCategory inactivationCategory) {
 		this.inactivationCategory = inactivationCategory;
+	}
+	public ActivationCategory getActivationCategory() {
+		return activationCategory;
+	}
+
+	public void setActivationCategory(ActivationCategory activationCategory) {
+		this.activationCategory = activationCategory;
 	}
 }

@@ -47,11 +47,9 @@ public class PaymentViewHelper implements IViewHelper{
 		
 		List<PaymentData> dados = new ArrayList<PaymentData>();
 		PaymentData dados1 = new PaymentData();
-		PaymentData dados2 = new PaymentData();
-		
+		PaymentData dados2 = new PaymentData();		
 			
 		if(action.equals("SAVE")) {
-			// Recuperando dados para cadastrar novo cartão
 			card.setNumber(number);
 			card.setCardholderName(name);
 			card.setCardholderCpf(cpf);
@@ -65,8 +63,8 @@ public class PaymentViewHelper implements IViewHelper{
 			if(code != null && ! month.equals("")) {
 				card.setCode(Integer.parseInt(code));
 			}
-			if(linsert.length > 0) {
-				client = (Client) session.getAttribute("client");
+			if(linsert != null && linsert.length > 0) {
+				client = (Client) session.getAttribute("user");
 				card.setClient(client);
 			}
 			// Recuperando quantidade de parcelas e valor
@@ -86,7 +84,7 @@ public class PaymentViewHelper implements IViewHelper{
 				dados1.setPrice(Double.parseDouble(price));	
 				dados1.setCard(new CreditCard(Integer.parseInt(id)));
 				dados.add(dados1);
-			}
+			} 
 			// Recuperando quantidade de parcelas, valor e id do cartão 2
 			if(quantity1 != null && price1 != null) {
 				dados2.setQuantity(Integer.parseInt(quantity1));
@@ -105,21 +103,39 @@ public class PaymentViewHelper implements IViewHelper{
 			HttpServletResponse response) throws IOException, ServletException {
 		String action = request.getParameter("action");
 		HttpSession session = request.getSession();
-				
+		String page = request.getParameter("page");		
+
 		RequestDispatcher rd = null;		
 		
 		if (result.getMsg() == null) {
 			if(action.equals("SAVE")) {
 				Payment payment = (Payment) result.getEntities().get(0);
 				session.setAttribute("payment", payment);
-
-				rd = request.getRequestDispatcher("Resume.jsp");				
+				rd = request.getRequestDispatcher("Resume.jsp");
+				
 			} else if (action.equals("CONSULT")) {
 				Payment payment = (Payment) result.getEntities().get(0);
 				session.setAttribute("payment", payment);
-
-				rd = request.getRequestDispatcher("Resume.jsp");					
+				rd = request.getRequestDispatcher("Resume.jsp");
+				
 			}
+		} else {
+			if(action.equals("SAVE")) {
+				request.setAttribute("response", result.getMsg());
+				rd = request.getRequestDispatcher("CartPaymentForm.jsp");
+				
+			} else if(action.equals("CONSULT")) {
+				request.setAttribute("response", result.getMsg());
+				Client client = (Client)request.getSession().getAttribute("user");
+
+				if(page != null) {
+					if(page.equals("2CARDS")) {
+						rd = request.getRequestDispatcher("/CreditCards?action=LIST&page=2CARDS&client_id=" + client.getId());	
+					}
+				} else {
+					rd = request.getRequestDispatcher("/CreditCards?action=CONSULT&lmain=true&page=CART&client_id=" + client.getId());
+				}
+			}	
 		}
 		
 		rd.forward(request, response);	

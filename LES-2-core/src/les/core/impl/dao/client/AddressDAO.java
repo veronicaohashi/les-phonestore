@@ -99,6 +99,8 @@ public class AddressDAO extends AbstractJdbcDAO{
 			sql += "WHERE client_id=?";
 		} else if (address.getClient().getId() != null && address.getLmain() != null) {
 			sql += "WHERE client_id=? AND lmain = true";
+		}  else {
+			sql += "ORDER BY addresses.id DESC LIMIT 1";
 		}
 		// executa consulta
 		try {

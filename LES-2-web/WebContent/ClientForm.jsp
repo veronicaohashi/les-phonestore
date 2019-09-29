@@ -72,7 +72,12 @@
 	                        <div class="row">
 	    						<div class="col-12">
 			                        <div class="form-group">
-			                            <input class="form-control" placeholder="Senha" name="txtPassword" type="password">
+			                            <input class="form-control" placeholder="Senha" name="txtPassword" type="text">
+			                        </div>
+		                        </div>
+	    						<div class="col-12">
+			                        <div class="form-group">
+			                            <input class="form-control" placeholder="Confirmação de Senha" name="txtPasswordConfirmation" type="text">
 			                        </div>
 		                        </div>
 	                        </div>

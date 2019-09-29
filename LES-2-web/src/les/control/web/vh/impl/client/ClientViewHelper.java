@@ -31,6 +31,7 @@ public class ClientViewHelper implements IViewHelper{
 		String phone = request.getParameter("txtPhone");
 		String email = request.getParameter("txtEmail");
 		String password = request.getParameter("txtPassword");
+		String password_confirmation = request.getParameter("txtPasswordConfirmation");
 		String level = request.getParameter("txtLevel");
 		String user_id = request.getParameter("user_id");
 		String id = request.getParameter("id");
@@ -54,6 +55,7 @@ public class ClientViewHelper implements IViewHelper{
 			if(email != null) {
 				user.setEmail(email);
 				user.setPassword(password);
+				user.setPasswordConfirmation(password_confirmation);
 				if(level != null)
 					user.setLevel(Integer.parseInt(level));
 			}
@@ -88,7 +90,7 @@ public class ClientViewHelper implements IViewHelper{
 				if(cart != null) {
 					rd = request.getRequestDispatcher("/Addresses?action=CONSULT&lmain=true&client_id=" + result.getEntities().get(0).getId() + "&lentrega=true&page=CART");
 				} else {
-					rd = request.getRequestDispatcher("index.jsp");
+					rd = request.getRequestDispatcher("/Phones?action=LIST");
 				}
 			} else if(action.equals("UPDATE")) {
 				result.setMsg("Cliente alterado com sucesso!");

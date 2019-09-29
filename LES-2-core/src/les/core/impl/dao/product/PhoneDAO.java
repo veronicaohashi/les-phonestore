@@ -38,8 +38,8 @@ public class PhoneDAO extends AbstractJdbcDAO{
 			StringBuilder sql = new StringBuilder();			
 			sql.append("INSERT INTO phones(model, screen_size, screen_resol, rcamera_resol, fcamera_resol, camcorder_resol,"
 					+ "chips, height, width, depth, weight, package_content, expandability, ram_memory, note, brand_id, pricing_group_id,"
-					+ "processor_id, so_id, created_at, updated_at)");
-			sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					+ "processor_id, so_id, lactive, created_at, updated_at)");
+			sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 			
 			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, phone.getModel());
@@ -61,9 +61,10 @@ public class PhoneDAO extends AbstractJdbcDAO{
 			pst.setInt(17, phone.getPricingGroup().getId());
 			pst.setInt(18, phone.getProcessor().getId());
 			pst.setInt(19, phone.getSo().getId());
+			pst.setBoolean(20, phone.getLactive());
 			Timestamp time = new Timestamp(System.currentTimeMillis());
-			pst.setTimestamp(20, time);
 			pst.setTimestamp(21, time);
+			pst.setTimestamp(22, time);
 
 			pst.executeUpdate();				
 			ResultSet rs = pst.getGeneratedKeys();
@@ -102,36 +103,45 @@ public class PhoneDAO extends AbstractJdbcDAO{
 		try {
 			connection.setAutoCommit(false);					
 			StringBuilder sql = new StringBuilder();
-			sql.append("UPDATE phones SET model=?, screen_size=?, screen_resol=?, rcamera_resol=?, fcamera_resol=?, camcorder_resol=?,"
-					+ "chips=?, height=?, width=?, depth=?, weight=?, package_content=?, expandability=?, ram_memory=?, note=?, brand_id=?, pricing_group_id=?,"
-					+ "processor_id=?, so_id=?, updated_at=?, cost_price=?, sale_price=?");
-			sql.append("WHERE id=?");							
-
-			pst = connection.prepareStatement(sql.toString());
-			pst.setString(1, phone.getModel());
-			pst.setDouble(2, phone.getScreenSize());
-			pst.setDouble(3, phone.getScreenResol());
-			pst.setDouble(4, phone.getRcameraResol());
-			pst.setDouble(5, phone.getFcameraResol());
-			pst.setDouble(6, phone.getCamcorderResol());
-			pst.setInt(7, phone.getChip());
-			pst.setDouble(8, phone.getHeight());
-			pst.setDouble(9, phone.getWidth());
-			pst.setDouble(10, phone.getDepth());
-			pst.setDouble(11, phone.getWeight());
-			pst.setString(12, phone.getPackageContent());		
-			pst.setInt(13, phone.getExpandability());	
-			pst.setInt(14, phone.getRamMemory());
-			pst.setString(15, phone.getNote());	
-			pst.setInt(16, phone.getBrand().getId());
-			pst.setInt(17, phone.getPricingGroup().getId());
-			pst.setInt(18, phone.getProcessor().getId());
-			pst.setInt(19, phone.getSo().getId());
-			Timestamp time = new Timestamp(System.currentTimeMillis());
-			pst.setTimestamp(20, time);
-			pst.setDouble(21, phone.getCostPrice());
-			pst.setDouble(22, phone.getSalePrice());
-			pst.setInt(23, phone.getId());
+			
+			if(phone.getActivationCategory() == null) {
+				sql.append("UPDATE phones SET model=?, screen_size=?, screen_resol=?, rcamera_resol=?, fcamera_resol=?, camcorder_resol=?,"
+						+ "chips=?, height=?, width=?, depth=?, weight=?, package_content=?, expandability=?, ram_memory=?, note=?, brand_id=?, pricing_group_id=?,"
+						+ "processor_id=?, so_id=?, updated_at=?, cost_price=?, sale_price=?");			
+				sql.append("WHERE id=?");							
+	
+				pst = connection.prepareStatement(sql.toString());
+				pst.setString(1, phone.getModel());
+				pst.setDouble(2, phone.getScreenSize());
+				pst.setDouble(3, phone.getScreenResol());
+				pst.setDouble(4, phone.getRcameraResol());
+				pst.setDouble(5, phone.getFcameraResol());
+				pst.setDouble(6, phone.getCamcorderResol());
+				pst.setInt(7, phone.getChip());
+				pst.setDouble(8, phone.getHeight());
+				pst.setDouble(9, phone.getWidth());
+				pst.setDouble(10, phone.getDepth());
+				pst.setDouble(11, phone.getWeight());
+				pst.setString(12, phone.getPackageContent());		
+				pst.setInt(13, phone.getExpandability());	
+				pst.setInt(14, phone.getRamMemory());
+				pst.setString(15, phone.getNote());	
+				pst.setInt(16, phone.getBrand().getId());
+				pst.setInt(17, phone.getPricingGroup().getId());
+				pst.setInt(18, phone.getProcessor().getId());
+				pst.setInt(19, phone.getSo().getId());
+				Timestamp time = new Timestamp(System.currentTimeMillis());
+				pst.setTimestamp(20, time);
+				pst.setDouble(21, phone.getCostPrice());
+				pst.setDouble(22, phone.getSalePrice());
+				pst.setInt(23, phone.getId());
+			} else {
+				sql.append("UPDATE phones SET lactive = TRUE, activation_categories_id=?  WHERE id = ?");
+				pst = connection.prepareStatement(sql.toString());
+				
+				pst.setInt(1, phone.getActivationCategory().getId());
+				pst.setInt(2, phone.getId());	
+			}
 
 			pst.executeUpdate();			
 			connection.commit();		
@@ -209,7 +219,9 @@ public class PhoneDAO extends AbstractJdbcDAO{
 		
 		if (phone.getId() != null) {
 			sql += "WHERE phones.id=?";
-		}else {
+		} else if (phone.getId() == null && phone.getLactive() != null) {
+			sql += "WHERE lactive=?";
+		}  else {
 			sql += "WHERE lactive=true";
 		}	
 		
@@ -221,6 +233,8 @@ public class PhoneDAO extends AbstractJdbcDAO{
 
 			if (phone.getId() != null) {
 				pst.setInt(1, phone.getId());
+			} else if (phone.getId() == null && phone.getLactive() != null) {
+				pst.setBoolean(1, phone.getLactive());
 			}
 			
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
