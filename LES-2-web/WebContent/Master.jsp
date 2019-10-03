@@ -155,7 +155,7 @@
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="ClientFormUpdate.jsp">Perfil</a>
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Cartões de Crédito</a>	    	
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Addresses?action=LIST&client_id=<%=client.getId()%>">Endereços</a>	
-	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Meus Pedidos</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Orders?action=LIST&client_id=<%= client.getId() %>">Meus Pedidos</a>
 	    	
       		<div class="btn-group mr-2">
 				<span>Bem vindo(a), <%= client.getFirstname()%></span>

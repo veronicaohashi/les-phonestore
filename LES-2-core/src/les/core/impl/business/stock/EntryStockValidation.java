@@ -25,7 +25,6 @@ public class EntryStockValidation implements IStrategy {
 					Stock stock = new Stock();
 					stock.setReference(i.getReference());
 					stock.setQuantity(i.getQuantity());
-					stock.setSupplier(entry.getSupplier());
 					stock.setReserved(0);
 										
 					try {

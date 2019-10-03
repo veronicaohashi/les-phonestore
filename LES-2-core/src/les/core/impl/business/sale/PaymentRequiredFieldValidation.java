@@ -17,7 +17,6 @@ public class PaymentRequiredFieldValidation implements IStrategy {
 				msg.append("Selecione o número de parcelas!");
 
 			} else {
-				System.out.println(payment.getPaymentDatas().size());
 				for(PaymentData paymentData : payment.getPaymentDatas()) {	
 					Double price = paymentData.getPrice();
 					Integer quantity = paymentData.getQuantity();		

@@ -16,21 +16,20 @@ public class CartRemoveItemValidation implements IStrategy {
 	public String process(DomainEntity entity) {
 		if(entity instanceof Cart) {			
 			Cart cart = (Cart)entity;
-			Orderi itemCart = cart.getItem(cart.getStorageItem());
+			Orderi item = cart.getItem(cart.getStorageItem());
+			
 			IDAO stockDAO = new StockDAO();	
 			IDAO dao = new ReservedStockDAO();		
-			Stock stock = new Stock();
-			stock.setReference(itemCart.getReference());
+			Stock stock = new Stock(item.getReference());
 			
-			if(itemCart.getReference() != null) {					
+			if(item.getReference() != null) {					
 				try {							
 					DomainEntity stockItem = stockDAO.consult(stock).get(0);					
 					Stock s = (Stock)stockItem;					
-					stock.setReserved(s.getReserved() - itemCart.getQuantity());
-					dao.update(stock);	
+					stock.setReserved(s.getReserved() - item.getQuantity());
+					dao.update(stock);						
 					
-					
-					cart.removeItem(itemCart);
+					cart.removeItem(item);
 					
 				} catch (SQLException e) {
 					e.printStackTrace();

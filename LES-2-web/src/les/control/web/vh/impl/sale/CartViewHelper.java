@@ -31,7 +31,7 @@ public class CartViewHelper implements IViewHelper{
 		if(reference_id != null && ! reference_id.equals("")) {
 			Reference reference = new Reference();
 			reference.setId(Integer.parseInt(reference_id));
-			item.setReference(reference);			
+			item.setReference(reference);
 		}
 		
 		if(quantity != null  && ! quantity.equals("")) {

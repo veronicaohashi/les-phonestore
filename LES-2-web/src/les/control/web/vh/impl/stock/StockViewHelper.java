@@ -53,7 +53,6 @@ public class StockViewHelper implements IViewHelper{
 				
 			} else if (action.equals("CONSULT")) {
 				List<DomainEntity> references = result.getEntities();  
-
 				String json = new Gson().toJson(references);
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");

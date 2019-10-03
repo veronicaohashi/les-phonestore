@@ -44,6 +44,8 @@ import les.core.impl.business.sale.OrderFirstStatusValidation;
 import les.core.impl.business.sale.PaymentRequiredFieldValidation;
 import les.core.impl.business.sale.CartReserveItemValidation;
 import les.core.impl.business.sale.OrderUpdateStatusValidation;
+import les.core.impl.business.sale.OrderiExchangeCategoryValidation;
+import les.core.impl.business.sale.OrderiUpdateStatusValidation;
 import les.core.impl.business.stock.EntryRequiredFieldValidation;
 import les.core.impl.business.stock.EntryMovstockValidation;
 import les.core.impl.business.stock.EntryPriceValidation;
@@ -53,6 +55,7 @@ import les.core.impl.business.stock.EntrySupplierValidation;
 import les.core.impl.business.stock.EntryTotalPriceValidation;
 import les.core.impl.business.stock.EntryTotalQuantityValidation;
 import les.core.impl.business.stock.OrderMovstockValidation;
+import les.core.impl.business.stock.OrderStockValidation;
 import les.core.impl.dao.client.AddressDAO;
 import les.core.impl.dao.client.ClientDAO;
 import les.core.impl.dao.client.CreditCardDAO;
@@ -69,8 +72,10 @@ import les.core.impl.dao.product.PricingGroupDAO;
 import les.core.impl.dao.product.ProcessorDAO;
 import les.core.impl.dao.product.ReferenceDAO;
 import les.core.impl.dao.product.SODAO;
+import les.core.impl.dao.sale.ExchangeCategoriesDAO;
 import les.core.impl.dao.sale.OrderAddressDAO;
 import les.core.impl.dao.sale.OrderDAO;
+import les.core.impl.dao.sale.OrderiDAO;
 import les.core.impl.dao.sale.PaymentDAO;
 import les.core.impl.dao.sale.ReservedStockDAO;
 import les.core.impl.dao.sale.StatusDAO;
@@ -97,8 +102,10 @@ import les.domain.product.Processor;
 import les.domain.product.Reference;
 import les.domain.product.SO;
 import les.domain.sale.Cart;
+import les.domain.sale.ExchangeCategory;
 import les.domain.sale.Order;
 import les.domain.sale.OrderAddress;
+import les.domain.sale.Orderi;
 import les.domain.sale.Payment;
 import les.domain.sale.Status;
 import les.domain.stock.Entry;
@@ -162,11 +169,15 @@ public class Facade implements IFacade {
 		OrderDAO orderDAO = new OrderDAO();
 		PaymentDAO paymentDAO = new PaymentDAO();
 		OrderAddressDAO orderAddressDAO = new OrderAddressDAO();
+		OrderiDAO orderiDAO = new OrderiDAO();
+		ExchangeCategoriesDAO exchangeCategoriesDAO = new ExchangeCategoriesDAO();
 		daos.put(Cart.class.getName(), reservedStockDAO);
 		daos.put(Status.class.getName(), statusDAO);
 		daos.put(Order.class.getName(), orderDAO);
 		daos.put(Payment.class.getName(), paymentDAO);
 		daos.put(OrderAddress.class.getName(), orderAddressDAO);
+		daos.put(ExchangeCategory.class.getName(), exchangeCategoriesDAO);
+		daos.put(Orderi.class.getName(), orderiDAO);
 
 //		CLIENT
 		ClientDAO clientDAO = new ClientDAO();
@@ -278,7 +289,7 @@ public class Facade implements IFacade {
 		
 		List<IStrategy> rnsSaveCart = new ArrayList<IStrategy>();
 		rnsSaveCart.add(cartValidation);
-		rnsSaveCart.add(cartAvaiableQtdValidation);
+		//rnsSaveCart.add(cartAvaiableQtdValidation);
 		rnsSaveCart.add(cartReserveItemValidation);
 		rnsSaveCart.add(cartNewItemValidation);
 		
@@ -406,14 +417,28 @@ public class Facade implements IFacade {
 		rns.put(Order.class.getName(), rnsOrder);
 
 		OrderMovstockValidation orderMovstockValidation = new OrderMovstockValidation();
+		OrderStockValidation orderStockValidation = new OrderStockValidation();
 		
 		List<IStrategy> rnsSaveOrderAfter = new ArrayList<IStrategy>();
 		rnsSaveOrderAfter.add(orderMovstockValidation);		
+		rnsSaveOrderAfter.add(orderStockValidation);		
 		
 		Map<String, List<IStrategy>> rnsOrderAfter = new HashMap<String, List<IStrategy>>();	
 		rnsOrderAfter.put("SAVE", rnsSaveOrderAfter);
 		
 		rnsAfter.put(Order.class.getName(), rnsOrderAfter);
+		
+//		ORDERI
+		OrderiUpdateStatusValidation orderiUpdateStatusValidation = new OrderiUpdateStatusValidation();
+		OrderiExchangeCategoryValidation orderiExchangeCategoryValidation = new OrderiExchangeCategoryValidation();
+		
+		List<IStrategy> rnsUpdateOrderi = new ArrayList<IStrategy>();
+		rnsUpdateOrderi.add(orderiUpdateStatusValidation);
+		rnsUpdateOrderi.add(orderiExchangeCategoryValidation);
+
+		Map<String, List<IStrategy>> rnsOrderi = new HashMap<String, List<IStrategy>>();	
+		rnsOrderi.put("UPDATE", rnsUpdateOrderi);		
+		rns.put(Orderi.class.getName(), rnsOrderi);
 	}
 	
 	@Override

@@ -12,10 +12,15 @@
 <%@ include file="Master.jsp"%>
 
 <style>
-.card {
-	border: none !important;
-}
-</style>
+.container{max-width: -webkit-fill-available !important;} 
+.title{font-size: 22px; margin: 0 0 0px; transition: all .3s ease 0s}
+.text{color: #777676; font-size: 18px; margin-bottom:0px}
+.price{color: #000; font-size: 20px; letter-spacing: 1px; font-weight: 600; margin-right: 2px; display: inline-block;}
+.social{padding-inline-start: 0px !important;}
+.social li{display:inline-block}
+.social li a{color:#ff0018;background:#fff;font-size:18px;margin:0 35px;display:block}
+.total{-ms-flex-align: center; align-items: center; display: -ms-flexbox; font-size: 16px; height: 48px; padding: 0 16px;}
+.card{border:none !important;}</style>
 <%
 	if (request.getAttribute("response") != null) {
 		out.println("<div class='alert alert-primary' role='alert' id='response'>");
@@ -25,7 +30,7 @@
 	Order order = (Order) request.getAttribute("order");
 %>
 <div class="row">
-	<div class="col-8">
+	<div class="col-12">
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
@@ -113,7 +118,7 @@
 									- <b>Cor: </b><%=item.getReference().getColor().getDescription()%>
 									-
 									<%=item.getQuantity()%>
-									x R$<%=item.getReference().getPhone().getSalePrice()%></p>
+									x R$<%=item.getPrice()%></p>
 							</div>
 						</div>
 						<%
@@ -124,46 +129,11 @@
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-12">
-		<div class="card card-body">
-			<div class="admin-title">
-				<h3 class="text-center">Dadados do pedido</h3>
-			</div>
-			<table class="table">
-
-				<%
-
-					out.println("<thead>");
-					out.println("<tr>");
-					out.println("<th></th>");
-					out.println("<th></th>");
-					out.println("<th>Ações</th>");
-					out.println("</tr>");
-					out.println("</thead>");
-
-					out.println("<tbody>");
-					for (Orderi orderi : order.getItems()) {
-						out.println("<tr>");
-						out.println("<td>" + orderi.getId() + "</td>");
-						out.println("<td>" + orderi.getReference().getName() + "</td>");
-						out.println("<td>" + orderi.getReference().getPhone().getModel() + "</td>");
-						out.println("<td>" + orderi.getReference().getCapacity().getDescription() + "</td>");
-						out.println("<td>" + orderi.getReference().getColor().getDescription() + "</td>");
-
-						out.println("</tr>");
-					}
-					out.println("</tbody>");
-				%>
-			</table>
-
-			<div class="row">
-				<div class="col-2 offset-md-10">
-					<a href="Orders?action=LIST&status_id=1"
-						class="btn btn-primary btn-block">Voltar</a>
-				</div>
+		
+		<div class="row">
+			<div class="col-2 offset-md-10">
+				<a href="Orders?action=LIST&status_id=1"
+					class="btn btn-primary btn-block">Voltar</a>
 			</div>
 		</div>
 	</div>

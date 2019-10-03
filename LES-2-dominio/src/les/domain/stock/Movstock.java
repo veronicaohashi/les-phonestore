@@ -10,7 +10,17 @@ public class Movstock extends DomainEntity{
 	private MovstockType movstockType;
 	private Supplier supplier;
 	private Reference reference;
-	
+	private Integer origin;
+	public Movstock() {
+	}
+	public Movstock(Integer id, MovstockType movstockType) {
+		super(id);
+		this.movstockType = movstockType;
+	}
+	public Movstock(Reference reference, MovstockType movstockType) {
+		this.reference = reference;
+		this.movstockType = movstockType;
+	}
 	public double getPrice() {
 		return price;
 	}
@@ -46,5 +56,11 @@ public class Movstock extends DomainEntity{
 	}
 	public void setReference(Reference reference) {
 		this.reference = reference;
+	}
+	public Integer getOrigin() {
+		return origin;
+	}
+	public void setOrigin(Integer origin) {
+		this.origin = origin;
 	}
 }

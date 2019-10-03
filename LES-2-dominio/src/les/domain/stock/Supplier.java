@@ -6,6 +6,11 @@ public class Supplier extends DomainEntity{
 	private String name;
 	private String cnpj;
 	
+	public Supplier() {	
+	}
+	public Supplier(Integer id) {
+		super(id);
+	}
 	public String getName() {
 		return name;
 	}

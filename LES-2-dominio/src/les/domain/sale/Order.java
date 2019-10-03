@@ -49,10 +49,10 @@ public class Order extends DomainEntity {
 	public void setItems(List<Orderi> items) {
 		this.items = items;
 	}
-	public Payment getPayments() {
+	public Payment getPayment() {
 		return payment;
 	}
-	public void setPayments(Payment payment) {
+	public void setPayment(Payment payment) {
 		this.payment = payment;
 	}
 	public Client getClient() {
@@ -66,12 +66,6 @@ public class Order extends DomainEntity {
 	}
 	public void setStatus(Status status) {
 		this.status = status;
-	}
-	public Payment getPayment() {
-		return payment;
-	}
-	public void setPayment(Payment payment) {
-		this.payment = payment;
 	}
 	public OrderAddress getOrderAddress() {
 		return orderAddress;

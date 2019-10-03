@@ -61,6 +61,7 @@
 						List<Order> orders = (List<Order>) request.getAttribute("orders");
 			
 						out.println("<tr>");
+						if(Integer.parseInt(status_id) != 4)
 							out.println("<th></th>");
 						for (String header : headers) {
 							out.println("<th>" + header + "</th>");
@@ -72,12 +73,15 @@
 						out.println("<tbody>");
 						for (Order order : orders){
 							out.println("<tr>");
-							out.println("<td><input style='margin:0px !important' class='form-check-input' type='checkbox' name='lupdate' value=" + order.getId() + "></td>");	
+							if(Integer.parseInt(status_id) != 4)
+								out.println("<td><input style='margin:0px !important' class='form-check-input' type='checkbox' name='lupdate' value=" + order.getId() + "></td>");	
 							out.println("<td>" + order.getId() +"</td>");
 							out.println("<td>" + order.getClient().getCpf() +"</td>");
 							out.println("<td>" + order.getClient().getFirstname() +"</td>");
+							out.println("<td>R$ " + order.getPrice() +"</td>");
+							out.println("<td>" + order.getQuantity() +"</td>");
 							out.println("<td><a href='Orders?action=CONSULT&id=" + order.getId() + "' class='btn btn-sm btn-outline-secondary mr-2'>" +
-							"<i class='material-icons'>edit</i></a></td>");
+							"<i class='material-icons'>visibility</i></a></td>");
 						
 							out.println("</tr>");
 						}
@@ -85,14 +89,15 @@
 			
 					%>
 				</table>	
-			
-				<div class="row">
-					<div class="col-2 offset-md-10">
-						<input type="text" name="status_id" id="status_id" value="<%= status_id %>" />
-						<input type="hidden" name="action" id="action" value="UPDATE" />
-						<input class="btn btn-primary btn-block" type="submit" value="Alterar Status" />
-	       			</div>
-      			</div>	 
+				<% if(Integer.parseInt(status_id) != 4){ %>
+					<div class="row">
+						<div class="col-2 offset-md-10">
+							<input type="text" name="status_id" id="status_id" value="<%= status_id %>" />
+							<input type="hidden" name="action" id="action" value="UPDATE" />
+							<input class="btn btn-primary btn-block" type="submit" value="Alterar Status" />
+		       			</div>
+	      			</div>
+      			<%} %>	 
 			</form>                  
 	    </div>
     </div>

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import les.core.impl.dao.AbstractJdbcDAO;
@@ -13,7 +14,6 @@ import les.core.impl.dao.product.ReferenceDAO;
 import les.domain.DomainEntity;
 import les.domain.product.Reference;
 import les.domain.stock.Stock;
-import les.domain.stock.Supplier;
 
 public class StockDAO extends AbstractJdbcDAO{
     
@@ -30,17 +30,16 @@ public class StockDAO extends AbstractJdbcDAO{
 		try {
 			connection.setAutoCommit(false);
 			StringBuilder sql = new StringBuilder();			
-			sql.append("INSERT INTO stocks(quantity, supplier_id, phone_reference_id,"
-					+ "created_at, updated_at)");
-			sql.append(" VALUES (?,?,?,?,?)");
+			sql.append("INSERT INTO stocks(quantity, phone_reference_id,"
+					+ " created_at, updated_at)");
+			sql.append(" VALUES (?,?,?,?)");
 			
 			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			pst.setDouble(1, stock.getQuantity());
-			pst.setInt(2, stock.getSupplier().getId());
-			pst.setInt(3, stock.getReference().getId());
+			pst.setInt(2, stock.getReference().getId());
 			Timestamp time = new Timestamp(System.currentTimeMillis());
+			pst.setTimestamp(3, time);
 			pst.setTimestamp(4, time);
-			pst.setTimestamp(5, time);
 
 			pst.executeUpdate();				
 			ResultSet rs = pst.getGeneratedKeys();
@@ -78,18 +77,16 @@ public class StockDAO extends AbstractJdbcDAO{
 		try {
 			connection.setAutoCommit(false);					
 			StringBuilder sql = new StringBuilder();
-			sql.append("UPDATE stocks SET quantity=?, reserved_quantity=?, supplier_id=?, phone_reference_id=?, updated_at=?");
-			sql.append("WHERE id=?");							
-
+			sql.append("UPDATE stocks SET quantity=?, reserved_quantity=?, phone_reference_id=?, updated_at=?");
+			sql.append("WHERE id=?");	
+			
 			pst = connection.prepareStatement(sql.toString());
 			pst.setDouble(1, stock.getQuantity());
 			pst.setDouble(2, stock.getReserved());
-			pst.setInt(3, stock.getSupplier().getId());
-			pst.setInt(4, stock.getReference().getId());
+			pst.setInt(3, stock.getReference().getId());
 			Timestamp time = new Timestamp(System.currentTimeMillis());
-			pst.setTimestamp(5, time);
-			pst.setInt(6, stock.getId());
-			
+			pst.setTimestamp(4, time);
+			pst.setInt(5, stock.getId());			
 			pst.executeUpdate();			
 			connection.commit();		
 		} catch (SQLException e) {
@@ -119,9 +116,7 @@ public class StockDAO extends AbstractJdbcDAO{
 		PreparedStatement pst = null;
 		String sql = "SELECT * FROM stocks ";
 
-		if(stock.getReference() != null && stock.getSupplier() != null){
-			sql += "WHERE phone_reference_id=? AND supplier_id=?";
-		} else if(stock.getReference() != null){
+		if(stock.getReference() != null){
 			sql += "WHERE phone_reference_id=?";
 		} else if (stock.getId() != null) {
 			sql += "WHERE id=?";
@@ -132,16 +127,12 @@ public class StockDAO extends AbstractJdbcDAO{
 			openConnection();
 			pst = connection.prepareStatement(sql);
 
-			if(stock.getReference() != null && stock.getSupplier() != null){
-				pst.setInt(1, stock.getReference().getId());
-				pst.setInt(2, stock.getSupplier().getId());
-				
-			} else if(stock.getReference() != null){
+			if(stock.getReference() != null){
 				pst.setInt(1, stock.getReference().getId());				
 			} else if (stock.getId() != null) {
 				pst.setInt(1, stock.getId());				
 			}
-
+			
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
 
@@ -152,7 +143,8 @@ public class StockDAO extends AbstractJdbcDAO{
 				s.setQuantity(rs.getInt("quantity"));	
 				s.setReserved(rs.getInt("reserved_quantity"));
 				s.setAvaiable(s.getQuantity() - s.getReserved());
-				
+				s.setDtAlteracao(new Date(rs.getTimestamp("updated_at").getTime()));
+
 				ReferenceDAO referenceDAO = new ReferenceDAO();
 				Reference reference = new Reference();
 				reference.setId(rs.getInt("phone_reference_id"));
@@ -161,16 +153,7 @@ public class StockDAO extends AbstractJdbcDAO{
 				if( ! references.isEmpty()){
 					s.setReference((Reference) references.get(0));
 				}
-				
-				SupplierDAO supplierDAO = new SupplierDAO();
-				Supplier supplier = new Supplier();
-				supplier.setId(rs.getInt("supplier_id"));
 
-				List<DomainEntity> suppliers = supplierDAO.consult(supplier);
-				if( ! suppliers.isEmpty()){
-					s.setSupplier((Supplier) suppliers.get(0));
-				}
-				
 				all.add(s);
 			}
 			return all;

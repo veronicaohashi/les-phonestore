@@ -52,6 +52,7 @@
 						  					<p class="text"><b>REF: </b><%= item.getReference().getName() %></p>
 					                        <p class="text"><b>Capacidade: </b><%= item.getReference().getCapacity().getDescription() %></p>
 					                        <p class="text"><b>Cor: </b><%= item.getReference().getColor().getDescription() %></p>  	
+					                        
 						  				</div>
 						  				<div class="col-3 offset-col-3">		  					
 						  					<div class="form-group">		

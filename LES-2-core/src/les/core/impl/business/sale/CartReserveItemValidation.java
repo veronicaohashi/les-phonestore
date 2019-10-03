@@ -17,8 +17,7 @@ public class CartReserveItemValidation implements IStrategy {
 		if(entity instanceof Cart) {			
 			Cart cart = (Cart)entity;
 			Orderi item = cart.getStorageItem();
-			Stock stock = new Stock();
-			stock.setReference(item.getReference());
+			Stock stock = new Stock(item.getReference());
 			
 			IDAO dao = new ReservedStockDAO();		
 			IDAO stockDAO = new StockDAO();	

@@ -9,6 +9,8 @@ public class Orderi extends DomainEntity {
 	private Reference reference;
 	private Order sale;
 	private Status status;
+	private ExchangeCategory exchangeCategory;
+	
 	public Orderi() {
 		
 	}
@@ -48,5 +50,11 @@ public class Orderi extends DomainEntity {
 	}
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	public ExchangeCategory getExchangeCategory() {
+		return exchangeCategory;
+	}
+	public void setExchangeCategory(ExchangeCategory exchangeCategory) {
+		this.exchangeCategory = exchangeCategory;
 	}
 }

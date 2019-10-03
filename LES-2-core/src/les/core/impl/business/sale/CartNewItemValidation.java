@@ -15,23 +15,23 @@ public class CartNewItemValidation implements IStrategy {
 	public String process(DomainEntity entity) {
 		if(entity instanceof Cart) {	
 			Cart cart = (Cart)entity;
-			Orderi salei = cart.getStorageItem();			
+			Orderi orderi = cart.getStorageItem();			
 			IDAO referenceDAO = new ReferenceDAO();
 			
-			if(salei.getReference() != null) {					
-				try {
-					
-					DomainEntity reference = referenceDAO.consult(salei.getReference()).get(0);
+			if(orderi.getReference() != null) {					
+				try {					
+					DomainEntity reference = referenceDAO.consult(orderi.getReference()).get(0);
 					Reference r = (Reference)reference;
-					salei.setReference(r);			
-					salei.setPrice(r.getPhone().getSalePrice());		
-					Orderi itemCart = cart.getItem(salei);
+					
+					orderi.setReference(r);			
+					orderi.setPrice(r.getPhone().getSalePrice());		
+					Orderi itemCart = cart.getItem(orderi);
 					
 					if(itemCart.getQuantity() != null) {
-						salei.setQuantity(salei.getQuantity() + itemCart.getQuantity());
+						orderi.setQuantity(orderi.getQuantity() + itemCart.getQuantity());
 						cart.removeItem(itemCart);
 					}
-					cart.addItem(salei);				
+					cart.addItem(orderi);				
 					
 				} catch (SQLException e) {
 					e.printStackTrace();

@@ -16,15 +16,18 @@ public class Reference extends DomainEntity{
 	public Reference() {
 		
 	}
+	public Reference(Integer id) {
+		super(id);
+	}
 	
-	public Reference(int id, String name,  Color color, Capacity capacity) {
+	public Reference(Integer id, String name,  Color color, Capacity capacity) {
 		super(id);
 		this.name = name;
 		this.color = color;
 		this.capacity = capacity;
 	}
 
-	public Reference(int id, String name,  Color color, Capacity capacity, Phone phone) {
+	public Reference(Integer id, String name,  Color color, Capacity capacity, Phone phone) {
 		super(id);
 		this.name = name;
 		this.color = color;

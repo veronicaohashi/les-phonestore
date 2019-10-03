@@ -1,12 +1,5 @@
 <%@page import="les.domain.product.InactivationCategory"%>
 <%@page import="les.domain.product.Phone"%>
-<%@page import="les.domain.product.SO"%>
-<%@page import="les.domain.product.ConnectionType"%>
-<%@page import="les.domain.product.Processor"%>
-<%@page import="les.domain.product.Capacity"%>
-<%@page import="les.domain.product.Color"%>
-<%@page import="les.domain.product.Brand"%>
-<%@page import="les.domain.product.PricingGroup"%>
 <%@page import="les.domain.DomainEntity"%>
 <%@page import="java.util.List"%>
 <%@page import="les.core.application.Result"%>
@@ -52,7 +45,3 @@
 		</div>
 	</div>
 </div>
-</main>
-<script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
-<script type="text/javascript">
-</script>

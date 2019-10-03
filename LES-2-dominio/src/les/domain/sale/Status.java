@@ -11,6 +11,10 @@ public class Status extends DomainEntity {
 	public Status(Integer id) {
 		super(id);
 	}
+	public Status(Integer id, String description) {
+		super(id);
+		this.description = description;
+	}
 	
 	public String getDescription() {
 		return description;

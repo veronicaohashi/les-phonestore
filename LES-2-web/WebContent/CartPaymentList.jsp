@@ -1,3 +1,4 @@
+<%@page import="les.domain.sale.Cart"%>
 <%@page import="les.domain.client.CreditCard"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -40,7 +41,7 @@
 									out.println("<td>" + c.getCardholderName() +"</td>");
 									out.println("<td>" + c.getCardholderCpf() +"</td>");
 									out.println("<td><a class='btn btn-sm btn-outline-primary'" +
-											"href='CreditCards?action=CONSULT&id=" + c.getId() + "&page=RESUME'>Selecionar</a></td>");
+											"href='CreditCards?action=CONSULT&page=CART&&id=" + c.getId() + "'>Selecionar</a></td>");
 									out.println("</tr>");	        
 								}
 								out.println("</tbody>");				

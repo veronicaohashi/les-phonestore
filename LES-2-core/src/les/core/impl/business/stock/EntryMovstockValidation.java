@@ -19,10 +19,8 @@ public class EntryMovstockValidation implements IStrategy {
 			Entry entry = (Entry)entity;
 						
 			IDAO dao = new MovstockDAO();
-			MovstockType movstockType = new MovstockType();
-			
-			movstockType.setId(1);
-			
+			MovstockType movstockType = new MovstockType(1);
+						
 			List<Entryi> items = entry.getItems();
 			
 			if (! items.isEmpty()) {
@@ -36,6 +34,7 @@ public class EntryMovstockValidation implements IStrategy {
 					mov.setSupplier(entry.getSupplier());
 					mov.setReference(i.getReference());
 					mov.setMovstockType(movstockType);
+					mov.setOrigin(entry.getId());
 										
 					try {
 						dao.save(mov);

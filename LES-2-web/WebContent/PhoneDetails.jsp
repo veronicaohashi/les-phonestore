@@ -113,21 +113,22 @@
 		var capacity_id;
 		var phone_id = document.getElementById("id");
 		    
-		$.get("References?action=CONSULT&fk_calcado=" + phone_id.value).done(function(data){	
+		$.get("References?action=CONSULT&phone_id=" + phone_id.value).done(function(data){	
 			references = data
 			let capacities = []
 			let result = []
-						
+			
+									
 			$.get("Stocks?action=CONSULT").done(function(data){	
 				references.filter((item) => {
 					data.filter((stock) => {
 						if(stock.reference.id == item.id && stock.avaiable > 0){
-							capacities.push(item.capacity)
+							capacities.push(item.capacity);						
 							stock_refs.push(item);
 						}
 					})
 				}) 
-								
+				
 				result = capacities.reduce((unique, o) => {
 				  if (! unique.find((obj) => obj.id === o.id)) unique.push(o);
 			      return unique;
@@ -147,13 +148,13 @@
 	    $('#cbCapacity').on("change", function(){
 	    	let colors = [];
 	    	capacity_id = this.value;
-	    	console.log(stock_refs)
-			stock_refs.filter(function(item){
+
+	    	stock_refs.filter(function(item){
 	    		if(item.capacity.id == capacity_id){
 	    			colors.push(item.color);
 	    		}
 			})
-			
+
 			result = colors.reduce((unique, o) => {
 			  if (! unique.find((obj) => obj.id === o.id)) unique.push(o);
 		      return unique;
@@ -164,7 +165,7 @@
 
 		 	let options="<option selected>Selecione</option>";
 
-	    	$.each(colors, function(key, value){
+	    	$.each(result, function(key, value){
 				options=options+"<option value='"+value.id+"'>"+value.description+" </option>";
 			});	    	
 	    	
@@ -176,14 +177,14 @@
 	    	let color_id = this.value;
 	    	let reference_id;
 		    let reference_name;	
-    	 	references.filter(function(item){
+		    stock_refs.filter(function(item){
     			if(item.capacity.id == capacity_id && item.color.id == color_id){
     				reference_id = item.id;
     				reference_name = item.name;
 	    		}
 	    	})
 	    	$("#reference_id").val(reference_id);	
-	    	$("#reference_name").val(reference_name);			    	
+	    	$("#reference_name").val(reference_name);		
 		})	
 	})
 </script>

@@ -24,6 +24,7 @@ import les.domain.product.Reference;
 import les.domain.sale.Order;
 import les.domain.sale.OrderAddress;
 import les.domain.sale.Orderi;
+import les.domain.sale.Payment;
 import les.domain.sale.PaymentData;
 import les.domain.sale.Status;
 
@@ -50,7 +51,7 @@ public class OrderDAO extends AbstractJdbcDAO{
 			address = (Address) addressDAO.consult(address).get(0);	
 		}	
 		
-		for(PaymentData c : order.getPayments().getPaymentDatas()) {
+		for(PaymentData c : order.getPayment().getPaymentDatas()) {
 			card = c.getCard();
 			
 			if(card.getClient() != null) {
@@ -99,9 +100,7 @@ public class OrderDAO extends AbstractJdbcDAO{
 			sql.append("INSERT INTO order_addresses(name, street, number, complement, district, postal_code, observation,"
 					+ " residence_type_id, city_id, created_at, updated_at)");
 			sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?,?)");
-			
-			System.out.println(address.getCity().getId());
-			
+						
 			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, address.getName());
 			pst.setString(2, address.getStreet());
@@ -121,60 +120,24 @@ public class OrderDAO extends AbstractJdbcDAO{
 			
 			if(rs.next())
 				idAddress = rs.getInt(1);
-				order.getOrderAddress().setId(idAddress);
+			order.getOrderAddress().setId(idAddress);
 			sql.setLength(0);
 			pst.close();
-				
-			String column = "price_installment_0, quantity_installment_0, credit_card_id_0, created_at, updated_at";
-			String values = "?,?,?,?,?";
-			int idPaymentTable = 0;
 			
-			if(order.getPayments().getPaymentDatas().size() > 1) {
-				column += ", price_installment_1, quantity_installment_1, credit_card_id_1";
-				values += ",?,?,?";
-			}
+			sql.append("INSERT INTO orders(price, quantity, clients_id, status_id, order_address_id, data, created_at, updated_at)");
+			sql.append(" VALUES (?,?,?,?,?,?,?,?)");
+			
+			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 
-			sql.append("INSERT INTO payments(" + column + ")");
-			sql.append(" VALUES (" + values + ")");
-			
-			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-			pst.setDouble(1, order.getPayments().getPaymentDatas().get(0).getPrice());
-			pst.setInt(2, order.getPayments().getPaymentDatas().get(0).getQuantity());
-			pst.setInt(3, order.getPayments().getPaymentDatas().get(0).getCard().getId());
-			Timestamp time2 = new Timestamp(System.currentTimeMillis());
-			pst.setTimestamp(4, time2);
-			pst.setTimestamp(5, time2);
-			
-			if(order.getPayments().getPaymentDatas().size() > 1) {
-				pst.setDouble(6, order.getPayments().getPaymentDatas().get(1).getPrice());
-				pst.setInt(7, order.getPayments().getPaymentDatas().get(1).getQuantity());
-				pst.setInt(8, order.getPayments().getPaymentDatas().get(1).getCard().getId());	
-			}
-			
-			pst.executeUpdate();				
-			rs = pst.getGeneratedKeys();
-			
-			if(rs.next())
-				idPaymentTable = rs.getInt(1);
-			order.getPayments().setId(idPaymentTable);
-			
-			sql.setLength(0);
-			pst.close();
-			
-			sql.append("INSERT INTO orders(price, quantity, clients_id, status_id, payment_id, order_address_id, date, created_at, updated_at)");
-			sql.append(" VALUES (?,?,?,?,?,?,?,?,?)");
-			
-			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			pst.setDouble(1, order.getPrice());
 			pst.setInt(2, order.getQuantity());
 			pst.setInt(3, order.getClient().getId());
 			pst.setInt(4, order.getStatus().getId());
-			pst.setInt(5, order.getPayments().getId());
-			pst.setInt(6, order.getOrderAddress().getId());
-			pst.setString(7, order.getDate());
+			pst.setInt(5, order.getOrderAddress().getId());
+			pst.setString(6, order.getDate());
 			Timestamp time3 = new Timestamp(System.currentTimeMillis());
+			pst.setTimestamp(7, time3);
 			pst.setTimestamp(8, time3);
-			pst.setTimestamp(9, time3);
 			pst.executeUpdate();				
 			rs = pst.getGeneratedKeys();
 			
@@ -182,10 +145,30 @@ public class OrderDAO extends AbstractJdbcDAO{
 			if(rs.next())
 				id = rs.getInt(1);
 			order.setId(id);
-
 			sql.setLength(0);
 			pst.close();
-			
+							
+			sql.append("INSERT INTO payments(price, quantity, credit_card_id, order_id, created_at, updated_at)");
+			sql.append(" VALUES (?,?,?,?,?,?)");
+
+			for (int i = 0; i < order.getPayment().getPaymentDatas().size(); i++) {		
+				pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+						
+				pst.setDouble(1, order.getPayment().getPaymentDatas().get(i).getPrice());
+				pst.setInt(2, order.getPayment().getPaymentDatas().get(i).getQuantity());
+				pst.setInt(3, order.getPayment().getPaymentDatas().get(i).getCard().getId());
+				pst.setInt(4, order.getId());
+				Timestamp time2 = new Timestamp(System.currentTimeMillis());
+				pst.setTimestamp(5, time2);
+				pst.setTimestamp(6, time2);
+				
+				pst.executeUpdate();				
+				rs = pst.getGeneratedKeys();
+			};
+						
+			sql.setLength(0);
+			pst.close();
+						
 			sql.append("INSERT INTO order_items(price, quantity, phone_reference_id, order_id, status_id, created_at, updated_at)");
 			sql.append(" VALUES (?,?,?,?,?,?,?)");
 			
@@ -234,17 +217,23 @@ public class OrderDAO extends AbstractJdbcDAO{
 
 		try {
 			connection.setAutoCommit(false);					
-			StringBuilder sql = new StringBuilder();
+			StringBuilder sql = new StringBuilder();			
+			StringBuilder sql2 = new StringBuilder();
 			sql.append("UPDATE orders SET status_id=?, updated_at=?");
-			sql.append(" WHERE id IN(");	
+			sql.append(" WHERE id IN(");
+			
+			sql2.append("UPDATE order_items SET status_id=?, updated_at=?");
+			sql2.append(" WHERE order_id IN(");		
 			
 	        int size = order.getOrderIds().size();
 	        
 			for (int i = 0; i < size; i++) {
 	            if (i + 1 == size) {
 	            	sql.append("?)");
+	            	sql2.append("?)");
 	            } else {
 	            	sql.append("?,");
+	            	sql2.append("?,");
 	            }
 	        }		
 			
@@ -260,7 +249,23 @@ public class OrderDAO extends AbstractJdbcDAO{
 	        }
 	        
 			pst.executeUpdate();			
-			connection.commit();		
+			connection.commit();
+
+			pst.close();
+			pst = connection.prepareStatement(sql2.toString());			
+
+			pst.setInt(1, order.getStatus().getId());
+			Timestamp time1 = new Timestamp(System.currentTimeMillis());
+			pst.setTimestamp(2, time1);
+			i = 3;
+	        
+			for (Integer value : order.getOrderIds()) {
+				pst.setInt(i++, value);
+	        }
+	        
+			pst.executeUpdate();			
+			connection.commit();
+						
 		} catch (SQLException e) {
 			try {
 				connection.rollback();
@@ -289,14 +294,18 @@ public class OrderDAO extends AbstractJdbcDAO{
 		String sql ="SELECT orders.*"
 				+ ", clients.firstname"
 				+ ", clients.cpf"
+				+ ", status.description AS status"
 				+ " FROM orders"
-				+ " JOIN clients ON clients.id = orders.clients_id ";
+				+ " JOIN clients ON clients.id = orders.clients_id "
+				+ " JOIN status ON status.id = orders.status_id ";
 
 		
 		if(order.getId() != null) {
 			sql += "WHERE orders.id=?";			
-		} else if(order.getStatus().getId() != null) {
+		} else if(order.getId() == null && order.getStatus() != null) {
 			sql += "WHERE orders.status_id=?";					
+		} else if(order.getId() == null && order.getStatus() == null && order.getClient() != null) {
+			sql += "WHERE orders.clients_id=?";					
 		}
 				
 		// executa consulta
@@ -305,8 +314,10 @@ public class OrderDAO extends AbstractJdbcDAO{
 			pst = connection.prepareStatement(sql);
 			if(order.getId() != null) {
 				pst.setInt(1, order.getId());				
-			} else if(order.getStatus().getId() != null) {
+			} else if(order.getId() == null && order.getStatus() != null) {
 				pst.setInt(1, order.getStatus().getId());					
+			} else if(order.getId() == null && order.getStatus() == null && order.getClient() != null) {
+				pst.setInt(1, order.getClient().getId());					
 			}
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
@@ -319,11 +330,13 @@ public class OrderDAO extends AbstractJdbcDAO{
 				o.setStatus(new Status(rs.getInt("status_id")));
 				o.setClient(new Client(rs.getString("cpf"), rs.getString("firstname")));
 				o.setOrderAddress(new OrderAddress(rs.getInt("order_address_id")));
+				o.setStatus(new Status(rs.getInt("status_id"), rs.getString("status")));
 				
 				if(order.getId() != null) {
 					openConnection();
 
 					sql = "SELECT order_items.*"
+							+ ", status.description as status_description " 
 							+ ", phone_references.id as reference_id " 
 							+ ", phone_references.name as reference_name " 
 							+ ", colors.id as color_id " 
@@ -336,6 +349,7 @@ public class OrderDAO extends AbstractJdbcDAO{
 							+ "INNER JOIN capacities ON capacities.id = phone_references.capacity_id " 
 							+ "INNER JOIN colors ON colors.id = phone_references.color_id "
 							+ "INNER JOIN phones ON phones.id = phone_references.phone_id "
+							+ "INNER JOIN status ON status.id = order_items.status_id "
 							+ "WHERE order_items.order_id = ? ";
 					
 					try {
@@ -345,7 +359,7 @@ public class OrderDAO extends AbstractJdbcDAO{
 						
 						while (rsi.next()) {							
 							o.addItem(new Orderi(rsi.getInt("id"), rsi.getDouble("price"), rsi.getInt("quantity"), 
-									new Status(rsi.getInt("status_id")),
+									new Status(rsi.getInt("status_id"), rsi.getString("status_description")),
 									new Reference(rsi.getInt("reference_id"), rsi.getString("reference_name"), 
 										new Color(rsi.getInt("color_id"), rsi.getString("color_description"))
 											, new Capacity(rsi.getInt("capacity_id"), rsi.getString("capacity_description"))
@@ -376,12 +390,45 @@ public class OrderDAO extends AbstractJdbcDAO{
 							a.setDistrict(rsa.getString("district"));
 							a.setPostalCode(rsa.getString("postal_code"));
 							a.setObservation(rsa.getString("observation"));
-							a.setLmain(rsa.getBoolean("lmain"));
 							a.setResidenceType(new ResidenceType(rsa.getInt("residence_type_id"), rsa.getString("residence_type")));
 							a.setCity(new City(rsa.getInt("city_id"), rsa.getString("city"), new State(rsa.getString("state"))));
 							
 							o.getOrderAddress().setAddress(a);							
 						}
+						
+						pst.close();
+						
+
+						sql= "SELECT payments.*, order_credit_cards.* "
+							+ "FROM payments "
+							+ "JOIN order_credit_cards ON order_credit_cards.id = payments.credit_card_id "
+							+ "WHERE payments.order_id=?";
+						pst = connection.prepareStatement(sql);
+						pst.setInt(1, order.getId());
+												
+						ResultSet rsc = pst.executeQuery();	
+						Payment payment = new Payment();
+						List<PaymentData> paymentDatas = new ArrayList<PaymentData>();
+						while (rsc.next()) {	
+							CreditCard c = new CreditCard();
+							PaymentData p = new PaymentData();
+							
+							c.setNumber(rsc.getString("number"));
+							c.setCode(rsc.getInt("code"));
+							c.setMonth(rsc.getInt("month"));
+							c.setYear(rsc.getInt("year"));
+							c.setCardholderName(rsc.getString("cardholder_name"));
+							c.setCardholderCpf(rsc.getString("cardholder_cpf"));
+							c.setFlag(rsc.getString("flag"));
+							
+							p.setQuantity(rsc.getInt("quantity"));
+							p.setPrice(rsc.getDouble("price"));
+							p.setCard(c);
+							paymentDatas.add(p);						
+						}
+
+						payment.setPaymentDatas(paymentDatas);						
+						o.setPayment(payment);	
 						
 						pst.close();
 
