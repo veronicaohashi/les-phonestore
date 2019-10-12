@@ -12,7 +12,6 @@
 <%@ include file="Master.jsp"%>
 <div class="container-fluid py-3">
 	<form action="OrderAddresses" method="post">
-
 		<%
 			Address address = (Address) request.getAttribute("address");
 			Client client = (Client) session.getAttribute("user");
@@ -20,7 +19,7 @@
 		<div class="row">
 			<div class="col-md-8 mx-auto">
 				<div class="card card-body">
-					<h3 class="text-center mb-4">Endereço de entrega</h3>
+					<h3 class="text-center mb-4">Frete</h3>
 					<div class="btn-toolbar mb-2 mb-md-0">
 						<div class="btn-group mr-2">
 							<a class="btn btn-sm btn-outline-secondary"

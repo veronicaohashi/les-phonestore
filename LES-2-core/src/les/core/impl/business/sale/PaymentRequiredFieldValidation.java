@@ -23,9 +23,7 @@ public class PaymentRequiredFieldValidation implements IStrategy {
 					CreditCard card = paymentData.getCard();
 		
 					if(quantity == null || price == null)
-						msg.append("Selecione o número de parcelas para o cartão " + paymentData.getCard().getNumber());
-					if(price < 100)
-						msg.append("Erro ao gerar as parcelas. Contate o suporte do sistema!");		
+						msg.append("Selecione o número de parcelas!");					
 					if(card.getId() == null && card.getNumber().equals(""))
 						msg.append("Selecione um cartão!");				
 				}

@@ -28,8 +28,8 @@ public class ClientDAO extends AbstractJdbcDAO{
 		try {
 			connection.setAutoCommit(false);
 			StringBuilder sql = new StringBuilder();			
-			sql.append("INSERT INTO clients(firstname, lastname, gender, cpf, birthday, phone, users_id, created_at, updated_at)");
-			sql.append(" VALUES (?,?,?,?,?,?,?,?,?)");
+			sql.append("INSERT INTO clients(firstname, lastname, gender, cpf, birthday, phone, users_id, lactive, created_at, updated_at)");
+			sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?)");
 			
 			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, client.getFirstname());
@@ -39,9 +39,10 @@ public class ClientDAO extends AbstractJdbcDAO{
 			pst.setString(5, client.getBirthday());
 			pst.setString(6, client.getPhone());
 			pst.setInt(7, client.getUser().getId());
+			pst.setBoolean(8, client.getLactive());
 			Timestamp time = new Timestamp(System.currentTimeMillis());
-			pst.setTimestamp(8, time);
 			pst.setTimestamp(9, time);
+			pst.setTimestamp(10, time);
 
 			pst.executeUpdate();				
 			ResultSet rs = pst.getGeneratedKeys();
@@ -80,7 +81,7 @@ public class ClientDAO extends AbstractJdbcDAO{
 			connection.setAutoCommit(false);					
 			StringBuilder sql = new StringBuilder();
 			
-			sql.append("UPDATE clients SET firstname=?, lastname=?, gender=?, cpf=?, birthday=?, phone=?, updated_at=?");
+			sql.append("UPDATE clients SET firstname=?, lastname=?, gender=?, cpf=?, birthday=?, phone=?, lactive=?, updated_at=?");
 			sql.append("WHERE id=?");				
 
 			pst = connection.prepareStatement(sql.toString());
@@ -90,8 +91,9 @@ public class ClientDAO extends AbstractJdbcDAO{
 			pst.setString(4, client.getCpf());
 			pst.setString(5, client.getBirthday());
 			pst.setString(6, client.getPhone());
+			pst.setBoolean(7, client.getLactive());
 			Timestamp time = new Timestamp(System.currentTimeMillis());	
-			pst.setTimestamp(7, time);			
+			pst.setTimestamp(8, time);			
 			pst.setInt(8, client.getId());
 
 			pst.executeUpdate();			

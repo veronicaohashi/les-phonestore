@@ -45,7 +45,7 @@ public class OrderMovstockValidation implements IStrategy {
 								quantity = quantity - mov.getQuantity();
 								
 								mov.setPrice(o.getPrice());
-								mov.setDate(order.getDate());
+								mov.setDate(order.getOrderDate());
 								mov.setReference(o.getReference());
 								mov.setMovstockType(new MovstockType(2));
 								mov.setSupplier(((Movstock)m).getSupplier());

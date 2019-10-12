@@ -105,9 +105,8 @@ $(document).ready(function() {
 	$('#cbPhones').on("change", function(){
 		$.get("References?action=CONSULT&phone_id=" + this.value).done(function(data){
 			
-		    let options="";
+			let options="";
 			let count = 0;
-			console.log(data)
 			
 			$.each(data, function(key, value){
 				options=options+"<tr>"

@@ -21,6 +21,10 @@ public class Movstock extends DomainEntity{
 		this.reference = reference;
 		this.movstockType = movstockType;
 	}
+	public Movstock(Reference reference, Integer origin) {
+		this.reference = reference;
+		this.origin = origin;
+	}
 	public double getPrice() {
 		return price;
 	}

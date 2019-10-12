@@ -14,6 +14,7 @@ public class OrderUpdateStatusValidation implements IStrategy {
 			Status status = new Status();
 			status.setId(order.getStatus().getId() + 1);
 			order.setStatus(status);
+			
 		}
 		return null;
 	}

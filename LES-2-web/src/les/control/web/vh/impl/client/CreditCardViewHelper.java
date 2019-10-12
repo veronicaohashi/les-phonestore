@@ -16,7 +16,6 @@ import les.core.application.Result;
 import les.domain.DomainEntity;
 import les.domain.client.Client;
 import les.domain.client.CreditCard;
-import les.domain.sale.PaymentData;
 
 public class CreditCardViewHelper implements IViewHelper{
 
@@ -34,34 +33,7 @@ public class CreditCardViewHelper implements IViewHelper{
 		String lmain = request.getParameter("lmain");
 		String client_id = request.getParameter("client_id");
 		
-		String id = request.getParameter("id");
-		String quantity = request.getParameter("cbInstallmentQuantity");
-		String price = request.getParameter("txtInstallmentPrice");
-		
-		String id1 = request.getParameter("id1");
-		String quantity1 = request.getParameter("cbInstallmentQuantity1");
-		String price1 = request.getParameter("txtInstallmentPrice1");
-		
-		List<PaymentData> dados = new ArrayList<PaymentData>();
-		
-		if(quantity != null && price != null) {
-			PaymentData dados1 = new PaymentData();
-			dados1.setQuantity(Integer.parseInt(quantity));
-			dados1.setPrice(Double.parseDouble(price));
-			dados1.setCard(new CreditCard(Integer.parseInt(id)));
-			dados.add(dados1);
-
-			if(quantity1 != null && price1 != null) {
-				PaymentData dados2 = new PaymentData();
-				dados2.setQuantity(Integer.parseInt(quantity1));
-				dados2.setPrice(Double.parseDouble(price1));
-				dados2.setCard(new CreditCard(Integer.parseInt(id1)));
-				dados.add(dados2);
-			}
-		}
-		
-		HttpSession session = request.getSession();
-		session.setAttribute("payment", dados);	
+		String id = request.getParameter("id");		
 				
 		if(client_id != null) {
 			Client client = new Client();
@@ -122,9 +94,7 @@ public class CreditCardViewHelper implements IViewHelper{
 						
 					} else if (page.equals("RESUME")) {
 						HttpSession session = request.getSession();
-						session.setAttribute("card", result.getEntities().get(0));	
-						
-						
+						session.setAttribute("card", result.getEntities().get(0));							
 						rd = request.getRequestDispatcher("Resume.jsp");
 					}
 				} else {
@@ -144,7 +114,7 @@ public class CreditCardViewHelper implements IViewHelper{
 						rd = request.getRequestDispatcher("CartPaymentCards.jsp");					
 					}
 				} else {
-					rd = request.getRequestDispatcher("index.jsp");
+					rd = request.getRequestDispatcher("CreditCards.jsp");
 				}				
 			}	
 		} else {

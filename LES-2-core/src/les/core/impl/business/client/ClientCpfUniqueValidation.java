@@ -15,16 +15,18 @@ public class ClientCpfUniqueValidation implements IStrategy {
 		if(entity instanceof Client){
 			Client client = (Client)entity;
 			IDAO dao = new ClientDAO();
-			
-			try {
-				List<DomainEntity> c = dao.consult(new Client(client.getCpf()));
-				if(! c.isEmpty()) {
-					return "Este CPF já está vinculado a um usuário!";
-				}
-				
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}				
+
+			if(client.getLactive()) {
+				try {
+					List<DomainEntity> c = dao.consult(new Client(client.getCpf()));
+					if(! c.isEmpty()) {
+						return "Este CPF já está vinculado a um usuário!";
+					}
+					
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}	
+			}
 		}		
 		return null;
 	}

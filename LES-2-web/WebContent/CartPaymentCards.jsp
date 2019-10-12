@@ -22,10 +22,12 @@
 		out.println(request.getAttribute("response") + "</div>");
 	}	
 %>		
+<div id="alerts"></div>
+
 <div class="container-fluid py-3">
 	<form action="Payments" method="post">
 		<div class="row">
-			<div class="col-md-12 mx-auto">
+			<div class="col-md-8 mx-auto">
 				<div class="card card-body">
 					<h3 class="text-center mb-4">Pagamento com 2 cartões de
 						crédito</h3>
@@ -118,98 +120,103 @@
 </div>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script>
-	$(document)
-			.ready(
-					function() {
-						let price = document.getElementById("price").value;
+	$(document).ready(function() {
+		let price = document.getElementById("price").value;
+		$('#id').on("change",function() {
+			let firstCard = document.getElementById("id");
+			let options = "";
 
-						$('#id')
-								.on(
-										"change",
-										function() {
-											let firstCard = document
-													.getElementById("id");
-											let options = "";
+			for (let i = 1; i < firstCard.options.length; i++) {
+				if (firstCard.options[i].value != this.value)
+					options = options
+					+ "<option value='"+firstCard.options[i].value+"'>"
+					+ firstCard.options[i].text
+					+ "</option>";
+				}
 
-											for (let i = 1; i < firstCard.options.length; i++) {
-												if (firstCard.options[i].value != this.value)
-													options = options
-															+ "<option value='"+firstCard.options[i].value+"'>"
-															+ firstCard.options[i].text
-															+ "</option>";
-											}
+			$("#id1").prop('disabled', false);
+			$("#id1").find("option").remove();
+			$("#id1").empty();
+			$("#id1").append(options);
+		});
 
-											$("#id1").prop('disabled', false);
-											$("#id1").find("option").remove();
-											$("#id1").empty();
-											$("#id1").append(options);
-										});
+		$('#txtValue').on("input",function() {
+			let options = "<option disabled selected>Selecione</option>";
+			$("#response").hide();
+			
+			if(this.value == ""){
+				$("#cbInstallmentQuantity").empty();
+				$("#cbInstallmentQuantity1").empty();
+				$("#txtValue1").val('');
+				$("#cbInstallmentQuantity1").prop('disabled', true);
+				
+			} else if(Number(this.value) > Number(price)){
+			    $('#alerts').append("<div class='alert alert-primary' role='alert' id='response'>" +
+	    		"O valor da parcela não deve ser maior que o valor do pedido</div>");
+				
+				$("#cbInstallmentQuantity").empty();
+				$("#cbInstallmentQuantity1").empty();
+				$("#txtValue1").val('');
+				$("#cbInstallmentQuantity1").prop('disabled', true);
+			    
+			} else if((Number(this.value) <= 0 && this.value != "")) {
+			    $('#alerts').append("<div class='alert alert-primary' role='alert' id='response'>" +
+	    		"Valor inválido</div>");			    
+				
+				$("#cbInstallmentQuantity").empty();
+				$("#cbInstallmentQuantity1").empty();
+				$("#txtValue1").val('');
+				$("#cbInstallmentQuantity1").prop('disabled', true);
+			    
+			} else if(Number(this.value) < 100 &&  this.value != "") {
+			    $('#alerts').append("<div class='alert alert-primary' role='alert' id='response'>" +
+	    		"O valor mínimo da parcela deve ser R$100.00</div>");			    
+				
+				$("#cbInstallmentQuantity").empty();
+				$("#cbInstallmentQuantity1").empty();
+				$("#txtValue1").val('');
+				$("#cbInstallmentQuantity1").prop('disabled', true);
+			    
+			} else {
+				if(this.value < Number(price) - 100){		
+					for (var i = 1; (this.value / i).toFixed(2) >= 100; i++) {
+						options = options
+						+ "<option value='"+ i +"'>"+ i + " x de R$ "+ (this.value / i).toFixed(2)
+						+ "</option>";
+					}		
+					$("#cbInstallmentQuantity").prop('disabled', false);
+					$("#cbInstallmentQuantity").empty();
+					$("#cbInstallmentQuantity").append(options);
+		
+					let secondValue = price - this.value;
+					$("#txtValue1").val(secondValue);
+					let options2 = "<option disabled selected>Selecione</option>";
+					for (var i = 1; (secondValue / i).toFixed(2) >= 100; i++) {
+						options2 = options2
+						+ "<option value='"+ i +"'>" + i + " x de R$ " + (secondValue / i).toFixed(2)
+						+ "</option>";
+					}		
+					$("#cbInstallmentQuantity1").prop('disabled', false);
+					$("#cbInstallmentQuantity1").empty();
+					$("#cbInstallmentQuantity1").append(options2);
+					
+				} else {
+					$("#cbInstallmentQuantity").empty();
+					$("#cbInstallmentQuantity1").empty();
+					$("#cbInstallmentQuantity1").prop('disabled', true);					
+				}
 
-						$('#txtValue')
-								.on(
-										"input",
-										function() {
-											let options = "<option disabled selected>Selecione</option>";
+			}
+		});
 
-											let price = document
-													.getElementById("price").value;
-											for (var i = 1; (this.value / i)
-													.toFixed(2) > 100; i++) {
-												options = options
-														+ "<option value='"+ i +"'>"
-														+ i
-														+ " x de R$ "
-														+ (this.value / i)
-																.toFixed(2)
-														+ "</option>";
-											}
+		$("#cbInstallmentQuantity").on("change", function() {
+			let value = document.getElementById("txtValue").value;
+			$("#txtInstallmentPrice").val((value / this.value).toFixed(2));
+		});
 
-											$("#cbInstallmentQuantity").prop(
-													'disabled', false);
-											$("#cbInstallmentQuantity").empty();
-											$("#cbInstallmentQuantity").append(
-													options);
-
-											let secondValue = price
-													- this.value;
-											$("#txtValue1").val(secondValue);
-
-											let options2 = "<option disabled selected>Selecione</option>";
-											for (var i = 1; (secondValue / i)
-													.toFixed(2) > 100; i++) {
-												options2 = options2
-														+ "<option value='"+ i +"'>"
-														+ i
-														+ " x de R$ "
-														+ (secondValue / i)
-																.toFixed(2)
-														+ "</option>";
-											}
-
-											$("#cbInstallmentQuantity1").prop(
-													'disabled', false);
-											$("#cbInstallmentQuantity1")
-													.empty();
-											$("#cbInstallmentQuantity1")
-													.append(options2);
-										});
-
-						$("#cbInstallmentQuantity").on(
-								"change",
-								function() {
-									let value = document
-											.getElementById("txtValue").value;
-									$("#txtInstallmentPrice").val(
-											(value / this.value).toFixed(2));
-								})
-
-						$("#cbInstallmentQuantity1").on(
-								"change",
-								function() {
-									let value1 = document
-											.getElementById("txtValue1").value;
-									$("#txtInstallmentPrice1").val(
-											(value1 / this.value).toFixed(2));
-								})
-					});
+		$("#cbInstallmentQuantity1").on("change", function() {
+			let value1 = document.getElementById("txtValue1").value;
+			$("#txtInstallmentPrice1").val((value1 / this.value).toFixed(2));
+		});
+	});
 </script>

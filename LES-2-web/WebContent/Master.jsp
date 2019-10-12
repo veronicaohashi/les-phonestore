@@ -15,6 +15,9 @@
 		
    		<title>CELULARES</title>
 	    <style>
+	    hr {
+	    	height: 1px;
+		}
 		.btn-primary{
 	    	background-color: #e67e22 !important;
 	    	border-color: #e67e22;
@@ -153,10 +156,11 @@
 	  	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">CELULARES</a>
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="ClientFormUpdate.jsp">Perfil</a>
-	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Cartões de Crédito</a>	    	
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="CreditCards?action=LIST&client_id=<%= client.getId() %>">Cartões de Crédito</a>	    	
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Addresses?action=LIST&client_id=<%=client.getId()%>">Endereços</a>	
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Orders?action=LIST&client_id=<%= client.getId() %>">Meus Pedidos</a>
-	    	
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Coupons?action=LIST&client_id=<%= client.getId() %>">Meus Cupons</a>
+  	    	<a class="my-0 mr-md-auto font-weight-normal" href="Clients?action=UPDATE&id=<%= client.getId() %>&lactive=false&page=INACTIVATION">Excluir Conta</a>	    	
       		<div class="btn-group mr-2">
 				<span>Bem vindo(a), <%= client.getFirstname()%></span>
 			</div>
@@ -172,7 +176,8 @@
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Phones?action=LIST">Celulares</a>	    	
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Stocks?action=LIST">Estoque</a>	
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Orders?action=LIST&status_id=1">Pedidos</a>
-	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">Trocas</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Orderi?action=LIST&status_id=5">Trocas</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Coupons?action=LIST">Cupons</a>
 	    	
       		<div class="btn-group mr-2">
 				<span>Bem vindo(a), <%= client.getFirstname()%></span>
@@ -184,7 +189,8 @@
 		</div>
 		
   		
-		<% } }else { %>
+		<% } 
+		}else { %>
 	  	
 	  	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="index.jsp">CELULARES</a>

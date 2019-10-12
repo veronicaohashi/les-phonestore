@@ -137,7 +137,7 @@
 									out.println("<td>" + item.getStatus().getDescription() +"</td>");
 									
 									if(item.getStatus().getId() == 4)
-										out.println("<td><a href='ClientExchangeForm.jsp?id=" + item.getId() + "&status_id=" + item.getStatus().getId() + "'" +
+										out.println("<td><a href='ClientExchangeForm.jsp?delivery_date="+ order.getDeliveryDate() +"&id=" + item.getId() + "&status_id=" + item.getStatus().getId() + "'" +
 										"class='btn btn-sm btn-outline-secondary mr-2'>Solicitar Troca</a></td>");
 								
 									out.println("</tr>");
@@ -161,8 +161,8 @@
 	</div>
 </div>	
 <script>
-	$("#response").show();
-	setTimeout(function() {
-		$("#response").hide();
-	}, 5000);
+$("#response").show();
+setTimeout(function() {
+	$("#response").hide();
+}, 5000);
 </script>

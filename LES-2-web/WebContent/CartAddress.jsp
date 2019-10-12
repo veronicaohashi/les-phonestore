@@ -21,7 +21,7 @@
 			<div class="col-md-8 mx-auto">
 				<div class="card card-body">
 					<h3 class="text-center mb-4">Endereço de entrega</h3>
-					<div class="btn-toolbar mb-2 mb-md-0">
+					<div style="display: flex;align-items: center;justify-content:center;" class="btn-toolbar mb-2 mb-md-0">
 						<div class="btn-group mr-2">
 							<a class="btn btn-sm btn-outline-secondary"
 								href="Addresses?action=LIST&client_id=<%=client.getId()%>&page=CART">Alterar
@@ -122,10 +122,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-2 offset-md-8">
-								<a href="#" class="btn btn-primary btn-block">Cancelar</a>
-							</div>
-							<div class="col-2">
+							<div class="col-2 offset-md-10">
 								<input type="hidden" name="page" id="page" value="PAYMENT" /> 
 								<input type="hidden" name="action" id="action" value="CONSULT" />
 								<input class="btn btn-primary btn-block" type="submit" value="Próximo" />

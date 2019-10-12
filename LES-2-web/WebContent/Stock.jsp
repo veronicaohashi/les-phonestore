@@ -29,6 +29,7 @@
 						for (String header : headers) {
 							out.println("<th>" + header + "</th>");
 						}
+						out.println("<th>Ações</th>");
 						out.println("</tr>");
 						out.println("</thead>");
 			
@@ -40,6 +41,8 @@
 							out.println("<td>" + item.getReference().getColor().getDescription() +"</td>");
 							out.println("<td>" + item.getReference().getCapacity().getDescription() +"</td>");
 							out.println("<td>" + item.getQuantity() +"</td>");
+							out.println("<td><a href='Movstock?action=LIST&reference_id=" + item.getReference().getId() + "' class='btn btn-sm btn-outline-secondary mr-2'>" +
+							"<i class='material-icons'>visibility</i></a></td>");
 							out.println("</tr>");
 						}
 						out.println("</tbody>");

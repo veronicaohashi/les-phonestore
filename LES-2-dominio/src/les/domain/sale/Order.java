@@ -7,8 +7,9 @@ import les.domain.DomainEntity;
 import les.domain.client.Client;
 
 public class Order extends DomainEntity {
-	private double price;
-	private String date;
+	private Double price;
+	private String orderDate;
+	private String deliveryDate;
 	private Integer quantity;
 	private Payment payment;
 	private OrderAddress orderAddress;
@@ -16,25 +17,41 @@ public class Order extends DomainEntity {
 	private Status status;
 	private List<Orderi> items;
 	private List<Integer> orderIds;
+	private OrderCoupons orderCoupons;
+	private double totalItemsPrice;
+	private double totalDiscountPrice;
 	
 	public Order() {
 		this.items = new ArrayList<Orderi>();
 		this.orderIds = new ArrayList<Integer>();
 	}
+	public Order(Integer id, Client client) {
+		super(id);
+		this.client = client;
+	}
+	public Order(Integer id) {
+		super(id);
+	}
+	public Order(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
 	public Order(OrderAddress orderAddress, Payment payment, Client client, List<Orderi> items, double price,
-			Integer quantity, String date) {
+			Integer quantity, double totalItemsPrice, double totalDiscountPrice, String orderDate, OrderCoupons orderCoupons) {
 		this.orderAddress = orderAddress;
 		this.payment = payment;
 		this.client = client;
 		this.items = items;
 		this.price = price;
 		this.quantity = quantity;
-		this.date = date;
+		this.totalItemsPrice = totalItemsPrice;
+		this.totalDiscountPrice = totalDiscountPrice;
+		this.orderDate = orderDate;
+		this.orderCoupons = orderCoupons;
 	}
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 	public Integer getQuantity() {
@@ -85,10 +102,34 @@ public class Order extends DomainEntity {
 	public void addIds(Integer id){
 		this.orderIds.add(id);
 	}
-	public String getDate() {
-		return date;
+	public String getOrderDate() {
+		return orderDate;
 	}
-	public void setDate(String date) {
-		this.date = date;
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
+	public String getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+	public OrderCoupons getOrderCoupons() {
+		return orderCoupons;
+	}
+	public void setOrderCoupons(OrderCoupons orderCoupons) {
+		this.orderCoupons = orderCoupons;
+	}
+	public double getTotalItemsPrice() {
+		return totalItemsPrice;
+	}
+	public void setTotalItemsPrice(double totalItemsPrice) {
+		this.totalItemsPrice = totalItemsPrice;
+	}
+	public double getTotalDiscountPrice() {
+		return totalDiscountPrice;
+	}
+	public void setTotalDiscountPrice(double totalDiscountPrice) {
+		this.totalDiscountPrice = totalDiscountPrice;
 	}
 }

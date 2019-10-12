@@ -128,7 +128,12 @@ $(document).ready(function() {
 
 	let options = "<option disabled selected>Selecione</option>";
 	let price = document.getElementById("price").value;
-	for(var i = 1; (price / i).toFixed(2) > 100; i++){
+	let minPrice = 100;
+	
+	if(price < 100)
+		minPrice = price;
+	
+	for(var i = 1; (price / i).toFixed(2) >= minPrice; i++){
 		options=options+"<option value='"+ i +"'>"+ i + " x de R$ "+ (price / i).toFixed(2) +"</option>";
 	}
 
@@ -137,18 +142,17 @@ $(document).ready(function() {
 	$('#txtNumber').on("input",function(){
 		var cardnumber = this.value.replace(/[^0-9]+/g, '');
 		
-		console.log(cardnumber)
-        var cards = {
-			Visa : /^4[0-9]{12}(?:[0-9]{3})/,                                                                   
-			Mastercard : /^5[1-5][0-9]{14}/,																	         
-			Diners : /^3(?:0[0-5]|[68][0-9])[0-9]{11}/,                                                           
-			Amex : /^3[47][0-9]{13}/,																		     
-			Discover : /^6(?:011|5[0-9]{2})[0-9]{12}/,															     
-			Hipercard : /^(606282\d{10}(\d{3})?)|(3841\d{15})/,												         	
-			Elo : /^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})/,
-			Jcb : /^(?:2131|1800|35\d{3})\d{11}/,        													    
-			Aura : /^(5078\d{2})(\d{2})(\d{11})$/      														 
-        };
+			var cards = {
+				Visa : /^4[0-9]{12}(?:[0-9]{3})/,                                                                   
+				Mastercard : /^5[1-5][0-9]{14}/,																	         
+				Diners : /^3(?:0[0-5]|[68][0-9])[0-9]{11}/,                                                           
+				Amex : /^3[47][0-9]{13}/,																		     
+				Discover : /^6(?:011|5[0-9]{2})[0-9]{12}/,															     
+				Hipercard : /^(606282\d{10}(\d{3})?)|(3841\d{15})/,												         	
+				Elo : /^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})/,
+				Jcb : /^(?:2131|1800|35\d{3})\d{11}/,        													    
+				Aura : /^(5078\d{2})(\d{2})(\d{11})$/      														 
+			};
 
         for (var flag in cards) {
 	        if(cards[flag].test(cardnumber)) {

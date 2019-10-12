@@ -11,6 +11,10 @@ public class Supplier extends DomainEntity{
 	public Supplier(Integer id) {
 		super(id);
 	}
+	public Supplier(Integer id, String name) {
+		super(id);
+		this.name = name;		
+	}
 	public String getName() {
 		return name;
 	}

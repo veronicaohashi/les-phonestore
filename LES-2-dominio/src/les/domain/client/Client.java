@@ -19,10 +19,14 @@ public class Client extends DomainEntity {
 	public Client() {
 		
 	}
+	public Client(Integer id) {
+		super(id);
+	}
 	public Client(String cpf) {
 		this.cpf = cpf;
 	}
-	public Client(String cpf, String firstname) {
+	public Client(Integer id, String cpf, String firstname) {
+		super(id);
 		this.cpf = cpf;
 		this.firstname = firstname;
 	}

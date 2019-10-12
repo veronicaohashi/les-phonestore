@@ -9,7 +9,9 @@ public class PricingGroup extends DomainEntity {
 	public PricingGroup() {
 		
 	}
-
+	public PricingGroup(Integer id) {
+		super(id);
+	}
 	public PricingGroup(Integer id, String description, double percentage) {
 		super(id);
 		this.description = description;

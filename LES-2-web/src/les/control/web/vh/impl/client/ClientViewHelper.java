@@ -35,6 +35,7 @@ public class ClientViewHelper implements IViewHelper{
 		String level = request.getParameter("txtLevel");
 		String user_id = request.getParameter("user_id");
 		String id = request.getParameter("id");
+		String lactive = request.getParameter("lactive");
 		
 		if(user_id != null && ! user_id.equals("")) {
 			user.setId(Integer.parseInt(user_id));
@@ -51,7 +52,10 @@ public class ClientViewHelper implements IViewHelper{
 			client.setBirthday(birthday);
 			client.setGender(gender);
 			client.setPhone(phone);
-			client.setLactive(true);
+			if(lactive == null)
+				client.setLactive(true);
+			else
+				client.setLactive(Boolean.parseBoolean(lactive));
 			if(email != null) {
 				user.setEmail(email);
 				user.setPassword(password);
@@ -69,6 +73,7 @@ public class ClientViewHelper implements IViewHelper{
 	public void setView(Result result, HttpServletRequest request, 
 			HttpServletResponse response) throws IOException, ServletException {	
 		String action = request.getParameter("action");
+		String page = request.getParameter("page");	
 		
 		RequestDispatcher rd = null;
 		
@@ -93,10 +98,17 @@ public class ClientViewHelper implements IViewHelper{
 					rd = request.getRequestDispatcher("/Phones?action=LIST");
 				}
 			} else if(action.equals("UPDATE")) {
-				result.setMsg("Cliente alterado com sucesso!");
-				request.setAttribute("response", result.getMsg());
-				rd = request.getRequestDispatcher("/Clients?action=CONSULT&user_id="+result.getEntities().get(0).getId()+"");
-				
+
+				if(page != null) {
+					if(page.equals("INACTIVATION")) {	
+						request.getSession().invalidate();
+						rd = request.getRequestDispatcher("index.jsp");
+					}
+				} else {
+					result.setMsg("Cliente alterado com sucesso!");
+					request.setAttribute("response", result.getMsg());
+					rd = request.getRequestDispatcher("/Clients?action=CONSULT&user_id="+result.getEntities().get(0).getId()+"");
+				}
 			}
 		} else {
 			if (action.equals("SAVE")) {

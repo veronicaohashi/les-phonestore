@@ -11,6 +11,7 @@ import les.core.impl.dao.AbstractJdbcDAO;
 import les.domain.DomainEntity;
 import les.domain.client.Address;
 import les.domain.client.City;
+import les.domain.client.Client;
 import les.domain.client.ResidenceType;
 import les.domain.client.State;
 
@@ -80,7 +81,39 @@ public class AddressDAO extends AbstractJdbcDAO{
 	}
 
 	@Override
-	public void delete(DomainEntity entity) {	
+	public void delete(DomainEntity entity) {			
+		Address address = (Address)entity;
+		openConnection();
+		PreparedStatement pst = null;		
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append("DELETE FROM addresses WHERE id=?");	
+	
+		try {
+			connection.setAutoCommit(false);
+			pst = connection.prepareStatement(sql.toString());
+			pst.setInt(1, address.getId());
+	
+			pst.executeUpdate();
+			connection.commit();
+		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();			
+		}finally{
+			
+			try {
+				pst.close();
+				if(ctrlTransaction)
+					connection.close();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}	
 
 	@Override
@@ -127,7 +160,7 @@ public class AddressDAO extends AbstractJdbcDAO{
 				a.setLmain(rs.getBoolean("lmain"));
 				a.setResidenceType(new ResidenceType(rs.getInt("residence_type_id"), rs.getString("residence_type")));
 				a.setCity(new City(rs.getInt("city_id"), rs.getString("city"), new State(rs.getString("state"))));
-				
+				a.setClient(new Client(rs.getInt("client_id")));
 				all.add(a);
 			}
 			return all;

@@ -41,10 +41,9 @@
 						out.println("<td>" + a.getComplement() +"</td>");
 						out.println("<td>" + a.getDistrict() +"</td>");
 						out.println("<td>" + a.getCity().getName() +"</td>");
-						out.println("<td>" + a.getCity().getState().getName() +"</td>");
-						
+						out.println("<td>" + a.getCity().getState().getName() +"</td>");						
 						out.println("<td><a href='Phones?action=CONSULT&id=" + a.getId() + "' class='btn btn-sm btn-outline-secondary mr-2'><i class='material-icons'>edit</i></a>"
-								+"<a href='InactivationPhoneForm.jsp?phone_id=" + a.getId() + "' class='btn btn-sm btn-outline-secondary'><i class='material-icons'>delete</i></a></td>");
+								+"<a href='Addresses?action=DELETE&id=" + a.getId() + "&client_id=" + a.getClient().getId() +"' class='btn btn-sm btn-outline-secondary'><i class='material-icons'>delete</i></a></td>");
 						out.println("</tr>");
 					}
 					out.println("</tbody>");

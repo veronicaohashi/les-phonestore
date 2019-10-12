@@ -19,6 +19,7 @@ public class ClientRequiredFieldValidation implements IStrategy {
 			String email = client.getUser().getEmail();
 			
 			StringBuilder msg = new StringBuilder();
+			if(client.getLactive()) {
 				if(firstname.equals("") ) 
 					msg.append("O nome deve ser preenchido!");
 				
@@ -45,6 +46,7 @@ public class ClientRequiredFieldValidation implements IStrategy {
 				
 				if(msg.length() > 0)
 					return msg.toString();
+			}
 		}		
 		return null;
 	}

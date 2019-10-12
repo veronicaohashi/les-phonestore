@@ -20,6 +20,7 @@ import les.domain.client.Client;
 import les.domain.sale.Cart;
 import les.domain.sale.Order;
 import les.domain.sale.OrderAddress;
+import les.domain.sale.OrderCoupons;
 import les.domain.sale.Payment;
 import les.domain.sale.Status;
 
@@ -28,9 +29,6 @@ public class OrderViewHelper implements IViewHelper{
 	public DomainEntity getEntity(HttpServletRequest request) {
 		String action = request.getParameter("action");		
 		Order order = new Order();
-		OrderAddress orderAddress;
-		Payment payment;
-		Cart cart;
 		Client client;
 		Status status = new Status();
 		HttpSession session = request.getSession();
@@ -46,18 +44,23 @@ public class OrderViewHelper implements IViewHelper{
 		}
 		
 		if(action.equals("SAVE")) {
-			orderAddress = (OrderAddress) session.getAttribute("address");
-			payment = (Payment) session.getAttribute("payment");
-			cart = (Cart) session.getAttribute("cart");
+			OrderAddress orderAddress = (OrderAddress) session.getAttribute("address");
+			Payment payment = (Payment) session.getAttribute("payment");
+			Cart cart = (Cart) session.getAttribute("cart");
 			client = (Client) session.getAttribute("user");
-
+			OrderCoupons orderCoupon = (OrderCoupons)session.getAttribute("coupons");
 			Date date = new Date();
 			String orderDate= new SimpleDateFormat("yyyy-MM-dd").format(date);
 			
-			order = new Order(orderAddress, payment, client, cart.getItems(), cart.getPrice(), cart.getQuantity(), orderDate);
+			order = new Order(orderAddress, payment, client, cart.getItems(), cart.getPrice(), cart.getQuantity(),
+					cart.getTotalItemsPrice(), 
+					cart.getTotalDiscountPrice(), 
+					orderDate, orderCoupon);
 		} else if(action.equals("UPDATE")) {
-			for(String i : lupdate) {
-				order.addIds(Integer.parseInt(i));
+			if(lupdate != null) {
+				for(String i : lupdate) {
+					order.addIds(Integer.parseInt(i));
+				}			
 			}
 		} else if(action.equals("CONSULT")) {
 			if(id != null) {
@@ -101,11 +104,12 @@ public class OrderViewHelper implements IViewHelper{
 					headers.add("Quantidade Total");
 					headers.add("Status");
 					request.setAttribute("headers", headers);
-					
+
 					rd = request.getRequestDispatcher("ClientOrders.jsp");
 				}				
 			} else if(action.equals("SAVE")) {
 				request.getSession().removeAttribute("cart");
+				request.getSession().removeAttribute("coupons");
 				request.setAttribute("response", "Pedido salvo com sucesso");
 				rd = request.getRequestDispatcher("Orders?action=LIST&client_id="+client.getId());	
 				
@@ -125,12 +129,18 @@ public class OrderViewHelper implements IViewHelper{
 				} else {
 					request.setAttribute("order", result.getEntities().get(0));
 					rd = request.getRequestDispatcher("Orders?action=LIST&client_id=" + client.getId());	
-				}
-					
+				}					
 			}
 		} else {
-			request.setAttribute("response", result.getMsg());
-			rd = request.getRequestDispatcher("index.jsp");				
+			if(action.equals("UPDATE")) {
+				if(client.getUser().getLevel() == 2) {
+					request.setAttribute("response", result.getMsg());
+					rd = request.getRequestDispatcher("Orders?action=LIST&status_id=1");	
+				} else {
+					request.setAttribute("response", result.getMsg());
+					rd = request.getRequestDispatcher("Orders?action=LIST&client_id=" + client.getId());	
+				}					
+			}
 		}
 		
 		rd.forward(request, response);		

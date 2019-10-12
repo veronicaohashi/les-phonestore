@@ -74,6 +74,7 @@ public class AddressViewHelper implements IViewHelper{
 	public void setView(Result result, HttpServletRequest request, 
 			HttpServletResponse response) throws IOException, ServletException {	
 		String action = request.getParameter("action");
+		Client client = (Client)request.getSession().getAttribute("user");
 		RequestDispatcher rd = null;
 				
 		List<String> headers = new ArrayList<String>();
@@ -96,8 +97,7 @@ public class AddressViewHelper implements IViewHelper{
 						request.setAttribute("address", result.getEntities().get(0));
 						rd = request.getRequestDispatcher("CartAddress.jsp");
 						
-					} else if(page.equals("")) {						
-						// ENDEREÇOS DO CLIENTE
+					} else if(page.equals("")) {	
 					}
 				} else {
 					rd = request.getRequestDispatcher("index.jsp");
@@ -116,10 +116,21 @@ public class AddressViewHelper implements IViewHelper{
 				}		
 				
 			} else if (action.equals("SAVE")) {	
-						// salvar e redirecionar para o painel administrativo
+				result.setMsg("Endereço cadastrado com sucesso!");
+				request.setAttribute("response", result.getMsg());
+				rd = request.getRequestDispatcher("/Addresses?action=LIST&client_id="+client.getId());
 					
+			} else if (action.equals("DELETE")) {	
+				result.setMsg("Endereço excluído com sucesso!");
+				request.setAttribute("response", result.getMsg());
+				rd = request.getRequestDispatcher("/Addresses?action=LIST&client_id="+client.getId());	
 			}
 		} else {
+			request.setAttribute("response", result.getMsg());
+			
+			if (action.equals("DELETE") || action.equals("SAVE")) {	
+				rd = request.getRequestDispatcher("/Addresses?action=LIST&client_id="+client.getId());	
+			}
 		}
 	
 		rd.forward(request, response);	

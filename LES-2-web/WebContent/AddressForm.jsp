@@ -123,6 +123,7 @@
 										class="btn btn-primary btn-block">Cancelar</a>
 									</div>
 									<div class="col-2">
+									    <input type="hidden" id="client_id" name="client_id" value="<%=client.getId()%>">
 				                   		<input type="hidden" name="page" id="page" value="CART" />   
 				                   		<input type="hidden" name="action" id="action" value="SAVE" />   
 					        			<input class="btn btn-primary btn-block" type="submit" value="Cadastrar"/>

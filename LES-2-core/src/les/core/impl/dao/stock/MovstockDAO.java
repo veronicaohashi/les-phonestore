@@ -83,10 +83,18 @@ public class MovstockDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Movstock movstock = (Movstock) entity;
 		PreparedStatement pst = null;
-		String sql = "SELECT * FROM movstocks ";
+		String sql = "SELECT *, suppliers.name AS supplier_name, movstock_types.description AS movstock_types_description, phone_references.name AS phone_reference_name "
+				+ "FROM movstocks "
+				+ "JOIN suppliers ON suppliers.id = movstocks.supplier_id "
+				+ "JOIN movstock_types ON movstock_types.id = movstocks.movstock_type_id "
+				+ "JOIN phone_references ON phone_references.id = movstocks.phone_reference_id ";
 
-		if(movstock.getReference() != null && movstock.getMovstockType() != null){
+		if(movstock.getReference() != null && movstock.getMovstockType() != null && movstock.getOrigin() == null){
 			sql += "WHERE phone_reference_id=? AND movstock_type_id=? ORDER BY date";
+		} else if(movstock.getReference() != null && movstock.getOrigin() != null){
+			sql += "WHERE phone_reference_id=? AND origin=? ORDER BY date";
+		} else if(movstock.getReference() != null) {
+			sql += "WHERE phone_reference_id=?";			
 		}
 		
 		// executa consulta
@@ -94,11 +102,16 @@ public class MovstockDAO extends AbstractJdbcDAO{
 			openConnection();
 			pst = connection.prepareStatement(sql);
 
-			if(movstock.getReference() != null && movstock.getMovstockType() != null){
+			if(movstock.getReference() != null && movstock.getMovstockType() != null && movstock.getOrigin() == null){
 				pst.setInt(1, movstock.getReference().getId());				
 				pst.setInt(2, movstock.getMovstockType().getId());				
-			}		
-
+			} else if(movstock.getReference() != null && movstock.getOrigin() != null){
+				pst.setInt(1, movstock.getReference().getId());				
+				pst.setInt(2, movstock.getOrigin());				
+			} else if(movstock.getReference() != null) {
+				pst.setInt(1, movstock.getReference().getId());				
+			}
+			
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
 
@@ -109,9 +122,10 @@ public class MovstockDAO extends AbstractJdbcDAO{
 				m.setQuantity(rs.getInt("quantity"));	
 				m.setPrice(rs.getDouble("price"));	
 				m.setDate(rs.getString("date"));
-				m.setSupplier(new Supplier(rs.getInt("supplier_id")));
-				m.setMovstockType(new MovstockType(rs.getInt("movstock_type_id")));
-				m.setReference(new Reference(rs.getInt("phone_reference_id")));
+				m.setSupplier(new Supplier(rs.getInt("supplier_id"), rs.getString("supplier_name")));
+				m.setMovstockType(new MovstockType(rs.getInt("movstock_type_id"), rs.getString("movstock_types_description")));
+				m.setReference(new Reference(rs.getInt("phone_reference_id"), rs.getString("phone_reference_name")));
+				m.setOrigin(rs.getInt("origin"));
 				
 				all.add(m);
 			}

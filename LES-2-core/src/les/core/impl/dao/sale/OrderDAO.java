@@ -21,6 +21,7 @@ import les.domain.product.Capacity;
 import les.domain.product.Color;
 import les.domain.product.Phone;
 import les.domain.product.Reference;
+import les.domain.sale.Coupon;
 import les.domain.sale.Order;
 import les.domain.sale.OrderAddress;
 import les.domain.sale.Orderi;
@@ -51,47 +52,49 @@ public class OrderDAO extends AbstractJdbcDAO{
 			address = (Address) addressDAO.consult(address).get(0);	
 		}	
 		
-		for(PaymentData c : order.getPayment().getPaymentDatas()) {
-			card = c.getCard();
-			
-			if(card.getClient() != null) {
-				// SALVA NA TABELA DO ENDEREÇO DO CLIENTE	
-				cardDAO.save(card);
-				card = (CreditCard) cardDAO.consult(card).get(0);	
-			} 
-			
-			try {				
-				connection.setAutoCommit(false);
-				StringBuilder sql = new StringBuilder();
-				int idCreditCard = 0;
-				sql.append("INSERT INTO order_credit_cards(number, code, month, year, cardholder_name, cardholder_cpf, flag,"
-						+ " created_at, updated_at)");
-				sql.append(" VALUES (?,?,?,?,?,?,?,?,?)");
+		if(order.getPayment() != null) {
+			for(PaymentData c : order.getPayment().getPaymentDatas()) {
+				card = c.getCard();
 				
-				pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-				pst.setString(1, card.getNumber());
-				pst.setInt(2, card.getCode());
-				pst.setInt(3, card.getMonth());
-				pst.setInt(4, card.getYear());
-				pst.setString(5, card.getCardholderName());
-				pst.setString(6, card.getCardholderCpf());
-				pst.setString(7, card.getFlag());
-				Timestamp time0 = new Timestamp(System.currentTimeMillis());
-				pst.setTimestamp(8, time0);
-				pst.setTimestamp(9, time0);
+				if(card.getClient() != null) {
+					// SALVA NA TABELA DO ENDEREÇO DO CLIENTE	
+					cardDAO.save(card);
+					card = (CreditCard) cardDAO.consult(card).get(0);	
+				} 
 				
-				pst.executeUpdate();				
-				ResultSet rs = pst.getGeneratedKeys();
-				
-				if(rs.next())
-					idCreditCard = rs.getInt(1);
-					card.setId(idCreditCard);
-				sql.setLength(0);
-				pst.close();
-			} catch (SQLException e) {
-				e.printStackTrace();	
+				try {				
+					connection.setAutoCommit(false);
+					StringBuilder sql = new StringBuilder();
+					int idCreditCard = 0;
+					sql.append("INSERT INTO order_credit_cards(number, code, month, year, cardholder_name, cardholder_cpf, flag,"
+							+ " created_at, updated_at)");
+					sql.append(" VALUES (?,?,?,?,?,?,?,?,?)");
+					
+					pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+					pst.setString(1, card.getNumber());
+					pst.setInt(2, card.getCode());
+					pst.setInt(3, card.getMonth());
+					pst.setInt(4, card.getYear());
+					pst.setString(5, card.getCardholderName());
+					pst.setString(6, card.getCardholderCpf());
+					pst.setString(7, card.getFlag());
+					Timestamp time0 = new Timestamp(System.currentTimeMillis());
+					pst.setTimestamp(8, time0);
+					pst.setTimestamp(9, time0);					
+					pst.executeUpdate();				
+					ResultSet rs = pst.getGeneratedKeys();
+										
+					if(rs.next())
+						idCreditCard = rs.getInt(1);
+						card.setId(idCreditCard);
+					sql.setLength(0);
+					pst.close();					
+				} catch (SQLException e) {
+					e.printStackTrace();	
+				}
 			}
 		}
+		
 		
 		try {				
 			connection.setAutoCommit(false);
@@ -124,8 +127,9 @@ public class OrderDAO extends AbstractJdbcDAO{
 			sql.setLength(0);
 			pst.close();
 			
-			sql.append("INSERT INTO orders(price, quantity, clients_id, status_id, order_address_id, data, created_at, updated_at)");
-			sql.append(" VALUES (?,?,?,?,?,?,?,?)");
+			sql.append("INSERT INTO orders(price, quantity, clients_id, status_id, order_address_id, order_date, total_orderi_price, "
+					+ "total_discount_price, created_at, updated_at)");
+			sql.append(" VALUES (?,?,?,?,?,?,?,?,?,?)");
 			
 			pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
 
@@ -134,10 +138,12 @@ public class OrderDAO extends AbstractJdbcDAO{
 			pst.setInt(3, order.getClient().getId());
 			pst.setInt(4, order.getStatus().getId());
 			pst.setInt(5, order.getOrderAddress().getId());
-			pst.setString(6, order.getDate());
+			pst.setString(6, order.getOrderDate());
+			pst.setDouble(7, order.getTotalItemsPrice());
+			pst.setDouble(8, order.getTotalDiscountPrice());
 			Timestamp time3 = new Timestamp(System.currentTimeMillis());
-			pst.setTimestamp(7, time3);
-			pst.setTimestamp(8, time3);
+			pst.setTimestamp(9, time3);
+			pst.setTimestamp(10, time3);
 			pst.executeUpdate();				
 			rs = pst.getGeneratedKeys();
 			
@@ -147,27 +153,29 @@ public class OrderDAO extends AbstractJdbcDAO{
 			order.setId(id);
 			sql.setLength(0);
 			pst.close();
-							
-			sql.append("INSERT INTO payments(price, quantity, credit_card_id, order_id, created_at, updated_at)");
-			sql.append(" VALUES (?,?,?,?,?,?)");
 
-			for (int i = 0; i < order.getPayment().getPaymentDatas().size(); i++) {		
-				pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
-						
-				pst.setDouble(1, order.getPayment().getPaymentDatas().get(i).getPrice());
-				pst.setInt(2, order.getPayment().getPaymentDatas().get(i).getQuantity());
-				pst.setInt(3, order.getPayment().getPaymentDatas().get(i).getCard().getId());
-				pst.setInt(4, order.getId());
-				Timestamp time2 = new Timestamp(System.currentTimeMillis());
-				pst.setTimestamp(5, time2);
-				pst.setTimestamp(6, time2);
-				
-				pst.executeUpdate();				
-				rs = pst.getGeneratedKeys();
-			};
-						
-			sql.setLength(0);
-			pst.close();
+			if(order.getPayment() != null) {
+				sql.append("INSERT INTO payments(price, quantity, credit_card_id, order_id, created_at, updated_at)");
+				sql.append(" VALUES (?,?,?,?,?,?)");
+	
+				for (int i = 0; i < order.getPayment().getPaymentDatas().size(); i++) {		
+					pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+							
+					pst.setDouble(1, order.getPayment().getPaymentDatas().get(i).getPrice());
+					pst.setInt(2, order.getPayment().getPaymentDatas().get(i).getQuantity());
+					pst.setInt(3, order.getPayment().getPaymentDatas().get(i).getCard().getId());
+					pst.setInt(4, order.getId());
+					Timestamp time2 = new Timestamp(System.currentTimeMillis());
+					pst.setTimestamp(5, time2);
+					pst.setTimestamp(6, time2);
+					
+					pst.executeUpdate();				
+					rs = pst.getGeneratedKeys();
+				};
+							
+				sql.setLength(0);
+				pst.close();
+			}
 						
 			sql.append("INSERT INTO order_items(price, quantity, phone_reference_id, order_id, status_id, created_at, updated_at)");
 			sql.append(" VALUES (?,?,?,?,?,?,?)");
@@ -188,8 +196,28 @@ public class OrderDAO extends AbstractJdbcDAO{
 				pst.executeUpdate();			
 				pst.close();				
 			}
+			sql.setLength(0);
+			pst.close();
+
+			if(order.getOrderCoupons() != null) {
+				sql.append("INSERT INTO order_coupons(coupon_id, order_id, created_at, updated_at)");
+				sql.append(" VALUES (?,?,?,?)");
 				
-							
+
+				for(Coupon c : order.getOrderCoupons().getCoupons()) {	
+					pst = connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+					
+					pst.setInt(1, c.getId());
+					pst.setInt(2, order.getId());
+					Timestamp time2 = new Timestamp(System.currentTimeMillis());
+					pst.setTimestamp(3, time2);
+					pst.setTimestamp(4, time2);
+					
+					pst.executeUpdate();				
+					rs = pst.getGeneratedKeys();
+					
+				}	
+			}
 			connection.commit();		
 		} catch (SQLException e) {
 			try {
@@ -219,7 +247,7 @@ public class OrderDAO extends AbstractJdbcDAO{
 			connection.setAutoCommit(false);					
 			StringBuilder sql = new StringBuilder();			
 			StringBuilder sql2 = new StringBuilder();
-			sql.append("UPDATE orders SET status_id=?, updated_at=?");
+			sql.append("UPDATE orders SET status_id=?, delivery_date=?, updated_at=?");
 			sql.append(" WHERE id IN(");
 			
 			sql2.append("UPDATE order_items SET status_id=?, updated_at=?");
@@ -240,9 +268,10 @@ public class OrderDAO extends AbstractJdbcDAO{
 			pst = connection.prepareStatement(sql.toString());			
 
 			pst.setInt(1, order.getStatus().getId());
+			pst.setString(2, order.getDeliveryDate());
 			Timestamp time = new Timestamp(System.currentTimeMillis());
-			pst.setTimestamp(2, time);
-			int i = 3;
+			pst.setTimestamp(3, time);
+			int i = 4;
 	        
 			for (Integer value : order.getOrderIds()) {
 				pst.setInt(i++, value);
@@ -302,21 +331,21 @@ public class OrderDAO extends AbstractJdbcDAO{
 		
 		if(order.getId() != null) {
 			sql += "WHERE orders.id=?";			
-		} else if(order.getId() == null && order.getStatus() != null) {
+		} else if(order.getId() == null && order.getStatus() != null && order.getClient() == null) {
 			sql += "WHERE orders.status_id=?";					
-		} else if(order.getId() == null && order.getStatus() == null && order.getClient() != null) {
+		} else if(order.getId() == null && order.getClient() != null) {
 			sql += "WHERE orders.clients_id=?";					
 		}
-				
+			
 		// executa consulta
 		try {
 			openConnection();
 			pst = connection.prepareStatement(sql);
 			if(order.getId() != null) {
 				pst.setInt(1, order.getId());				
-			} else if(order.getId() == null && order.getStatus() != null) {
+			} else if(order.getId() == null && order.getStatus() != null && order.getClient() == null) {
 				pst.setInt(1, order.getStatus().getId());					
-			} else if(order.getId() == null && order.getStatus() == null && order.getClient() != null) {
+			} else if(order.getId() == null && order.getClient() != null) {
 				pst.setInt(1, order.getClient().getId());					
 			}
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
@@ -327,10 +356,11 @@ public class OrderDAO extends AbstractJdbcDAO{
 				o.setId(rs.getInt("id"));
 				o.setPrice(rs.getDouble("price"));
 				o.setQuantity(rs.getInt("quantity"));
-				o.setStatus(new Status(rs.getInt("status_id")));
-				o.setClient(new Client(rs.getString("cpf"), rs.getString("firstname")));
+				o.setClient(new Client(rs.getInt("clients_id"), rs.getString("cpf"), rs.getString("firstname")));
 				o.setOrderAddress(new OrderAddress(rs.getInt("order_address_id")));
 				o.setStatus(new Status(rs.getInt("status_id"), rs.getString("status")));
+				o.setOrderDate(rs.getString("order_date"));
+				o.setDeliveryDate(rs.getString("delivery_date"));
 				
 				if(order.getId() != null) {
 					openConnection();

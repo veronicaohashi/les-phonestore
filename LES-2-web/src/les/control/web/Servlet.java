@@ -31,13 +31,16 @@ import les.control.web.vh.impl.product.ProcessorViewHelper;
 import les.control.web.vh.impl.product.ReferenceViewHelper;
 import les.control.web.vh.impl.product.SOViewHelper;
 import les.control.web.vh.impl.sale.CartViewHelper;
+import les.control.web.vh.impl.sale.CouponViewHelper;
 import les.control.web.vh.impl.sale.ExchangeCategoriesViewHelper;
 import les.control.web.vh.impl.sale.OrderAddressViewHelper;
+import les.control.web.vh.impl.sale.OrderCouponsViewHelper;
 import les.control.web.vh.impl.sale.OrderViewHelper;
 import les.control.web.vh.impl.sale.OrderiViewHelper;
 import les.control.web.vh.impl.sale.PaymentViewHelper;
 import les.control.web.vh.impl.sale.StatusViewHelper;
 import les.control.web.vh.impl.stock.EntryViewHelper;
+import les.control.web.vh.impl.stock.MovstockViewHelper;
 import les.control.web.vh.impl.stock.StockViewHelper;
 import les.control.web.vh.impl.stock.SupplierViewHelper;
 import les.core.application.Result;
@@ -100,7 +103,10 @@ public class Servlet extends HttpServlet {
     	vhs.put("/LES-web/Orders", new OrderViewHelper());      
     	vhs.put("/LES-web/Orderi", new OrderiViewHelper());      
     	vhs.put("/LES-web/Payments", new PaymentViewHelper());
-    	vhs.put("/LES-web/OrderAddresses", new OrderAddressViewHelper());        
+    	vhs.put("/LES-web/OrderAddresses", new OrderAddressViewHelper());   
+    	vhs.put("/LES-web/Movstock", new MovstockViewHelper());  
+    	vhs.put("/LES-web/Coupons", new CouponViewHelper());    
+    	vhs.put("/LES-web/OrderCoupons", new OrderCouponsViewHelper());             
     	
     	vhs.put("/LES-web/ConsultBrand", new BrandViewHelper());
     	vhs.put("/LES-web/ConsultColor", new ColorViewHelper());

@@ -11,6 +11,10 @@ public class MovstockType extends DomainEntity{
 	public MovstockType(Integer id) {
 		super(id);
 	}
+	public MovstockType(Integer id, String description) {
+		super(id);
+		this.description = description;
+	}
 	public String getDescription() {
 		return description;
 	}

@@ -13,6 +13,7 @@ import les.core.IStrategy;
 import les.core.application.Result;
 import les.core.impl.business.client.ClientCpfUniqueValidation;
 import les.core.impl.business.client.AddressCityValidation;
+import les.core.impl.business.client.AddressDeleteValidation;
 import les.core.impl.business.client.ClientUserDecryptedPasswordValidation;
 import les.core.impl.business.client.ClientUserEncryptedPasswordValidation;
 import les.core.impl.business.client.AddressUniqueMainValidation;
@@ -28,6 +29,7 @@ import les.core.impl.business.product.ProductBrandValidation;
 import les.core.impl.business.product.ProductConnectionTypeInsertValidation;
 import les.core.impl.business.product.ProductConnectionTypeValidation;
 import les.core.impl.business.product.ProductInactivationCategoryValidation;
+import les.core.impl.business.product.ProductPriceValidation;
 import les.core.impl.business.product.ProductPricingGroupValidation;
 import les.core.impl.business.product.ProductProcessorValidation;
 import les.core.impl.business.product.ReferenceQtdValidation;
@@ -40,10 +42,17 @@ import les.core.impl.business.sale.CartAvaiableQtdValidation;
 import les.core.impl.business.sale.CartNewItemValidation;
 import les.core.impl.business.sale.CartRemoveItemValidation;
 import les.core.impl.business.sale.CartValidation;
+import les.core.impl.business.sale.ExchangeCouponsValidation;
+import les.core.impl.business.sale.OrderCouponValueValidation;
+import les.core.impl.business.sale.OrderDeliveryDateValidation;
+import les.core.impl.business.sale.OrderDifferenceCouponValidation;
 import les.core.impl.business.sale.OrderFirstStatusValidation;
+import les.core.impl.business.sale.OrderUpdateCouponValidation;
 import les.core.impl.business.sale.PaymentRequiredFieldValidation;
 import les.core.impl.business.sale.CartReserveItemValidation;
 import les.core.impl.business.sale.OrderUpdateStatusValidation;
+import les.core.impl.business.sale.OrderUpdateValidation;
+import les.core.impl.business.sale.OrderiExchangeDateValidation;
 import les.core.impl.business.sale.OrderiExchangeCategoryValidation;
 import les.core.impl.business.sale.OrderiUpdateStatusValidation;
 import les.core.impl.business.stock.EntryRequiredFieldValidation;
@@ -54,6 +63,8 @@ import les.core.impl.business.stock.EntryReferenceValidation;
 import les.core.impl.business.stock.EntrySupplierValidation;
 import les.core.impl.business.stock.EntryTotalPriceValidation;
 import les.core.impl.business.stock.EntryTotalQuantityValidation;
+import les.core.impl.business.stock.ExchangeMovstockValidation;
+import les.core.impl.business.stock.ExchangeStockValidation;
 import les.core.impl.business.stock.OrderMovstockValidation;
 import les.core.impl.business.stock.OrderStockValidation;
 import les.core.impl.dao.client.AddressDAO;
@@ -72,8 +83,10 @@ import les.core.impl.dao.product.PricingGroupDAO;
 import les.core.impl.dao.product.ProcessorDAO;
 import les.core.impl.dao.product.ReferenceDAO;
 import les.core.impl.dao.product.SODAO;
+import les.core.impl.dao.sale.CouponDAO;
 import les.core.impl.dao.sale.ExchangeCategoriesDAO;
 import les.core.impl.dao.sale.OrderAddressDAO;
+import les.core.impl.dao.sale.OrderCouponsDAO;
 import les.core.impl.dao.sale.OrderDAO;
 import les.core.impl.dao.sale.OrderiDAO;
 import les.core.impl.dao.sale.PaymentDAO;
@@ -102,9 +115,11 @@ import les.domain.product.Processor;
 import les.domain.product.Reference;
 import les.domain.product.SO;
 import les.domain.sale.Cart;
+import les.domain.sale.Coupon;
 import les.domain.sale.ExchangeCategory;
 import les.domain.sale.Order;
 import les.domain.sale.OrderAddress;
+import les.domain.sale.OrderCoupons;
 import les.domain.sale.Orderi;
 import les.domain.sale.Payment;
 import les.domain.sale.Status;
@@ -171,6 +186,8 @@ public class Facade implements IFacade {
 		OrderAddressDAO orderAddressDAO = new OrderAddressDAO();
 		OrderiDAO orderiDAO = new OrderiDAO();
 		ExchangeCategoriesDAO exchangeCategoriesDAO = new ExchangeCategoriesDAO();
+		CouponDAO couponDAO = new CouponDAO();
+		OrderCouponsDAO orderCouponsDAO = new OrderCouponsDAO();
 		daos.put(Cart.class.getName(), reservedStockDAO);
 		daos.put(Status.class.getName(), statusDAO);
 		daos.put(Order.class.getName(), orderDAO);
@@ -178,6 +195,8 @@ public class Facade implements IFacade {
 		daos.put(OrderAddress.class.getName(), orderAddressDAO);
 		daos.put(ExchangeCategory.class.getName(), exchangeCategoriesDAO);
 		daos.put(Orderi.class.getName(), orderiDAO);
+		daos.put(Coupon.class.getName(), couponDAO);
+		daos.put(OrderCoupons.class.getName(), orderCouponsDAO);
 
 //		CLIENT
 		ClientDAO clientDAO = new ClientDAO();
@@ -203,6 +222,7 @@ public class Facade implements IFacade {
 		ProductConnectionTypeInsertValidation productConnectionTypeInsertValidation = new ProductConnectionTypeInsertValidation();
 		ProductInactivationCategoryValidation productInactivationCategoryValidation = new ProductInactivationCategoryValidation();
 		ProductActivationCategoryValidation productActivationCategoryValidation = new ProductActivationCategoryValidation();
+		ProductPriceValidation productPriceValidation = new ProductPriceValidation();
 		
 		List<IStrategy> rnsSavePhone = new ArrayList<IStrategy>();
 		rnsSavePhone.add(productRequiredFieldValidation);
@@ -217,6 +237,7 @@ public class Facade implements IFacade {
 		rnsUpdatePhone.add(productRequiredFieldValidation);
 		rnsUpdatePhone.add(productUniqueReferenceValidation);
 		rnsUpdatePhone.add(productActivationCategoryValidation);
+		rnsUpdatePhone.add(productPriceValidation);
 		
 		List<IStrategy> rnsDeletePhone = new ArrayList<IStrategy>();
 		rnsDeletePhone.add(productInactivationCategoryValidation);
@@ -355,15 +376,20 @@ public class Facade implements IFacade {
 		AddressCityValidation addressCityValidation = new AddressCityValidation();
 		AddressResidenceTypeValidation addressResidenceTypeValidation = new AddressResidenceTypeValidation();
 		AddressUniqueMainValidation addressUniqueMainValidation = new AddressUniqueMainValidation();
+		AddressDeleteValidation addressDeleteValidation = new AddressDeleteValidation();
 
 		List<IStrategy> rnsSaveAddress = new ArrayList<IStrategy>();
 		rnsSaveAddress.add(addressRequiredFieldValidation);
 		rnsSaveAddress.add(addressCityValidation);
 		rnsSaveAddress.add(addressResidenceTypeValidation);
 		rnsSaveAddress.add(addressUniqueMainValidation);
+		
+		List<IStrategy> rnsDeleteAddress = new ArrayList<IStrategy>();
+		rnsDeleteAddress.add(addressDeleteValidation);
 
 		Map<String, List<IStrategy>> rnsAddress = new HashMap<String, List<IStrategy>>();	
-		rnsAddress.put("SAVE", rnsSaveAddress);		
+		rnsAddress.put("SAVE", rnsSaveAddress);			
+		rnsAddress.put("DELETE", rnsDeleteAddress);		
 		rns.put(Address.class.getName(), rnsAddress);	
 		
 //		CREDIT CARD
@@ -404,12 +430,20 @@ public class Facade implements IFacade {
 //		ORDER
 		OrderFirstStatusValidation orderFirstStatusValidation = new OrderFirstStatusValidation();
 		OrderUpdateStatusValidation orderUpdateStatusValidation = new OrderUpdateStatusValidation();
-
+		OrderUpdateValidation orderUpdateValidation = new OrderUpdateValidation();
+		OrderDeliveryDateValidation orderDeliveryDateValidation = new OrderDeliveryDateValidation();
+		OrderCouponValueValidation orderCouponValueValidation = new OrderCouponValueValidation();
+		OrderDifferenceCouponValidation orderDifferenceCouponValidation = new OrderDifferenceCouponValidation();
+		OrderUpdateCouponValidation orderUpdateCouponValidation = new OrderUpdateCouponValidation();
+		
 		List<IStrategy> rnsSaveOrder = new ArrayList<IStrategy>();
 		rnsSaveOrder.add(orderFirstStatusValidation);
+		rnsSaveOrder.add(orderCouponValueValidation);
 		
 		List<IStrategy> rnsUpdateOrder = new ArrayList<IStrategy>();
+		rnsUpdateOrder.add(orderUpdateValidation);
 		rnsUpdateOrder.add(orderUpdateStatusValidation);
+		rnsUpdateOrder.add(orderDeliveryDateValidation);
 
 		Map<String, List<IStrategy>> rnsOrder = new HashMap<String, List<IStrategy>>();	
 		rnsOrder.put("SAVE", rnsSaveOrder);			
@@ -421,7 +455,9 @@ public class Facade implements IFacade {
 		
 		List<IStrategy> rnsSaveOrderAfter = new ArrayList<IStrategy>();
 		rnsSaveOrderAfter.add(orderMovstockValidation);		
-		rnsSaveOrderAfter.add(orderStockValidation);		
+		rnsSaveOrderAfter.add(orderStockValidation);	
+		rnsSaveOrderAfter.add(orderDifferenceCouponValidation);	
+		rnsSaveOrderAfter.add(orderUpdateCouponValidation);	
 		
 		Map<String, List<IStrategy>> rnsOrderAfter = new HashMap<String, List<IStrategy>>();	
 		rnsOrderAfter.put("SAVE", rnsSaveOrderAfter);
@@ -431,14 +467,34 @@ public class Facade implements IFacade {
 //		ORDERI
 		OrderiUpdateStatusValidation orderiUpdateStatusValidation = new OrderiUpdateStatusValidation();
 		OrderiExchangeCategoryValidation orderiExchangeCategoryValidation = new OrderiExchangeCategoryValidation();
+		OrderiExchangeDateValidation orderiExchangeDateValidation = new OrderiExchangeDateValidation();
 		
 		List<IStrategy> rnsUpdateOrderi = new ArrayList<IStrategy>();
 		rnsUpdateOrderi.add(orderiUpdateStatusValidation);
 		rnsUpdateOrderi.add(orderiExchangeCategoryValidation);
+		rnsUpdateOrderi.add(orderiExchangeDateValidation);
 
 		Map<String, List<IStrategy>> rnsOrderi = new HashMap<String, List<IStrategy>>();	
 		rnsOrderi.put("UPDATE", rnsUpdateOrderi);		
 		rns.put(Orderi.class.getName(), rnsOrderi);
+		
+		ExchangeMovstockValidation exchangeMovstockValidation = new ExchangeMovstockValidation();
+		ExchangeStockValidation exchangeStockValidation = new ExchangeStockValidation();
+		ExchangeCouponsValidation exchangeCouponsValidation = new ExchangeCouponsValidation();
+		
+		List<IStrategy> rnsUpdateOrderiAfter = new ArrayList<IStrategy>();
+		rnsUpdateOrderiAfter.add(exchangeMovstockValidation);		
+		rnsUpdateOrderiAfter.add(exchangeStockValidation);		
+		rnsUpdateOrderiAfter.add(exchangeCouponsValidation);		
+		
+		Map<String, List<IStrategy>> rnsOrderiAfter = new HashMap<String, List<IStrategy>>();	
+		rnsOrderiAfter.put("UPDATE", rnsUpdateOrderiAfter);
+		
+		rnsAfter.put(Orderi.class.getName(), rnsOrderiAfter);
+		
+//		ORDER COUPONS
+		
+
 	}
 	
 	@Override

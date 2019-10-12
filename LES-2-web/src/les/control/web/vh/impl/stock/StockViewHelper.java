@@ -45,8 +45,7 @@ public class StockViewHelper implements IViewHelper{
 		headers.add("Quantidade");
 		
 		if (result.getMsg() == null) {
-			if (action.equals("LIST")) {			
-				
+			if (action.equals("LIST")) {						
 				request.setAttribute("headers", headers);
 				request.setAttribute("stockItems", result.getEntities());	
 				rd = request.getRequestDispatcher("Stock.jsp");	

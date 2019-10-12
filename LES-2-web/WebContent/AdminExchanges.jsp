@@ -1,3 +1,4 @@
+<%@page import="les.domain.sale.Orderi"%>
 <%@page import="les.core.application.Result"%>
 <%@page import="les.domain.sale.Status"%>
 <%@page import="les.domain.DomainEntity"%>
@@ -21,31 +22,87 @@
   			<div class="admin-title">
   				<h3 class="text-center">Trocas</h3>
 	        </div>	  
-         	<div class="col-4">
-				<div class="form-group">		  		
-			    	<label for="cbStatus">Status</label>
-			  		<%
-			  			Result status = (Result)getServletContext().getAttribute("statusResult");
-	 					List<DomainEntity> statusList = status.getEntities();        			
-			    		int index = 1;
-		  			  			     	
- 						out.println("<select class='form-control' id='cbStatus' name='cbStatus'>");
-  						out.println("<option value='' disabled selected>Selecione</option>");
-  						for(DomainEntity s : statusList){
-  							if(index > 4)
-  								out.println("<option value='" + ((Status)s).getId() + "'>" + ((Status)s).getDescription() +"</option>");
-  							index++;
-  						}
-  						out.println("</select>");
-			  		%>
-			  	</div>
-         	</div>      
-       		<table class="table">
-		    </table>
+			<form action="Orderi" method="get">
+		        <div class="row">	        
+		         	<div class="col-4">		         	
+						<div class="form-group">		  		
+					    	<label for="status_id">Status</label>
+					    	<select class='form-control' id='status_id' name='status_id'>
+						    	<%
+						  			Result status = (Result)getServletContext().getAttribute("statusResult");
+				 					List<DomainEntity> statusList = status.getEntities();     
+						    		String status_id = request.getParameter("status_id");
+						    			
+						    		int index = 1;			  			  			     	
+			  						for(DomainEntity s : statusList){
+			  							if(index > 4){
+			  								if(s.getId() == Integer.parseInt(status_id))
+			  									out.println("<option value='" + ((Status)s).getId() + "' selected>" + ((Status)s).getDescription() +"</option>");
+			  								else
+			  									out.println("<option value='" + ((Status)s).getId() + "'>" + ((Status)s).getDescription() +"</option>");
+			  							}
+			 								index++;
+			  						}
+			  						out.println("</select>");
+						  		%>
+					    	</select>
+					  	</div>		        				  	
+		         	</div>    
+		         	<div class="col-1">	         	
+						<input type="hidden" name="action" id="action" value="LIST" />
+						<input style="margin-top: 35px;" class="btn btn-sm btn-outline-secondary" type="submit" value="Filtrar" />
+		         	</div> 	 	 
+	         	</div>     
+         	</form> 
+			<form action="Orderi" method="post">
+	       		<table class="table">	       		
+			        <thead>
+			        <%
+						List<String> headers = (List<String>) request.getAttribute("headers");
+						List<Orderi> orderi = (List<Orderi>) request.getAttribute("orderi");
+			
+						out.println("<tr>");
+						if(Integer.parseInt(status_id) != 8)
+							out.println("<th></th>");
+						for (String header : headers) {
+							out.println("<th>" + header + "</th>");
+						}
+						out.println("<th>Ações</th>");
+						out.println("</tr>");
+						out.println("</thead>");
+			
+						out.println("<tbody>");
+						for (Orderi item : orderi){
+							out.println("<tr>");
+							if(Integer.parseInt(status_id) != 8)
+								out.println("<td><input style='margin:0px !important' class='form-check-input' type='checkbox' name='lupdate' value=" + item.getId() + "></td>");	
+							out.println("<td>" + item.getOrder().getId() +"</td>");
+							out.println("<td>" + item.getReference().getName() +"</td>");
+							out.println("<td>R$ " + item.getPrice() +"</td>");
+							out.println("<td>" + item.getQuantity() +"</td>");
+							out.println("<td>" + item.getExchangeCategory().getDescription() +"</td>");
+							out.println("<td><a href='Orderi?action=CONSULT&id=" + item.getId() + "' class='btn btn-sm btn-outline-secondary mr-2'>" +
+							"<i class='material-icons'>visibility</i></a></td>");
+						
+							out.println("</tr>");
+						}
+						out.println("</tbody>");
+			
+					%>
+				</table>	
+				<% if(Integer.parseInt(status_id) != 8){ %>
+					<div class="row">
+						<div class="col-2 offset-md-10">
+							<input type="text" name="status_id" id="status_id" value="<%= status_id %>" />
+							<input type="hidden" name="action" id="action" value="UPDATE" />
+							<input class="btn btn-primary btn-block" type="submit" value="Alterar Status" />
+		       			</div>
+	      			</div>
+      			<%} %>	 
+			</form>                  
 	    </div>
     </div>
-</div>
-		        
+</div>            
 <script>
 $("#response").show();
 setTimeout(function() { $("#response").hide(); }, 5000);

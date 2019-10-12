@@ -10,7 +10,7 @@ public class OrderiExchangeCategoryValidation implements IStrategy {
 		if(entity instanceof Orderi){
 			Orderi orderi = (Orderi)entity;
 			
-			if(orderi.getExchangeCategory() == null) {
+			if(orderi.getExchangeCategory() == null && orderi.getStatus().getId() == 5) {
 				return "A troca deve estar associada a uma justificativa";
 			}
 		}

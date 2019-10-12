@@ -96,20 +96,12 @@
 			</div>				
             <div class="row" style="padding-bottom: 20px;">
 				<div class="left"><b>Subtotal: </b></div>
-				<div class="right"><input style='border-width:0px !important;text-align: right;' name='price' id='price' value='<%= cart.getPrice() %>'/></div>
-			</div>	
-            <div class="row" style="padding-bottom: 20px;">
-				<div class="left"><b>Frete: </b></div>
-				<div class="right"></div>
-			</div>	
-            <div class="row" style="padding-bottom: 20px;">
-				<div class="left"><b>Cupom: </b></div>
-				<div class="right"></div>
+				<div class="right"><input style='border-width:0px !important;text-align: right;' name='price' id='price' value='<%= cart.getTotalItemsPrice() %>'/></div>
 			</div>	
 			<hr>
             <div class="row" style="padding-bottom: 50px;">
 				<div class="left"><b>Total: </b></div>
-				<div class="right"><%= cart.getPrice() %></div>
+				<div class="right"><input style='border-width:0px !important;text-align: right;' name='totalPrice' id='totalPrice' value='<%= cart.getPrice() %>'/></div>
 			</div>
 			<% if(session.getAttribute("user") != null) {
 				Client client = (Client) session.getAttribute("user"); %>
@@ -181,6 +173,7 @@ function calculatePrice(i, quantity){
 	$.post("Cart?action=SAVE&json=true", { reference_id : reference_id, cbQuantity : quantity  - previous_quantity})
 	.done(function( data ) {
     	$("#price").val(data.price);
+    	$("#totalPrice").val(data.price);
     	$("#txtQuantity").val(data.quantity);
  	});
 }
@@ -193,40 +186,6 @@ function calculateSubtotal(){
 		
 		sum += preco;
 	}
-	
-	console.log(sum)
-}
-
-function frete(){
-    var params = {
-	    'nCdEmpresa': '',
-	    'sDsSenha': '',
-	    'nCdServico': '04014',
-	    'sCepOrigem': '03638010',
-	    'sCepDestino': '43810040',
-	    'nVlPeso': '1',
-	    'nCdFormato': '1',
-	    'nVlComprimento': '16',
-	    'nVlAltura': '5',
-	    'nVlLargura': '15',
-	    'nVlDiametro': '0',
-	    'sCdMaoPropria': 'n',
-	    'nVlValorDeclarado': '0',
-	    'sCdAvisoRecebimento': 'n',
-	    'StrRetorno': 'xml',
-	    'nCdServico': '40010,41106'
-	};
-
-
-    $.ajax({
-        type: "GET",
-        url: "http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo",
-        data: params,
-        dataType : "xml",
-        success: function (data) {
-            console.log(JSON.stringify(data));
-       }
-    });
 }
 $("#response").show();
 setTimeout(function() { $("#response").hide(); }, 5000);     

@@ -134,4 +134,16 @@
     <servlet-name>Servlet</servlet-name>
     <url-pattern>/Orderi</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Movstock</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Coupons</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/OrderCoupons</url-pattern>
+  </servlet-mapping>
 </web-app>

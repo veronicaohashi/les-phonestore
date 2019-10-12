@@ -1,4 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="les.domain.sale.Coupon"%>
+<%@page import="les.domain.sale.OrderCoupons"%>
 <%@page import="les.domain.sale.OrderAddress"%>
 <%@page import="les.domain.sale.PaymentData"%>
 <%@page import="les.domain.sale.Payment"%>
@@ -29,6 +31,7 @@
 		OrderAddress orderAddress = (OrderAddress) session.getAttribute("address");
 		CreditCard card = (CreditCard) session.getAttribute("card");
 		Payment payment = (Payment) session.getAttribute("payment");
+		OrderCoupons coupons = (OrderCoupons)session.getAttribute("coupons");
 	%>
 	<form action="Orders" method="post">
 		<div class="row">
@@ -57,29 +60,42 @@
 			  			<div class="card">
 					  		<div class="card-body">		  					
 			                    <ul class="social">
-	                				<li><%
-	                					if(payment.getPaymentDatas().size() == 1){
-	                   						out.println("<h3 class='title'>Forma de pagamento (1 Cartão)</h3>");		
-	                					} else {	
-	                   						out.println("<h3 class='title'>Forma de pagamento (2 Cartões)</h3>");
-	                					}
-	                				%></li>
+	                				<li><h3 class='title'>Forma de pagamento</h3></li>
 	               				</ul> 
-					  			<div class="row">
-					  			<%
-					  				int count = 1;
-					  				for(PaymentData p : payment.getPaymentDatas()){
-	               				%>
-				  					<div class="col-4">
-			  							<p class="text"><b><%= count %>º Cartão</b></p>                				
-					  					<p class="text"><b><%=p.getCard().getNumber()%></b></p>
-					  					<p class="text"><b>Parcelas: <%= p.getQuantity() %> x <%= p.getPrice() %></b></p>
+		       					 <% if(payment != null){ %>
+						  			<div class="row">
+						  			<%
+						  				int count = 1;
+						  				for(PaymentData p : payment.getPaymentDatas()){
+		               				%>
+					  					<div class="col-4" style="padding-bottom: 15px;">
+				  							<p class="text"><b><%= count %>º Cartão</b></p>                				
+						  					<p class="text"><b><%=p.getCard().getNumber()%></b></p>
+						  					<p class="text"><b>Parcelas: <%= p.getQuantity() %> x R$<%= p.getPrice() %></b></p>
+						  				</div>
+						  				
+				  					<% 		count++; 
+				  						} 
+			  						%>
 					  				</div>
-					  				
-			  					<% 		count++; 
-			  						} 
-		  						%>
-					  			</div>
+		        				<% } %>
+		        				
+	       						<% if(coupons != null){
+       								out.println("<div class='row'>");
+	       							for(Coupon c : coupons.getCoupons()){
+	       								out.println("<div class='col-4'>");
+	       								if(c.getCouponCategory().getId() == 1)     								
+	                   						out.println("<p class='text'><b>Cupom de Troca</b></p>");
+                   						else                   										
+	                   						out.println("<p class='text'><b>Cupom de Desconto</b></p>");
+              						%>			
+					  					<p class="text"><b><%= c.getName()%></b>: R$<%= c.getValue() %></p>
+						  		<%
+						  				out.println("</div>"); 
+	       							}
+					  				out.println("</div>"); 
+	       						}
+						  		%>
 						  	</div>
 						</div>
 					</div>
@@ -124,7 +140,7 @@
 				</div>				
 	            <div class="row" style="padding-bottom: 20px;">
 					<div class="left"><b>Subtotal: </b></div>
-					<div class="right"><input style='border-width:0px !important;text-align: right;' name='price' id='price' value='<%= cart.getPrice() %>'/></div>
+					<div class="right"><input style='border-width:0px !important;text-align: right;' name='price' id='price' value='<%= cart.getTotalItemsPrice() %>'/></div>
 				</div>	
 	            <div class="row" style="padding-bottom: 20px;">
 					<div class="left"><b>Frete: </b></div>
@@ -132,7 +148,7 @@
 				</div>	
 	            <div class="row" style="padding-bottom: 20px;">
 					<div class="left"><b>Cupom: </b></div>
-					<div class="right"></div>
+					<div class="right"><input style='border-width:0px !important;text-align: right;' name='price' id='price' value='<%= cart.getTotalDiscountPrice() %>'/></div>
 				</div>	
 				<hr>
 	            <div class="row" style="padding-bottom: 50px;">

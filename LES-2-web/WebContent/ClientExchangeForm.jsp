@@ -12,21 +12,22 @@
   		<div class="card card-body">
        		<h3 class="text-center mb-4">Troca do Item: <%=request.getParameter("id")%></h3>
 			<form action="Orderi" method="post">
-			<input type="hidden" name="id" value="<%=request.getParameter("id")%>" /> 
-			<input type="hidden" name="status_id" value="<%=request.getParameter("status_id")%>" /> 
+				<input type="hidden" name="id" value="<%=request.getParameter("id")%>" /> 
+				<input type="hidden" name="status_id" value="<%=request.getParameter("status_id")%>" /> 
+				<input type="hidden" name="delivery_date" value="<%=request.getParameter("delivery_date")%>" /> 
 		       	<div class="col-4">
 					<div class="form-group">		  		
 				    	<label for="cbExchangeCategory">Justificativa</label>
 				  		<%
 				  			Result categories = (Result)getServletContext().getAttribute("exchangeCategoryResult");
-				  				 					List<DomainEntity> categoriesList = categories.getEntities();        					
-				  			  			  			     	
-				  							out.println("<select class='form-control' id='cbExchangeCategory' name='cbExchangeCategory'>");
-				  							out.println("<option value='' disabled selected>Selecione</option>");
-				  							for(DomainEntity e : categoriesList){
-				  								out.println("<option value='" + ((ExchangeCategory)e).getId() + "'>" + ((ExchangeCategory)e).getDescription() +"</option>");
-				  							}
-				  							out.println("</select>");
+		 					List<DomainEntity> categoriesList = categories.getEntities();        					
+  			  			  			     	
+  							out.println("<select class='form-control' id='cbExchangeCategory' name='cbExchangeCategory'>");
+  							out.println("<option value='' disabled selected>Selecione</option>");
+  							for(DomainEntity e : categoriesList){
+  								out.println("<option value='" + ((ExchangeCategory)e).getId() + "'>" + ((ExchangeCategory)e).getDescription() +"</option>");
+  							}
+  							out.println("</select>");
 				  		%>
 				  	</div>
 		       	</div>
