@@ -94,7 +94,7 @@ public class ClientDAO extends AbstractJdbcDAO{
 			pst.setBoolean(7, client.getLactive());
 			Timestamp time = new Timestamp(System.currentTimeMillis());	
 			pst.setTimestamp(8, time);			
-			pst.setInt(8, client.getId());
+			pst.setInt(9, client.getId());
 
 			pst.executeUpdate();			
 			connection.commit();		

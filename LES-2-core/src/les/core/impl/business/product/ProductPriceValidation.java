@@ -15,16 +15,17 @@ public class ProductPriceValidation implements IStrategy {
 		if(entity instanceof Phone){
 			Phone phone = (Phone)entity;
 			IDAO pricingGroupDAO = new PricingGroupDAO();
-			
-			try {
-				DomainEntity group = pricingGroupDAO.consult(new PricingGroup(phone.getPricingGroup().getId())).get(0);
-				Double minPrice = phone.getCostPrice() + Math.round(((PricingGroup)group).getPercentage()/100 * phone.getCostPrice());
-				
-				if(minPrice > phone.getSalePrice())
-					return "Apenas o gerente de vendas pode realizar definir um valor de venda menor que a margem de lucro"; 
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
+			if(phone.getPricingGroup() != null) {
+				try {
+					DomainEntity group = pricingGroupDAO.consult(new PricingGroup(phone.getPricingGroup().getId())).get(0);
+					Double minPrice = phone.getCostPrice() + Math.round(((PricingGroup)group).getPercentage()/100 * phone.getCostPrice());
+					
+					if(minPrice > phone.getSalePrice())
+						return "Apenas o gerente de vendas pode realizar definir um valor de venda menor que a margem de lucro"; 
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}				
 			}
 		}		
 		return null;

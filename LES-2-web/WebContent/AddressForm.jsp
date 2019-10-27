@@ -105,7 +105,7 @@
 								</div>	
 								<div class="row">
 									<div class="col-12">							
-                   						<span class="text-center mb-4">* O endereço cadastrado não será configurado como endereço principal</span>
+                   						<span class="text-center mb-4">* O primeiro endereço cadastrado será configurado como endereço principal</span>
 									</div>
 									<div class="col-12">							
                    						<span class="text-center mb-4">* O endereço cadastrado será configurado como endereço de entrega e cobrança</span>
@@ -124,7 +124,6 @@
 									</div>
 									<div class="col-2">
 									    <input type="hidden" id="client_id" name="client_id" value="<%=client.getId()%>">
-				                   		<input type="hidden" name="page" id="page" value="CART" />   
 				                   		<input type="hidden" name="action" id="action" value="SAVE" />   
 					        			<input class="btn btn-primary btn-block" type="submit" value="Cadastrar"/>
 				        			</div>

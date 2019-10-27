@@ -10,6 +10,9 @@
 		out.println("<div class='alert alert-primary' role='alert' id='response'>");
 		out.println(request.getAttribute("response") + "</div>");
 	}
+
+	Client client = (Client) session.getAttribute("user");
+
  %>
 <div class="row">
 	<div class="col-md-12">	
@@ -42,8 +45,7 @@
 						out.println("<td>" + a.getDistrict() +"</td>");
 						out.println("<td>" + a.getCity().getName() +"</td>");
 						out.println("<td>" + a.getCity().getState().getName() +"</td>");						
-						out.println("<td><a href='Phones?action=CONSULT&id=" + a.getId() + "' class='btn btn-sm btn-outline-secondary mr-2'><i class='material-icons'>edit</i></a>"
-								+"<a href='Addresses?action=DELETE&id=" + a.getId() + "&client_id=" + a.getClient().getId() +"' class='btn btn-sm btn-outline-secondary'><i class='material-icons'>delete</i></a></td>");
+						out.println("<td><a href='Addresses?action=DELETE&id=" + a.getId() + "&client_id=" + client.getId() +"' class='btn btn-sm btn-outline-secondary'><i class='material-icons'>delete</i></a></td>");
 						out.println("</tr>");
 					}
 					out.println("</tbody>");

@@ -32,11 +32,11 @@ public class ExchangeCouponsValidation implements IStrategy {
 						coupon.setValidity(LocalDateTime.now().plusDays(60).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 						coupon.setLactive(true);
 						coupon.setCouponCategory(new CouponCategory(1));
-						coupon.setValue(((Orderi)o).getPrice());
+						coupon.setValue(((Orderi)o).getPrice() * ((Orderi)o).getQuantity());
 						coupon.setOrder(((Orderi)o).getOrder());
 						coupon.setClient(((Orderi)o).getOrder().getClient());
 						
-						String name = "TR" + ((Orderi)o).getOrder().getId() + ((Orderi)o).getReference().getId();
+						String name = "TR" + ((Orderi)o).getOrder().getId() + ((Orderi)o).getOrder().getClient().getId() + Math.random();
 
 						coupon.setName(name);								
 						couponDAO.save(coupon);						

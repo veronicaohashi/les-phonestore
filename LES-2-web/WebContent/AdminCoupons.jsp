@@ -48,21 +48,18 @@
 						for (String header : headers) {
 							out.println("<th>" + header + "</th>");
 						}
-						out.println("<th>Ações</th>");
 						out.println("</tr>");
 						out.println("</thead>");
 			
 						out.println("<tbody>");
 						for (Coupon c : coupons){
 							out.println("<tr>");
-							out.println("<td>" + c.getId() +"</td>");
+							out.println("<td>" + c.getName() +"</td>");
 							out.println("<td>" + c.getClient().getCpf() +"</td>");
 							out.println("<td>" + c.getClient().getFirstname() +"</td>");
 							out.println("<td>" + c.getOrder().getId() +"</td>");
 							out.println("<td>R$ " + c.getValue() +"</td>");
 							out.println("<td>" + c.getValidity() +"</td>");
-							out.println("<td><a href='Orders?action=CONSULT&id=" + c.getId() + "' class='btn btn-sm btn-outline-secondary mr-2'>" +
-							"<i class='material-icons'>visibility</i></a></td>");
 						
 							out.println("</tr>");
 						}

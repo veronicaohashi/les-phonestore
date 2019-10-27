@@ -40,6 +40,7 @@
 						for (Order order : orders){
 							out.println("<tr>");
 							out.println("<td>" + order.getId() +"</td>");
+							out.println("<td>" + order.getOrderDate() +"</td>");
 							out.println("<td>R$ " + order.getPrice() +"</td>");
 							out.println("<td>" + order.getQuantity() +"</td>");
 							out.println("<td>" + order.getStatus().getDescription() +"</td>");

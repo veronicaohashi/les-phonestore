@@ -1,3 +1,6 @@
+<%@page import="les.domain.sale.Coupon"%>
+<%@page import="les.domain.sale.OrderCoupons"%>
+<%@page import="les.domain.sale.Payment"%>
 <%@page import="les.domain.sale.PaymentData"%>
 <%@page import="les.domain.sale.Orderi"%>
 <%@page import="les.domain.sale.Order"%>
@@ -64,41 +67,45 @@
 		<div class="row">
 			<div class="col-12">
 				<div class="card">
-					<div class="card-body">
-						<ul class="social">
-							<li>
-								<%
-									if (order.getPayment().getPaymentDatas().size() == 1) {
-										out.println("<h3 class='title'>Forma de pagamento (1 Cartão)</h3>");
-									} else {
-										out.println("<h3 class='title'>Forma de pagamento (2 Cartões)</h3>");
-									}
-								%>
-							</li>
-						</ul>
-						<div class="row">
-							<%
-								int count = 1;
-								for (PaymentData p : order.getPayment().getPaymentDatas()) {
-							%>
-							<div class="col-4">
-								<p class="text">
-									<b><%=count%>º Cartão</b>
-								</p>
-								<p class="text">
-									<b><%=p.getCard().getNumber()%></b>
-								</p>
-								<p class="text">
-									<b>Parcelas: <%=p.getQuantity()%> x <%=p.getPrice()%></b>
-								</p>
-							</div>
-
-							<%
-								count++;
-								}
-							%>
-						</div>
-					</div>
+			  		<div class="card-body">		  					
+	                    <ul class="social">
+               				<li><h3 class='title'>Forma de pagamento</h3></li>
+              				</ul> 
+       					 <% if(order.getPayment() != null){ %>
+				  			<div class="row">
+				  			<%
+				  				int count = 1;
+				  				for(PaymentData p : order.getPayment().getPaymentDatas()){
+               				%>
+			  					<div class="col-4" style="padding-bottom: 15px;">
+		  							<p class="text"><b><%= count %>º Cartão</b></p>                				
+				  					<p class="text"><b><%=p.getCard().getNumber()%></b></p>
+				  					<p class="text"><b>Parcelas: <%= p.getQuantity() %> x R$<%= p.getPrice() %></b></p>
+				  				</div>
+				  				
+		  					<% 		count++; 
+		  						} 
+	  						%>
+			  				</div>
+        				<% } %>
+        				
+      						<% //if(order.getOrderCoupons() != null){
+     								out.println("<div class='row'>");
+      							for(Coupon c : order.getOrderCoupons().getCoupons()){
+      								out.println("<div class='col-4'>");
+      								if(c.getCouponCategory().getId() == 1)     								
+                  						out.println("<p class='text'><b>Cupom de Troca</b></p>");
+                 						else                   										
+                  						out.println("<p class='text'><b>Cupom de Desconto</b></p>");
+            						%>			
+			  					<p class="text"><b><%= c.getName()%></b>: R$<%= c.getValue() %></p>
+				  		<%
+				  				out.println("</div>"); 
+      							}
+			  				out.println("</div>"); 
+      						//}
+				  		%>
+				  	</div>
 				</div>
 			</div>
 		</div>

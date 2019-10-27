@@ -46,7 +46,6 @@
 		}
 		@media only screen and (max-width:359px){.product-grid3 .rating{margin:0}
 		}
-
 	</style>
 
 </head>

@@ -12,7 +12,8 @@ public class AddressRequiredFieldValidation implements IStrategy {
 		String postalCode = "";
 		String street = "";
 		String number = "";
-		String district = "";		
+		String district = "";	
+		StringBuilder msg = new StringBuilder();	
 		
 		if(entity instanceof Address){
 			Address address = (Address)entity;			
@@ -29,10 +30,8 @@ public class AddressRequiredFieldValidation implements IStrategy {
 			street = orderAddress.getAddress().getStreet();
 			number = orderAddress.getAddress().getNumber();
 			district = orderAddress.getAddress().getDistrict();
-		}
-			
+		}			
 		
-		StringBuilder msg = new StringBuilder();
 		if(name.equals("") ) 
 			msg.append("O nome deve ser preenchido!");
 		

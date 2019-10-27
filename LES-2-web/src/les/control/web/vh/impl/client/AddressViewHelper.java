@@ -46,7 +46,6 @@ public class AddressViewHelper implements IViewHelper{
 		if(id != null) {
 			address.setId(Integer.parseInt(id));
 		}
-		
 		if(action.equals("SAVE")){
 			address.setName(name);
 			address.setPostalCode(postalCode);
@@ -121,6 +120,7 @@ public class AddressViewHelper implements IViewHelper{
 				rd = request.getRequestDispatcher("/Addresses?action=LIST&client_id="+client.getId());
 					
 			} else if (action.equals("DELETE")) {	
+				System.out.println("passou aqui");
 				result.setMsg("Endereço excluído com sucesso!");
 				request.setAttribute("response", result.getMsg());
 				rd = request.getRequestDispatcher("/Addresses?action=LIST&client_id="+client.getId());	

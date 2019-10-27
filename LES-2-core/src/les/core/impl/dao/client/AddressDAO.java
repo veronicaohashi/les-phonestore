@@ -11,7 +11,6 @@ import les.core.impl.dao.AbstractJdbcDAO;
 import les.domain.DomainEntity;
 import les.domain.client.Address;
 import les.domain.client.City;
-import les.domain.client.Client;
 import les.domain.client.ResidenceType;
 import les.domain.client.State;
 
@@ -120,7 +119,7 @@ public class AddressDAO extends AbstractJdbcDAO{
 	public List<DomainEntity> consult(DomainEntity entity) {
 		Address address = (Address) entity;
 		PreparedStatement pst = null;
-		String sql ="SELECT addresses.*, cities.name AS city, states.name AS state, residence_types.description AS residence_type "
+		String sql ="SELECT addresses.*, cities.name AS city, states.name AS state, states.id AS state_id, residence_types.description AS residence_type "
 				+ "FROM addresses "
 				+ "JOIN cities ON cities.id = addresses.city_id "
 				+ "JOIN states ON states.id = cities.state_id "
@@ -144,6 +143,8 @@ public class AddressDAO extends AbstractJdbcDAO{
 			} else if (address.getClient().getId() != null) {
 				pst.setInt(1, address.getClient().getId());
 			}
+			
+			System.out.println(pst);
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
 
@@ -159,8 +160,8 @@ public class AddressDAO extends AbstractJdbcDAO{
 				a.setObservation(rs.getString("observation"));
 				a.setLmain(rs.getBoolean("lmain"));
 				a.setResidenceType(new ResidenceType(rs.getInt("residence_type_id"), rs.getString("residence_type")));
-				a.setCity(new City(rs.getInt("city_id"), rs.getString("city"), new State(rs.getString("state"))));
-				a.setClient(new Client(rs.getInt("client_id")));
+				a.setCity(new City(rs.getInt("city_id"), rs.getString("city"), new State(rs.getInt("state_id"), rs.getString("state"))));
+				//a.setClient(new Client(rs.getInt("client_id")));
 				all.add(a);
 			}
 			return all;

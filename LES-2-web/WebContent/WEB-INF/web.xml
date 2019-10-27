@@ -146,4 +146,12 @@
     <servlet-name>Servlet</servlet-name>
     <url-pattern>/OrderCoupons</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/Freight</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Servlet</servlet-name>
+    <url-pattern>/States</url-pattern>
+  </servlet-mapping>
 </web-app>

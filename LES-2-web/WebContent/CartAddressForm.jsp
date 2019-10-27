@@ -3,8 +3,9 @@
 <%@page import="les.domain.client.Address"%>
 <%@page import="les.core.application.Result"%>
 <%@page import="les.domain.DomainEntity"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
 <style>
 .container{max-width: -webkit-fill-available !important;} 
 </style>
@@ -104,6 +105,15 @@
 										</div>
 									</div>
 								</div>
+			                  	<div class="row">
+			                    	<div class="col-md-6">
+				                        <div class="form-group">
+				                            <label for="cbFreight">Frete</label>
+				                            <select class="custom-select" id="cbFreight" name="cbFreight">
+				                            </select>
+				                        </div>
+			                        </div>
+						       	</div>	
 								<div class="row">
 									<div class="col-12">
 										<div class="form-check">
@@ -160,13 +170,28 @@ $(document).ready(function() {
 	          $("#txtCity").val("...");
 	          $("#txtState").val("...");
 
-	          $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(data) {
+	          $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", (data) => {
 	            if (!("erro" in data)) {
 	                $("#txtStreet").val(data.logradouro);
 	                $("#txtDistrict").val(data.bairro);
 	                $("#txtCity").val(data.localidade);
 	                $("#txtState").val(data.uf);
-	            } 
+	                
+	            	$.get("States?action=LIST&acronym=" + data.uf).done((data) => {
+		            	$.get("Freight?action=LIST&state_id=" + data.id).done((data) => {
+
+		            		let options = "<option disabled selected>Selecione</option>";
+		            	 	console.log(data)
+		            		$.each(data, function(key, value){
+		            			options=options+"<option value='"+value.id+"'>"+value.description+" - R$ "+ value.price +"</option>";
+		            		})				
+		            			
+		            		$("#cbFreight").empty();
+		            		$("#cbFreight").append(options);
+		            	});
+	            		
+	            	});
+            	} 
 	            else {
 	              clean();
 	              alert("CEP não encontrado.");

@@ -16,7 +16,7 @@
   		<div class="card card-body">  		
   			<div class="admin-title">
   				<h3 class="text-center">Cartões de crédito</h3>
-		        <a class="btn btn-sm btn-outline-secondary admin-button" href='AddressForm.jsp'>Novo cartão</a>
+		        <a class="btn btn-sm btn-outline-secondary admin-button" href='CreditCardForm.jsp'>Novo cartão</a>
 	        </div>
        		<table class="table">
 		        <thead>

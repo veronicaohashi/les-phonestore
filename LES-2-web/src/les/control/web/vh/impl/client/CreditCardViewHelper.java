@@ -71,6 +71,7 @@ public class CreditCardViewHelper implements IViewHelper{
 	public void setView(Result result, HttpServletRequest request, 
 			HttpServletResponse response) throws IOException, ServletException {
 		String action = request.getParameter("action");
+		Client client = (Client)request.getSession().getAttribute("user");
 		RequestDispatcher rd = null;
 		
 		List<String> headers = new ArrayList<String>();
@@ -102,7 +103,9 @@ public class CreditCardViewHelper implements IViewHelper{
 					
 				}				
 			} else if (action.equals("SAVE")) {		
-				// salvar e redirecionar para o painel administrativo
+				result.setMsg("Cartão de crédito cadastrado com sucesso!");
+				rd = request.getRequestDispatcher("CreditCards?action=LIST&client_id=" + client.getId());			
+				
 			} else if(action.equals("LIST")) {
 				request.setAttribute("headers", headers);
 				request.setAttribute("cards", result.getEntities());
@@ -119,7 +122,8 @@ public class CreditCardViewHelper implements IViewHelper{
 			}	
 		} else {
 			if (action.equals("SAVE")) {
-				// salvar e redirecionar para o painel administrativo
+				request.setAttribute("response", result.getMsg());
+				rd = request.getRequestDispatcher("CreditCards?action=LIST&client_id=" + client.getId());
 			}
 		}
 		

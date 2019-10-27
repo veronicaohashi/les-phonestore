@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import les.core.impl.dao.AbstractJdbcDAO;
 import les.domain.DomainEntity;
-import les.domain.client.City;
+import les.domain.client.State;
 
-public class CityDAO extends AbstractJdbcDAO{
+public class StateDAO extends AbstractJdbcDAO{
     
-	public CityDAO() {
-		super("cities", "id");	
+	public StateDAO() {
+		super("states", "id");	
 	}
 
 	@Override
@@ -30,36 +30,34 @@ public class CityDAO extends AbstractJdbcDAO{
 
 	@Override
 	public List<DomainEntity> consult(DomainEntity entity) {
-		City city = (City)entity;
+		State state = (State)entity;
 		PreparedStatement pst = null;
-		String sql = "SELECT * FROM cities ";
+		String sql = "SELECT * FROM states ";
 
-		if (city.getId() != null) {
+		if (state.getId() != null) {
 			sql += "WHERE id=?";
-		} else if(city.getName() != null) {
-			sql += "WHERE name LIKE ?";
+		} else if(state.getAcronym() != null) {
+			sql += "WHERE acronym=?";
 		}
 		// executa consulta
 		try {
 			openConnection();
 			pst = connection.prepareStatement(sql);
 
-			if (city.getId() != null) {
-				pst.setInt(1, city.getId());
-			} else if(city.getName() != null) {
-				pst.setString(1, city.getName());
+			if (state.getId() != null) {
+				pst.setInt(1, state.getId());
+			} else if(state.getAcronym() != null) {
+				pst.setString(1, state.getAcronym());
 			}
-			
-			System.out.println(pst);
 			
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
-				City c = new City();
+				State s = new State();
 				
-				c.setId(rs.getInt("id"));
-				c.setName(rs.getString("name"));
-				all.add(c);
+				s.setId(rs.getInt("id"));
+				s.setAcronym(rs.getString("acronym"));
+				all.add(s);
 			}
 			return all;
 		} catch (SQLException e) {

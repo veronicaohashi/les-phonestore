@@ -16,6 +16,10 @@ public class CreditCard extends DomainEntity {
 	public CreditCard() {
 		
 	}
+	public CreditCard(Client client, Boolean lmain) {
+		this.client = client;
+		this.lmain = lmain;
+	}
 	public CreditCard(Integer id) {
 		super(id);
 	}

@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.gson.Gson;
+
 import les.control.web.vh.IViewHelper;
 import les.core.application.Result;
 import les.domain.DomainEntity;
@@ -87,7 +89,8 @@ public class OrderViewHelper implements IViewHelper{
 		
 		if (result.getMsg() == null) {			
 			if (action.equals("LIST")) {
-				request.setAttribute("orders", result.getEntities());					
+				List<DomainEntity> orders = result.getEntities();	
+				String page = request.getParameter("page");						
 
 				if(client.getUser().getLevel() == 2) {
 					headers.add("Código");
@@ -96,10 +99,21 @@ public class OrderViewHelper implements IViewHelper{
 					headers.add("Valor Total");
 					headers.add("Quantidade Total");
 					request.setAttribute("headers", headers);
-					
-					rd = request.getRequestDispatcher("AdminOrders.jsp");						
+					if(page != null) {
+						if(page.equals("ANALYSIS")) {
+							String json = new Gson().toJson(orders);
+							response.setContentType("application/json");
+							response.setCharacterEncoding("UTF-8");
+							response.getWriter().write(json);
+						}
+					} else {		
+						request.setAttribute("orders", orders);	
+						rd = request.getRequestDispatcher("AdminOrders.jsp");							
+					}
+										
 				} else {		
 					headers.add("Código");
+					headers.add("Data");
 					headers.add("Valor Total");
 					headers.add("Quantidade Total");
 					headers.add("Status");
@@ -143,7 +157,9 @@ public class OrderViewHelper implements IViewHelper{
 			}
 		}
 		
-		rd.forward(request, response);		
+		if(rd != null) {
+			rd.forward(request, response);				
+		}	
 	
 	}
 

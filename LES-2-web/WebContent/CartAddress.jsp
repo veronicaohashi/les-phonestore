@@ -10,9 +10,14 @@
 </style>
 
 <%@ include file="Master.jsp"%>
+<%
+	if(request.getAttribute("response") != null){
+		out.println("<div class='alert alert-primary' role='alert' id='response'>");
+		out.println(request.getAttribute("response") + "</div>");
+	}	
+%>
 <div class="container-fluid py-3">
 	<form action="OrderAddresses" method="post">
-
 		<%
 			Address address = (Address) request.getAttribute("address");
 			Client client = (Client) session.getAttribute("user");
@@ -24,7 +29,7 @@
 					<div style="display: flex;align-items: center;justify-content:center;" class="btn-toolbar mb-2 mb-md-0">
 						<div class="btn-group mr-2">
 							<a class="btn btn-sm btn-outline-secondary"
-								href="Addresses?action=LIST&client_id=<%=client.getId()%>&page=CART">Alterar
+								href="Addresses?action=LIST&client_id=<%=client.getId()%>&page=CART">Trocar
 								Endereço</a>
 						</div>
 						<div class="btn-group mr-2">
@@ -108,6 +113,7 @@
 												value="<%=address.getCity().getState().getName()%>"
 												readonly>
 										</div>
+										<input type="hidden" name="state_id" id="state_id" value="<%= address.getCity().getState().getId() %>" /> 
 									</div>
 								</div>
 								<div class="row">
@@ -119,6 +125,15 @@
 										</div>
 									</div>
 								</div>
+			                  	<div class="row">
+			                    	<div class="col-md-6">
+				                        <div class="form-group">
+				                            <label for="cbFreight">Frete</label>
+				                            <select class="custom-select" id="cbFreight" name="cbFreight">
+				                            </select>
+				                        </div>
+			                        </div>
+						       	</div>	
 							</div>
 						</div>
 						<div class="row">
@@ -135,3 +150,22 @@
 	</form>
 </div>
 <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>
+$(document).ready(function() {	
+	$("#response").show();
+	setTimeout(function() { $("#response").hide(); }, 5000);
+	
+	var state_id = document.getElementById("state_id");	    
+	$.get("Freight?action=LIST&state_id=" + state_id.value).done(function(data){
+		let options = "<option disabled selected>Selecione</option>";
+	 	console.log(data)
+		$.each(data, function(key, value){
+			options=options+"<option value='"+value.id+"'>"+value.description+" - R$ "+ value.price +"</option>";
+		})				
+			
+		$("#cbFreight").empty();
+		$("#cbFreight").append(options);
+		
+	});	
+});
+</script>

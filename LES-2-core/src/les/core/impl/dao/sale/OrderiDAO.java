@@ -103,6 +103,7 @@ public class OrderiDAO extends AbstractJdbcDAO{
 				+ ", status.description AS status_description"
 				+ ", exchange_categories.description as exchange_categories_description"
 				+ ", orders.clients_id AS order_client_id"
+				+ ", orders.order_date AS order_date"
 				+ " FROM order_items "
 				+ " JOIN phone_references ON phone_references.id = order_items.phone_reference_id"
 				+ " JOIN status ON status.id = order_items.status_id"
@@ -125,7 +126,11 @@ public class OrderiDAO extends AbstractJdbcDAO{
 	            	sql += "?,";
 	            }
 	        }		
+		} else if(orderi.getExchangeCategory() != null) {
+			sql += " WHERE exchange_categories_id is not null";			
 		}
+		
+		sql += " ORDER BY orders.order_date";
 		
 		// executa consulta
 		try {
@@ -153,7 +158,7 @@ public class OrderiDAO extends AbstractJdbcDAO{
 				o.setPrice(rs.getDouble("price"));
 				o.setQuantity(rs.getInt("quantity"));
 				o.setReference(new Reference(rs.getInt("phone_reference_id"), rs.getString("reference_name")));
-				o.setOrder(new Order(rs.getInt("order_id"), new Client(rs.getInt("order_client_id"))));
+				o.setOrder(new Order(rs.getInt("order_id"), new Client(rs.getInt("order_client_id")), rs.getString("order_date")));
 				o.setStatus(new Status(rs.getInt("status_id"), rs.getString("status_description")));
 				o.setExchangeCategory(new ExchangeCategory(rs.getInt("exchange_categories_id"), rs.getString("exchange_categories_description")));
 				

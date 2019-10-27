@@ -5,6 +5,8 @@ import les.domain.client.Address;
 
 public class OrderAddress extends DomainEntity {
 	private Address address;
+	private Freight freight;
+	
 	public OrderAddress() {
 		
 	}
@@ -17,5 +19,11 @@ public class OrderAddress extends DomainEntity {
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+	public Freight getFreight() {
+		return freight;
+	}
+	public void setFreight(Freight freight) {
+		this.freight = freight;
 	}
 }

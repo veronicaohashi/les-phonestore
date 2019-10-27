@@ -131,10 +131,11 @@ $(document).ready(function() {
 	let minPrice = 100;
 	
 	if(price < 100)
-		minPrice = price;
-	
-	for(var i = 1; (price / i).toFixed(2) >= minPrice; i++){
-		options=options+"<option value='"+ i +"'>"+ i + " x de R$ "+ (price / i).toFixed(2) +"</option>";
+		options = options+"<option value='"+ 1 +"'>"+ 1 + " x de R$ "+ (price / 1).toFixed(2) +"</option>";
+	else {
+		for(var i = 1; (price / i).toFixed(2) >= minPrice; i++){
+			options=options+"<option value='"+ i +"'>"+ i + " x de R$ "+ (price / i).toFixed(2) +"</option>";
+		}
 	}
 
 	$("#cbInstallmentQuantity").append(options);	

@@ -22,8 +22,10 @@ import les.domain.product.Color;
 import les.domain.product.Phone;
 import les.domain.product.Reference;
 import les.domain.sale.Coupon;
+import les.domain.sale.CouponCategory;
 import les.domain.sale.Order;
 import les.domain.sale.OrderAddress;
+import les.domain.sale.OrderCoupons;
 import les.domain.sale.Orderi;
 import les.domain.sale.Payment;
 import les.domain.sale.PaymentData;
@@ -336,7 +338,8 @@ public class OrderDAO extends AbstractJdbcDAO{
 		} else if(order.getId() == null && order.getClient() != null) {
 			sql += "WHERE orders.clients_id=?";					
 		}
-			
+		
+		sql += " ORDER BY orders.order_date";
 		// executa consulta
 		try {
 			openConnection();
@@ -360,7 +363,7 @@ public class OrderDAO extends AbstractJdbcDAO{
 				o.setOrderAddress(new OrderAddress(rs.getInt("order_address_id")));
 				o.setStatus(new Status(rs.getInt("status_id"), rs.getString("status")));
 				o.setOrderDate(rs.getString("order_date"));
-				o.setDeliveryDate(rs.getString("delivery_date"));
+				o.setDeliveryDate(rs.getString("delivery_date"));				
 				
 				if(order.getId() != null) {
 					openConnection();
@@ -395,11 +398,10 @@ public class OrderDAO extends AbstractJdbcDAO{
 											, new Capacity(rsi.getInt("capacity_id"), rsi.getString("capacity_description"))
 													, new Phone(rsi.getString("phone_model")))));
 							
-						}
-						
+						}						
 						pst.close();
 						
-						sql= "SELECT order_addresses.*, cities.name AS city, states.name AS state, residence_types.description AS residence_type "
+						sql= "SELECT order_addresses.*, cities.name AS city, states.name AS state, states.id AS state_id, residence_types.description AS residence_type "
 							+ "FROM order_addresses "
 							+ "JOIN cities ON cities.id = order_addresses.city_id "
 							+ "JOIN states ON states.id = cities.state_id "
@@ -421,13 +423,11 @@ public class OrderDAO extends AbstractJdbcDAO{
 							a.setPostalCode(rsa.getString("postal_code"));
 							a.setObservation(rsa.getString("observation"));
 							a.setResidenceType(new ResidenceType(rsa.getInt("residence_type_id"), rsa.getString("residence_type")));
-							a.setCity(new City(rsa.getInt("city_id"), rsa.getString("city"), new State(rsa.getString("state"))));
+							a.setCity(new City(rsa.getInt("city_id"), rsa.getString("city"), new State(rsa.getInt("state_id"), rsa.getString("state"))));
 							
 							o.getOrderAddress().setAddress(a);							
 						}
-						
-						pst.close();
-						
+						pst.close();			
 
 						sql= "SELECT payments.*, order_credit_cards.* "
 							+ "FROM payments "
@@ -458,11 +458,33 @@ public class OrderDAO extends AbstractJdbcDAO{
 						}
 
 						payment.setPaymentDatas(paymentDatas);						
-						o.setPayment(payment);	
-						
+						o.setPayment(payment);				
 						pst.close();
-
 						
+						sql= "SELECT order_coupons.*, coupons.id AS coupon_id, "
+							+ "coupons.name AS coupon_name, coupons.value AS coupon_value, "
+							+ "coupons.coupon_category_id "
+							+ "FROM order_coupons "
+							+ "JOIN coupons ON coupons.id = order_coupons.coupon_id "
+							+ "WHERE order_coupons.order_id=?";
+						pst = connection.prepareStatement(sql);
+						pst.setInt(1, order.getId());
+						
+						ResultSet rsoc = pst.executeQuery();	
+						OrderCoupons orderCoupons = new OrderCoupons();
+						List<Coupon> coupon = new ArrayList<Coupon>();
+						while (rsoc.next()) {	
+							Coupon c = new Coupon();
+							c.setId(rsoc.getInt("coupon_id"));
+							c.setName(rsoc.getString("coupon_name"));
+							c.setValue(rsoc.getDouble("coupon_value"));
+							c.setCouponCategory(new CouponCategory(rsoc.getInt("coupon_category_id")));
+							coupon.add(c);
+						}
+						orderCoupons.setCoupons(coupon);	
+						o.setOrderCoupons(orderCoupons);
+			
+						pst.close();					
 						
 					} catch (SQLException e) {
 						e.printStackTrace();

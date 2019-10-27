@@ -5,13 +5,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 	<head>
-		<!-- Required meta tags -->
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		
-		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
      	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<meta charset="UTF-8">
 		
    		<title>CELULARES</title>
 	    <style>
@@ -178,6 +175,7 @@
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Orders?action=LIST&status_id=1">Pedidos</a>
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Orderi?action=LIST&status_id=5">Trocas</a>
 	    	<a class="my-0 mr-md-auto font-weight-normal" href="Coupons?action=LIST">Cupons</a>
+	    	<a class="my-0 mr-md-auto font-weight-normal" href="Analysis.jsp">Análise</a>
 	    	
       		<div class="btn-group mr-2">
 				<span>Bem vindo(a), <%= client.getFirstname()%></span>

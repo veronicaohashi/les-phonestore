@@ -12,6 +12,7 @@ public class Cart extends DomainEntity {
 	private Orderi storageItem;
 	private Double totalItemsPrice;
 	private Double totalDiscountPrice;
+	private Double freightPrice;
 	
 	public Cart() {
 		this.totalItemsPrice = 0.0;
@@ -85,5 +86,11 @@ public class Cart extends DomainEntity {
 	}
 	public void setTotalDiscountPrice(Double totalDiscountPrice) {
 		this.totalDiscountPrice = totalDiscountPrice;
+	}
+	public Double getFreightPrice() {
+		return freightPrice;
+	}
+	public void setFreightPrice(Double freightPrice) {
+		this.freightPrice = freightPrice;
 	}	
 }

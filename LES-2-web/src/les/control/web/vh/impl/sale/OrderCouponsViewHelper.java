@@ -74,7 +74,7 @@ public class OrderCouponsViewHelper implements IViewHelper{
 								total += c.getValue();
 							}
 							cart.setTotalDiscountPrice(total);
-							cart.setPrice(cart.getTotalItemsPrice() - total);
+							cart.setPrice(cart.getTotalItemsPrice() + cart.getFreightPrice() - total);
 							request.getSession().setAttribute("cart", cart);
 							
 							if(cart.getPrice() > 0) {							
@@ -84,7 +84,7 @@ public class OrderCouponsViewHelper implements IViewHelper{
 							}											
 						} else {
 							cart.setTotalDiscountPrice(0.0);
-							cart.setPrice(cart.getTotalItemsPrice());
+							cart.setPrice(cart.getTotalItemsPrice() + cart.getFreightPrice());
 							request.getSession().setAttribute("cart", cart);
 							
 							request.getSession().removeAttribute("coupons");

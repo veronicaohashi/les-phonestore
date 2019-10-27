@@ -10,6 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import les.control.web.vh.IViewHelper;
 import les.core.application.Result;
 import les.domain.DomainEntity;
@@ -30,7 +32,8 @@ public class OrderiViewHelper implements IViewHelper{
 		String id = request.getParameter("id");
 		String exchange_category_id = request.getParameter("cbExchangeCategory");
 		String[] lupdate = request.getParameterValues("lupdate");
-		
+		String exchange_categories_id = request.getParameter("exchange_categories_id");
+
 		if(action.equals("UPDATE")) {
 			if(status_id != null) {
 				orderi.setStatus(new Status(Integer.parseInt(status_id)));				
@@ -55,7 +58,10 @@ public class OrderiViewHelper implements IViewHelper{
 		} else if(action.equals("LIST")) {
 			if(status_id != null) {
 				orderi.setStatus(new Status(Integer.parseInt(status_id)));					
-			}			
+			}
+			if(exchange_categories_id != null) {
+				orderi.setExchangeCategory(new ExchangeCategory(1));
+			}
 		}				
 		return orderi;		
 	}	
@@ -77,7 +83,8 @@ public class OrderiViewHelper implements IViewHelper{
 					rd = request.getRequestDispatcher("Orders?action=LIST&client_id=" + client.getId());	
 				}					
 			} else if(action.equals("LIST")) {
-				request.setAttribute("orderi", result.getEntities());					
+				List<DomainEntity> orderi = result.getEntities();
+				String page = request.getParameter("page");							
 
 				if(client.getUser().getLevel() == 2) {
 					headers.add("Pedido");
@@ -86,7 +93,17 @@ public class OrderiViewHelper implements IViewHelper{
 					headers.add("Quantidade");
 					headers.add("Justificativa");
 					request.setAttribute("headers", headers);
-					rd = request.getRequestDispatcher("AdminExchanges.jsp");						
+					if(page != null) {
+						if(page.equals("ANALYSIS")) {
+							String json = new Gson().toJson(orderi);
+							response.setContentType("application/json");
+							response.setCharacterEncoding("UTF-8");
+							response.getWriter().write(json);}
+					} else {
+						request.setAttribute("orderi", result.getEntities());
+						rd = request.getRequestDispatcher("AdminExchanges.jsp");						
+
+					}
 				} else {		
 					headers.add("Código");
 					headers.add("Valor Total");
@@ -109,8 +126,10 @@ public class OrderiViewHelper implements IViewHelper{
 				rd = request.getRequestDispatcher("index.jsp");						
 			}		
 		}
-		
-		rd.forward(request, response);		
+
+		if(rd != null) {
+			rd.forward(request, response);		
+		}
 	
 	}
 

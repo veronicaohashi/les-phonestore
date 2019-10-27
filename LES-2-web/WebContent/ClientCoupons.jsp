@@ -36,10 +36,14 @@
 					out.println("<tbody>");
 					for (Coupon c : coupons){
 						out.println("<tr>");
-						out.println("<td>" + c.getId() +"</td>");
+						out.println("<td>" + c.getName() +"</td>");
 						out.println("<td>" + c.getOrder().getId() +"</td>");
 						out.println("<td>R$ " + c.getValue() +"</td>");
-						out.println("<td>" + c.getValidity() +"</td>");					
+						out.println("<td>" + c.getValidity() +"</td>");	
+						if(c.getLactive())
+							out.println("<td>ATIVO</td>");
+						else
+							out.println("<td>INATIVO</td>");			
 						out.println("</tr>");
 					}
 					out.println("</tbody>");

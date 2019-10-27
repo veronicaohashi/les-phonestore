@@ -39,7 +39,7 @@
 							out.println("<td>" + a.getCity().getName() +"</td>");
 							out.println("<td>" + a.getCity().getState().getName() +"</td>");
 							out.println("<td><a class='btn btn-sm btn-outline-primary'" +
-									"href='OrderAddresses?action=CONSULT&id=" + a.getId() + "&page=PAYMENT'>Selecionar</a></td>");
+									"href='OrderAddresses?action=CONSULT&id=" + a.getId() + "&page=CART'>Selecionar</a></td>");
 							out.println("</tr>");	        
 						}
 						out.println("</tbody>");				

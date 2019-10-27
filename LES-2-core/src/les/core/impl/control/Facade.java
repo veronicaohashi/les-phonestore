@@ -21,6 +21,7 @@ import les.core.impl.business.client.ClientUserPasswordValidation;
 import les.core.impl.business.client.AddressRequiredFieldValidation;
 import les.core.impl.business.client.ClientRequiredFieldValidation;
 import les.core.impl.business.client.CreditCardRequiredFieldValidation;
+import les.core.impl.business.client.CreditCardUniqueMainValidation;
 import les.core.impl.business.client.UserRequiredFieldValidation;
 import les.core.impl.business.client.AddressResidenceTypeValidation;
 import les.core.impl.business.client.ClientUniqueUserValidation;
@@ -43,6 +44,7 @@ import les.core.impl.business.sale.CartNewItemValidation;
 import les.core.impl.business.sale.CartRemoveItemValidation;
 import les.core.impl.business.sale.CartValidation;
 import les.core.impl.business.sale.ExchangeCouponsValidation;
+import les.core.impl.business.sale.FreightValidation;
 import les.core.impl.business.sale.OrderCouponValueValidation;
 import les.core.impl.business.sale.OrderDeliveryDateValidation;
 import les.core.impl.business.sale.OrderDifferenceCouponValidation;
@@ -71,6 +73,7 @@ import les.core.impl.dao.client.AddressDAO;
 import les.core.impl.dao.client.ClientDAO;
 import les.core.impl.dao.client.CreditCardDAO;
 import les.core.impl.dao.client.ResidenceTypeDAO;
+import les.core.impl.dao.client.StateDAO;
 import les.core.impl.dao.client.UserDAO;
 import les.core.impl.dao.product.ActivationCategoryDAO;
 import les.core.impl.dao.product.BrandDAO;
@@ -85,6 +88,7 @@ import les.core.impl.dao.product.ReferenceDAO;
 import les.core.impl.dao.product.SODAO;
 import les.core.impl.dao.sale.CouponDAO;
 import les.core.impl.dao.sale.ExchangeCategoriesDAO;
+import les.core.impl.dao.sale.FreightDAO;
 import les.core.impl.dao.sale.OrderAddressDAO;
 import les.core.impl.dao.sale.OrderCouponsDAO;
 import les.core.impl.dao.sale.OrderDAO;
@@ -102,6 +106,7 @@ import les.domain.client.Address;
 import les.domain.client.Client;
 import les.domain.client.CreditCard;
 import les.domain.client.ResidenceType;
+import les.domain.client.State;
 import les.domain.client.User;
 import les.domain.product.ActivationCategory;
 import les.domain.product.Brand;
@@ -117,6 +122,7 @@ import les.domain.product.SO;
 import les.domain.sale.Cart;
 import les.domain.sale.Coupon;
 import les.domain.sale.ExchangeCategory;
+import les.domain.sale.Freight;
 import les.domain.sale.Order;
 import les.domain.sale.OrderAddress;
 import les.domain.sale.OrderCoupons;
@@ -188,6 +194,7 @@ public class Facade implements IFacade {
 		ExchangeCategoriesDAO exchangeCategoriesDAO = new ExchangeCategoriesDAO();
 		CouponDAO couponDAO = new CouponDAO();
 		OrderCouponsDAO orderCouponsDAO = new OrderCouponsDAO();
+		FreightDAO freightDAO = new FreightDAO();
 		daos.put(Cart.class.getName(), reservedStockDAO);
 		daos.put(Status.class.getName(), statusDAO);
 		daos.put(Order.class.getName(), orderDAO);
@@ -197,6 +204,7 @@ public class Facade implements IFacade {
 		daos.put(Orderi.class.getName(), orderiDAO);
 		daos.put(Coupon.class.getName(), couponDAO);
 		daos.put(OrderCoupons.class.getName(), orderCouponsDAO);
+		daos.put(Freight.class.getName(), freightDAO);
 
 //		CLIENT
 		ClientDAO clientDAO = new ClientDAO();
@@ -204,11 +212,13 @@ public class Facade implements IFacade {
 		UserDAO userDAO = new UserDAO();
 		AddressDAO addressDAO = new AddressDAO();
 		CreditCardDAO creditCardDAO = new CreditCardDAO();
+		StateDAO stateDAO = new StateDAO();
 		daos.put(Client.class.getName(), clientDAO);	
 		daos.put(ResidenceType.class.getName(), residenceTypeDAO);	
 		daos.put(User.class.getName(), userDAO);	
 		daos.put(Address.class.getName(), addressDAO);		
-		daos.put(CreditCard.class.getName(), creditCardDAO);			
+		daos.put(CreditCard.class.getName(), creditCardDAO);		
+		daos.put(State.class.getName(), stateDAO);			
 		
 //		PRODUCT
 		ProductRequiredFieldValidation productRequiredFieldValidation = new ProductRequiredFieldValidation();
@@ -219,7 +229,6 @@ public class Facade implements IFacade {
 		ProductReferenceValidation productReferenceValidation = new ProductReferenceValidation();
 		ProductUniqueReferenceValidation productUniqueReferenceValidation = new ProductUniqueReferenceValidation();
 		ProductConnectionTypeValidation productConnectionTypeValidation = new ProductConnectionTypeValidation();
-		ProductConnectionTypeInsertValidation productConnectionTypeInsertValidation = new ProductConnectionTypeInsertValidation();
 		ProductInactivationCategoryValidation productInactivationCategoryValidation = new ProductInactivationCategoryValidation();
 		ProductActivationCategoryValidation productActivationCategoryValidation = new ProductActivationCategoryValidation();
 		ProductPriceValidation productPriceValidation = new ProductPriceValidation();
@@ -251,7 +260,6 @@ public class Facade implements IFacade {
 		
 		List<IStrategy> rnsSavePhoneAfter = new ArrayList<IStrategy>();
 		rnsSavePhoneAfter.add(productUniqueReferenceValidation);
-		rnsSavePhoneAfter.add(productInactivationCategoryValidation);		
 		
 		Map<String, List<IStrategy>> rnsPhoneAfter = new HashMap<String, List<IStrategy>>();	
 		rnsPhoneAfter.put("SAVE", rnsSavePhoneAfter);
@@ -304,7 +312,6 @@ public class Facade implements IFacade {
 		
 //		CART
 		CartValidation cartValidation = new CartValidation();
-		CartAvaiableQtdValidation cartAvaiableQtdValidation = new CartAvaiableQtdValidation();
 		CartNewItemValidation cartNewItemValidation = new CartNewItemValidation();
 		CartReserveItemValidation cartReserveItemValidation = new CartReserveItemValidation();
 		
@@ -386,7 +393,7 @@ public class Facade implements IFacade {
 		
 		List<IStrategy> rnsDeleteAddress = new ArrayList<IStrategy>();
 		rnsDeleteAddress.add(addressDeleteValidation);
-
+		
 		Map<String, List<IStrategy>> rnsAddress = new HashMap<String, List<IStrategy>>();	
 		rnsAddress.put("SAVE", rnsSaveAddress);			
 		rnsAddress.put("DELETE", rnsDeleteAddress);		
@@ -394,9 +401,10 @@ public class Facade implements IFacade {
 		
 //		CREDIT CARD
 		CreditCardRequiredFieldValidation creditCardRequiredFieldValidation = new CreditCardRequiredFieldValidation();
-		
+		CreditCardUniqueMainValidation creditCardUniqueMainValidation = new CreditCardUniqueMainValidation();
 		List<IStrategy> rnsSaveCreditCard = new ArrayList<IStrategy>();
 		rnsSaveCreditCard.add(creditCardRequiredFieldValidation);
+		rnsSaveCreditCard.add(creditCardUniqueMainValidation);
 		
 		Map<String, List<IStrategy>> rnsCreditCard = new HashMap<String, List<IStrategy>>();	
 		rnsCreditCard.put("SAVE", rnsSaveCreditCard);		
@@ -418,13 +426,20 @@ public class Facade implements IFacade {
 		rns.put(Payment.class.getName(), rnsPayment);
 		
 //		ORDER ADDRESS
+		FreightValidation freightValidation = new FreightValidation();
 		List<IStrategy> rnsSaveOrderAddress = new ArrayList<IStrategy>();
 		rnsSaveOrderAddress.add(addressRequiredFieldValidation);
 		rnsSaveOrderAddress.add(addressCityValidation);
 		rnsSaveOrderAddress.add(addressResidenceTypeValidation);
+		rnsSaveOrderAddress.add(freightValidation);
+		
+		List<IStrategy> rnsConsultOrderAddress = new ArrayList<IStrategy>();
+		rnsConsultOrderAddress.add(freightValidation);
 
 		Map<String, List<IStrategy>> rnsOrderAddress = new HashMap<String, List<IStrategy>>();	
 		rnsOrderAddress.put("SAVE", rnsSaveOrderAddress);		
+		rnsOrderAddress.put("CONSULT", rnsConsultOrderAddress);
+		
 		rns.put(OrderAddress.class.getName(), rnsOrderAddress);	
 		
 //		ORDER

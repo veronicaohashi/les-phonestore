@@ -16,16 +16,27 @@ public class OrderCouponValueValidation implements IStrategy {
 			if(order.getOrderCoupons() != null) {
 				int discount = 0;
 				List<Coupon> new_order_coupons = new ArrayList<Coupon>();
-				
+				int count = 0;
 				for(Coupon c : order.getOrderCoupons().getCoupons()) {
-					discount += c.getValue();		
-					new_order_coupons.add(c);			
-
-					if(discount > order.getTotalItemsPrice()) {						
-						order.setTotalDiscountPrice(discount);
-						order.setPrice(order.getTotalItemsPrice() - discount);
-						order.getOrderCoupons().setCoupons(new_order_coupons);
-						break;
+					if(c.getCouponCategory().getId() == 2)
+						count++;
+				}
+				
+				if(count == order.getOrderCoupons().getCoupons().size()) {
+					order.setPrice(0.0);
+				} else {
+				
+					for(Coupon c : order.getOrderCoupons().getCoupons()) {
+						
+						discount += c.getValue();		
+						new_order_coupons.add(c);			
+	
+						if(discount > order.getTotalItemsPrice()) {						
+							order.setTotalDiscountPrice(discount);
+							order.setPrice(order.getTotalItemsPrice() - discount);
+							order.getOrderCoupons().setCoupons(new_order_coupons);
+							break;
+						}
 					}
 				}
 				

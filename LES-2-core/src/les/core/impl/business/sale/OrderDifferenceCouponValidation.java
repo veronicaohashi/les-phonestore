@@ -25,7 +25,7 @@ public class OrderDifferenceCouponValidation implements IStrategy {
 				
 				if(price > 0) {
 					Coupon coupon = new Coupon();
-					String name = "TR" + order.getId() + order.getClient().getId();
+					String name = "TR" + order.getId() + order.getClient().getId() + Math.random();
 	
 					coupon.setClient(order.getClient());
 					coupon.setCouponCategory(new CouponCategory(1));
@@ -41,7 +41,7 @@ public class OrderDifferenceCouponValidation implements IStrategy {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-				}
+				} 
 			}
 		}
 		return null;

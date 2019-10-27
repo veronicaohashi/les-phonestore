@@ -25,9 +25,10 @@ public class Order extends DomainEntity {
 		this.items = new ArrayList<Orderi>();
 		this.orderIds = new ArrayList<Integer>();
 	}
-	public Order(Integer id, Client client) {
+	public Order(Integer id, Client client, String orderDate) {
 		super(id);
 		this.client = client;
+		this.orderDate = orderDate;
 	}
 	public Order(Integer id) {
 		super(id);

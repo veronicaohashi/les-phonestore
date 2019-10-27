@@ -1,6 +1,7 @@
 package les.control.web;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ import les.control.web.vh.impl.client.AddressViewHelper;
 import les.control.web.vh.impl.client.ClientViewHelper;
 import les.control.web.vh.impl.client.CreditCardViewHelper;
 import les.control.web.vh.impl.client.ResidenceTypeViewHelper;
+import les.control.web.vh.impl.client.StateViewHelper;
 import les.control.web.vh.impl.client.UserViewHelper;
 import les.control.web.vh.impl.product.ActivationCategoryViewHelper;
 import les.control.web.vh.impl.product.BrandViewHelper;
@@ -33,6 +35,7 @@ import les.control.web.vh.impl.product.SOViewHelper;
 import les.control.web.vh.impl.sale.CartViewHelper;
 import les.control.web.vh.impl.sale.CouponViewHelper;
 import les.control.web.vh.impl.sale.ExchangeCategoriesViewHelper;
+import les.control.web.vh.impl.sale.FreightViewHelper;
 import les.control.web.vh.impl.sale.OrderAddressViewHelper;
 import les.control.web.vh.impl.sale.OrderCouponsViewHelper;
 import les.control.web.vh.impl.sale.OrderViewHelper;
@@ -106,7 +109,9 @@ public class Servlet extends HttpServlet {
     	vhs.put("/LES-web/OrderAddresses", new OrderAddressViewHelper());   
     	vhs.put("/LES-web/Movstock", new MovstockViewHelper());  
     	vhs.put("/LES-web/Coupons", new CouponViewHelper());    
-    	vhs.put("/LES-web/OrderCoupons", new OrderCouponsViewHelper());             
+    	vhs.put("/LES-web/OrderCoupons", new OrderCouponsViewHelper());    
+    	vhs.put("/LES-web/Freight", new FreightViewHelper());         
+    	vhs.put("/LES-web/States", new StateViewHelper());         
     	
     	vhs.put("/LES-web/ConsultBrand", new BrandViewHelper());
     	vhs.put("/LES-web/ConsultColor", new ColorViewHelper());
@@ -137,6 +142,12 @@ public class Servlet extends HttpServlet {
 	protected void doProcessRequest(HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
 
+    	try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		uri = request.getRequestURI();
 		this.request = request;
 		action = request.getParameter("action");

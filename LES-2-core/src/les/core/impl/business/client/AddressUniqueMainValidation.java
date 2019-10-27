@@ -19,21 +19,21 @@ public class AddressUniqueMainValidation implements IStrategy {
 			if(address.getClient() != null) {
 				try {
 					List<DomainEntity> addresses = dao.consult(new Address(address.getClient(), address.getLmain()));
-					
-					if(address.getId() != null){
+					if(addresses.size() > 0){
 						if(addresses.get(0).getId() != address.getId() && address.getLmain()) {
 							Address a = (Address)addresses.get(0);
 							a.setLmain(false);
-							dao.update(a);					
 							
 						} else if(addresses.get(0).getId() == address.getId() && ! address.getLmain()) {
 							return "Você deve possuir apenas um endereço principal!";					
 						}
+					} else {
+						address.setLmain(true);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			}
+			} 
 		}
 		
 		return null;

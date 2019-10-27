@@ -144,7 +144,7 @@
 				</div>	
 	            <div class="row" style="padding-bottom: 20px;">
 					<div class="left"><b>Frete: </b></div>
-					<div class="right"></div>
+					<div class="right"><input style='border-width:0px !important;text-align: right;' name='price' id='price' value='<%= cart.getFreightPrice() %>'/></div>
 				</div>	
 	            <div class="row" style="padding-bottom: 20px;">
 					<div class="left"><b>Cupom: </b></div>
