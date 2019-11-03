@@ -14,9 +14,11 @@ public class Orderi extends DomainEntity {
 	private Status status;
 	private ExchangeCategory exchangeCategory;
 	private List<Integer> orderiIds;
+	private List<Integer> orderIds;
 	
 	public Orderi() {
 		this.orderiIds = new ArrayList<Integer>();
+		this.orderIds = new ArrayList<Integer>();
 		
 	}
 	public Orderi(Integer id, Double price, Integer quantity, Status status, Reference reference) {
@@ -71,4 +73,14 @@ public class Orderi extends DomainEntity {
 	public void addIds(Integer id){
 		this.orderiIds.add(id);
 	}
+	public List<Integer> getOrderIds() {
+		return orderIds;
+	}
+	public void setOrderIds(List<Integer> orderIds) {
+		this.orderIds = orderIds;
+	}
+	public void addOrderIds(Integer id){
+		this.orderIds.add(id);
+	}
+	
 }

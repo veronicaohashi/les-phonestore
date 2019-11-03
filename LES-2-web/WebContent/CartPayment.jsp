@@ -103,9 +103,9 @@
                    		</div>
                		</div>
    					<%
-   						Cart cart = (Cart) session.getAttribute("cart");			
-			    		out.println("<input type='text' name='price' id='price' value='" + cart.getPrice() + "' />");
-			    		out.println("<input type='text' name='client' id='client' value='" + client.getId() + "' />");
+   						Cart cart = (Cart) session.getAttribute("cart");
+			    		out.println("<input type='hidden' name='price' id='price' value='" + cart.getPrice() + "' />");
+			    		out.println("<input type='hidden' name='client' id='client' value='" + client.getId() + "' />");
 			    		out.println("<input type='hidden' name='txtInstallmentPrice' id='txtInstallmentPrice' />");
    					%>	
                   	<div class="row">
@@ -127,11 +127,6 @@
 					       	</div>
 				       	</div>			       	
 		       		<% 	
-		       			int i = 0;
-		       			for(Coupon c : coupons.getCoupons()){
-				    		out.println("<input type='text' name='txtCouponValue"+i+"' id='txtCouponValue"+i+"' value='"+c.getValue()+"'/>");
-		       				i++;
-		       			}
 					} 
 					%>
 					<div class="row">

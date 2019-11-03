@@ -1,3 +1,5 @@
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="java.time.LocalDate"%>
 <%@page import="les.domain.sale.OrderCoupons"%>
 <%@page import="les.domain.sale.Coupon"%>
 <%@page import="les.domain.sale.Cart"%>
@@ -66,7 +68,7 @@
 												out.println("<td>" + c.getName() +"</td>");
 												out.println("<td>" + c.getOrder().getId() +"</td>");
 												out.println("<td>R$ " + c.getValue() +"</td>");
-												out.println("<td>" + c.getValidity() +"</td>");
+												out.println("<td>" + LocalDate.parse(c.getValidity()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +"</td>");						
 												out.println("</tr>");	        
 											}
 											out.println("</tbody>");				

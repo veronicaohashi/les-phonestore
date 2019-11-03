@@ -12,182 +12,184 @@
   		<div class="card card-body">
        		<h3 class="text-center mb-4">Gráficos de Análise</h3>
 			<input type="hidden" name="id" value="<%=request.getParameter("phone_id")%>" /> 
-			<div class="row">
-		       	<div class="col-4">
-					<canvas id="order" width="300" height="300"></canvas>
-		       	</div>
-		       	<div class="col-4">
-		       		<canvas id="orderStatus" width="400" height="400"></canvas>
-		       	</div>
-		       	<div class="col-4">
-		       		<canvas id="myChart" width="400" height="400"></canvas>
-		       	</div>
-			</div>
+			<form action="Orders" method="get">
+		        <div class="row">	        
+		         	<div class="col-2">
+						<div class="form-group">		  		
+					    	<label for="txtDateIni">Dt. Inicio</label>
+						    <input type="date" class="form-control" id="txtDateIni" name="txtDateIni">
+					  	</div>		        				  	
+		         	</div>         
+		         	<div class="col-2">
+						<div class="form-group">		  		
+					    	<label for="txtDateEnd">Dt. Fim</label>
+						    <input type="date" class="form-control" id="txtDateEnd" name="txtDateEnd">
+					  	</div>		        				  	
+		         	</div>   
+		         	<div class="col-1">	         	
+						<input type="hidden" name="action" id="action" value="LIST" />
+						<input type="hidden" name="page" id="page" value="ANALYSIS" />
+						<input style="margin-top: 35px;" class="btn btn-sm btn-outline-secondary" 
+						onclick="generateGraphic(document.getElementById('txtDateIni').value, document.getElementById('txtDateEnd').value)" value="Filtrar" />
+		         	</div> 	 
+	         	</div>     
+         	</form>
+	        <div class="row">	        
+	         	<div class="col-12"> 
+	         		<div id="container" ></div>
+	         	</div> 	 
+         	</div>   
 		</div>
 	</div>
 </div>
 <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script>
-	var chartColors = {
-	  red: 'rgb(255, 99, 132)',
-	  orange: 'rgb(255, 159, 64)',
-	  yellow: 'rgb(255, 205, 86)',
-	  green: 'rgb(75, 192, 192)',
-	  blue: 'rgb(54, 162, 235)',
-	  purple: 'rgb(153, 102, 255)',
-	  grey: 'rgb(231,233,237)'
-	};	
-	
-	$.get("Orders?action=LIST&page=ANALYSIS").done((orders) => {	
-		let ordersByMonth = [];
-		let ordersByStatus = [];
-		let exchangesByMonth = [];
-		let exchangesByBug = [];
-		
-		Object.values(orders.filter((order, index) => {
- 			let month = new Date(order.orderDate).getMonth();
- 			ordersByMonth[month] = ordersByMonth[month] || 0;
- 			ordersByMonth[month] += +order.quantity;
-		}))
-		
-		for(let i = 0; i < 12; i++){
-			if(ordersByMonth[i] == undefined) ordersByMonth[i] = 0
-		}
 
-		$.get("Orderi?action=LIST&exchange_categories_id=true&page=ANALYSIS").done((exchanges) => {	
+$(document).ready(() => {	
+
+ 	let dateIni = document.getElementById("txtDateIni");
+	let firstDateOfYear = new Date(new Date().getFullYear(), 0, 1);	
+	dateIni.value = firstDateOfYear.toISOString().slice(0,10);
+	
+	let dateEnd = document.getElementById("txtDateEnd");
+	let lastDateOfYear = new Date(new Date().getFullYear(), 11, 31);	
+	dateEnd.value = lastDateOfYear.toISOString().slice(0,10);
+	
+	generateGraphic(dateIni.value, dateEnd.value);
+})
+
+
+function generateGraphic(dateIni, dateEnd){	
+	$.get("Orders?action=LIST&page=ANALYSIS&txtDateIni=" + dateIni + "&txtDateEnd=" + dateEnd).done((orders) => {
+		let order_ids = orders.map(order => order.id);
+		
+		$.get("Orderi?action=LIST&exchange_categories_id=true&page=ANALYSIS&order_ids=" + order_ids).done((exchanges) => {	
+
+			let months = calculateMonths(dateIni, dateEnd);
+			let ordersByMonth = generateOrdersByMonth(orders, Object.assign({}, months));
+			let exchangesByMonth = generateExchangesByMonth(exchanges, Object.assign({}, months));
+		
 			
-			Object.values(exchanges.filter((exchange, index) => {
-	 			if(exchange.exchangeCategory.id != 1){
-		 			let month = new Date(exchange.order.orderDate).getMonth();
-		 			exchangesByMonth[month] = exchangesByMonth[month] || 0;
-	 				exchangesByMonth[month] += +exchange.quantity;
-	 			}
-			}))
+			console.log(exchangesByMonth, ordersByMonth)
 			
-			for(let i = 0; i < 12; i++){
-				if(exchangesByMonth[i] == undefined) exchangesByMonth[i] = 0
-			}	
-						
-			Object.values(exchanges.filter((exchange, index) => {
-	 			if(exchange.exchangeCategory.id == 1){
-		 			let month = new Date(exchange.order.orderDate).getMonth();
-		 			exchangesByBug[month] = exchangesByBug[month] || 0;
-		 			exchangesByBug[month] += +exchange.quantity;
-	 			}
-			}))
-			
-			for(let i = 0; i < 12; i++){
-				if(exchangesByBug[i] == undefined) exchangesByBug[i] = 0
-			}
-				
-			let MONTHS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-			let config = {
-			  type: 'line',
-			  data: {
-			    labels: MONTHS,
-			    datasets: [{
-			    	label: "Itens Vendidos",
-			      	fill: false,
-				    backgroundColor: chartColors.red,
-				    borderColor: chartColors.red,
-				    data: ordersByMonth,
+		
+		
+			Highcharts.chart('container', {
+			    chart: { type: 'line' },
+			    title: { text: 'Movimentações de Venda' },
+			    xAxis: {
+			        categories: months,
+			        title: { text: 'Mês' }
+			    },
+			    yAxis: {
+			        title: { text: 'Quantidade' }
+			    },
+			    plotOptions: {
+			        line: {
+			            dataLabels: { enabled: true },
+			            enableMouseTracking: false
+			        }
+			    },
+			    series: [{
+			        name: 'Itens Vendidos',
+			        data: ordersByMonth
 			    }, {
-			      	label: "Itens Trocados",
-			      	fill: false,
-			      	backgroundColor: chartColors.blue,
-			      	borderColor: chartColors.blue,
-		   			data: exchangesByMonth,
+			        name: 'Itens Trocado',
+			        data: exchangesByMonth[0]
 			    }, {
-			      	label: "Itens Trocados por Defeito",
-			      	fill: false,
-			      	backgroundColor: chartColors.yellow,
-			      	borderColor: chartColors.yellow,
-		   			data: exchangesByBug,
+			        name: 'Itens Trocados por Defeito',
+			        data: exchangesByMonth[1]
 			    }]
-			  },
-			  options: {
-			    title: {
-			      display: true,
-			      text: 'Movimentações de Venda'
-			    },
-			    scales: {
-			      xAxes: [{
-			        scaleLabel: {
-			          display: true,
-			          labelString: 'Mês'
-			        }
-			      }],
-			      yAxes: [{
-			        scaleLabel: {
-			          display: true,
-			          labelString: 'Quantidade'
-			        }
-			      }]
-			    }
-			  }
-			};
-		
-	
-			let ctx = document.getElementById("order").getContext("2d");
-			window.myLine = new Chart(ctx, config);
-						
-			Object.values(orders.filter((order, index) => {				
-				ordersByStatus[order.status.id - 1] = ordersByMonth[order.status.id - 1] || 0;
-				ordersByStatus[order.status.id - 1] += +order.quantity;
-			}))
-			
-			
-			for(let i = 0; i < 4; i++){
-				if(ordersByStatus[i] == undefined) ordersByStatus[i] = 0
-			}
-
-			ctx = document.getElementById('orderStatus').getContext('2d');
-			let myChart = new Chart(ctx, {
-			    type: 'bar',
-			    data: {
-			        labels: ['EM ABERTO', 'APROVADO', 'EM TRÂNSITO', 'ENTREGUE'],
-			        datasets: [{
-			            data: ordersByStatus,
-			            backgroundColor: [
-			                'rgba(255, 99, 132, 0.2)',
-			                'rgba(54, 162, 235, 0.2)',
-			                'rgba(255, 206, 86, 0.2)',
-			                'rgba(75, 192, 192, 0.2)'
-			            ],
-			            borderColor: [
-			                'rgba(255, 99, 132, 1)',
-			                'rgba(54, 162, 235, 1)',
-			                'rgba(255, 206, 86, 1)',
-			                'rgba(75, 192, 192, 1)'
-			            ],
-			            borderWidth: 1
-			        }]
-			    },
-			    options: {
-			        legend: {
-			            display: false
-			        },
-				    title: {
-				      display: true,
-				      text: 'Vendas por Status (2019)'
-				    },
-				    scales: {
-				      xAxes: [{
-				        scaleLabel: {
-				          display: true,
-				          labelString: 'Status'
-				        }
-				      }],
-				      yAxes: [{
-				        scaleLabel: {
-				          display: true,
-				          labelString: 'Quantidade'
-				        }
-				      }]
-				    }
-			    }
 			});
+		});
+	});
+}
+
+function calculateMonths(dateIni, dateEnd){
+	let startYear = new Date(dateIni).getUTCFullYear();
+	let endYear = new Date(dateEnd).getUTCFullYear();
+  	let dates = [];
+  	
+  	for(let i = startYear; i <= endYear; i++) {  
+  	    let endMonth = (i != endYear) ? 12 : new Date(dateEnd).getUTCMonth() + 1;
+  	    let startMonth = (i == startYear) ? new Date(dateIni).getUTCMonth() + 1 : 1;
+  	    
+  		for(let j = startMonth; j <= endMonth; j++){
+  			dates.push(j + "/" + i);
+  		} 
+  	}
+	
+  return dates;
+}
+
+function generateOrdersByMonth(orders, months){
+	let ordersByMonth = Object.values(months);
+	let newMonths = Object.values(months);
+	
+	Object.values(orders.filter((order, index) => {
+		let month = new Date(order.orderDate).getMonth() + 1;
+		let year = new Date(order.orderDate).getUTCFullYear();
+		let date = month + "/" + year;		
+		
+		newMonths.forEach((ordersDate, index) => {
+			if(ordersDate == date){
+				if(typeof ordersByMonth[index] == "string"){
+					ordersByMonth[index] = 0;
+				}
+				ordersByMonth[index] += +order.quantity;
+			}
 		})
-	})
+	}));
+
+	for(let i = 0; i < ordersByMonth.length; i++){
+		if(typeof ordersByMonth[i] == "string") ordersByMonth[i] = 0
+	}	
+	
+	return ordersByMonth;
+}
+
+
+function generateExchangesByMonth(exchanges, months){
+	let exchangesByMonth = Object.values(months);
+	let exchangesByBug = Object.values(months);
+	let newMonths = Object.values(months);
+	
+	Object.values(exchanges.filter((exchange, index) => {
+		let month = new Date(exchange.order.orderDate).getMonth() + 1;
+		let year = new Date(exchange.order.orderDate).getUTCFullYear();
+		let date = month + "/" + year;		
+		
+		newMonths.forEach((exchangesDate, index) => {
+			if(exchangesDate == date){
+				if(exchange.exchangeCategory.id == 1){	
+					if(typeof exchangesByBug[index] == "string"){
+						exchangesByBug[index] = 0;
+					}
+					exchangesByBug[index] += +exchange.quantity;
+				} else {
+					if(typeof exchangesByMonth[index] == "string"){
+						exchangesByMonth[index] = 0;
+					}
+					exchangesByMonth[index] += +exchange.quantity;
+					
+				}
+			}
+		})
+	}));
+
+	for(let i = 0; i < exchangesByMonth.length; i++){
+		if(typeof exchangesByMonth[i] == "string") exchangesByMonth[i] = 0
+	}
+
+	for(let i = 0; i < exchangesByBug.length; i++){
+		if(typeof exchangesByBug[i] == "string") exchangesByBug[i] = 0
+	}
+	
+	return [exchangesByMonth, exchangesByBug];
+}
 </script>

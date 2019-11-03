@@ -49,9 +49,7 @@ public class CityDAO extends AbstractJdbcDAO{
 			} else if(city.getName() != null) {
 				pst.setString(1, city.getName());
 			}
-			
-			System.out.println(pst);
-			
+						
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {

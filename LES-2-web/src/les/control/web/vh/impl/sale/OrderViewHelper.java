@@ -39,6 +39,8 @@ public class OrderViewHelper implements IViewHelper{
 		String status_id = request.getParameter("status_id");
 		String client_id = request.getParameter("client_id");
 		String id = request.getParameter("id");
+		String dateIni = request.getParameter("txtDateIni");
+		String dateEnd = request.getParameter("txtDateEnd");
 		
 		if(status_id != null) {
 			status.setId(Integer.parseInt(status_id));
@@ -53,7 +55,7 @@ public class OrderViewHelper implements IViewHelper{
 			OrderCoupons orderCoupon = (OrderCoupons)session.getAttribute("coupons");
 			Date date = new Date();
 			String orderDate= new SimpleDateFormat("yyyy-MM-dd").format(date);
-			
+						
 			order = new Order(orderAddress, payment, client, cart.getItems(), cart.getPrice(), cart.getQuantity(),
 					cart.getTotalItemsPrice(), 
 					cart.getTotalDiscountPrice(), 
@@ -74,6 +76,9 @@ public class OrderViewHelper implements IViewHelper{
 				client.setId(Integer.parseInt(client_id));
 				order.setClient(client);
 			}		
+			
+			order.setOrderDate(dateIni);
+			order.setOrderDateEnd(dateEnd);
 		}
 				
 		return order;		
@@ -90,12 +95,14 @@ public class OrderViewHelper implements IViewHelper{
 		if (result.getMsg() == null) {			
 			if (action.equals("LIST")) {
 				List<DomainEntity> orders = result.getEntities();	
+				request.setAttribute("orders", orders);
 				String page = request.getParameter("page");						
 
 				if(client.getUser().getLevel() == 2) {
 					headers.add("Código");
 					headers.add("CPF");
 					headers.add("Cliente");
+					headers.add("Data");
 					headers.add("Valor Total");
 					headers.add("Quantidade Total");
 					request.setAttribute("headers", headers);
@@ -106,8 +113,7 @@ public class OrderViewHelper implements IViewHelper{
 							response.setCharacterEncoding("UTF-8");
 							response.getWriter().write(json);
 						}
-					} else {		
-						request.setAttribute("orders", orders);	
+					} else {			
 						rd = request.getRequestDispatcher("AdminOrders.jsp");							
 					}
 										

@@ -2,6 +2,7 @@ package les.control.web.vh.impl.sale;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -33,6 +34,7 @@ public class OrderiViewHelper implements IViewHelper{
 		String exchange_category_id = request.getParameter("cbExchangeCategory");
 		String[] lupdate = request.getParameterValues("lupdate");
 		String exchange_categories_id = request.getParameter("exchange_categories_id");
+		String order_ids = request.getParameter("order_ids");
 
 		if(action.equals("UPDATE")) {
 			if(status_id != null) {
@@ -61,6 +63,12 @@ public class OrderiViewHelper implements IViewHelper{
 			}
 			if(exchange_categories_id != null) {
 				orderi.setExchangeCategory(new ExchangeCategory(1));
+			}
+			if(order_ids != null) {
+				List<String> ids = Arrays.asList(order_ids.split("\\s*,\\s*"));
+				for(String i : ids) {
+					orderi.addOrderIds(Integer.parseInt(i));
+				}		
 			}
 		}				
 		return orderi;		

@@ -41,7 +41,7 @@
 			  			<div class="card">
 					  		<div class="card-body">		  					
 			                    <ul class="social">
-	                				<li><h3 class="title">Endereço de entrega</h3></li>
+	                				<li><h3 class="title">EndereÃ§o de entrega</h3></li>
 	               				</ul> 
 					  			<div class="row">
 					  				<div class="col-10">
@@ -69,7 +69,7 @@
 						  				for(PaymentData p : payment.getPaymentDatas()){
 		               				%>
 					  					<div class="col-4" style="padding-bottom: 15px;">
-				  							<p class="text"><b><%= count %>º Cartão</b></p>                				
+				  							<p class="text"><b><%= count %>ï¿½ Cartï¿½o</b></p>                				
 						  					<p class="text"><b><%=p.getCard().getNumber()%></b></p>
 						  					<p class="text"><b>Parcelas: <%= p.getQuantity() %> x R$<%= p.getPrice() %></b></p>
 						  				</div>
@@ -112,6 +112,9 @@
 	 								for(Orderi item : cart.getItems()){
 	 							%>
 					  			<div class="row">
+					  				<div class="col-2">
+			                 			<img class="img-fluid" src="<%= item.getReference().getPhone().getDetailsImage() %>"  />
+					  				</div>
 					  				<div class="col-10">
 					  					<p class="text"><b><%= item.getReference().getPhone().getModel() %></b></p>
 					  					<p class="text"><b>REF: </b><%= item.getReference().getName() %> -

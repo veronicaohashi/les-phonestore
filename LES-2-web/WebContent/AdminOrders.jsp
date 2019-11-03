@@ -1,3 +1,5 @@
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="java.time.LocalDate"%>
 <%@page import="les.domain.sale.Order"%>
 <%@page import="les.core.application.Result"%>
 <%@page import="les.domain.sale.Status"%>
@@ -78,6 +80,7 @@
 							out.println("<td>" + order.getId() +"</td>");
 							out.println("<td>" + order.getClient().getCpf() +"</td>");
 							out.println("<td>" + order.getClient().getFirstname() +"</td>");
+							out.println("<td>" + LocalDate.parse(order.getOrderDate()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +"</td>");
 							out.println("<td>R$ " + order.getPrice() +"</td>");
 							out.println("<td>" + order.getQuantity() +"</td>");
 							out.println("<td><a href='Orders?action=CONSULT&id=" + order.getId() + "' class='btn btn-sm btn-outline-secondary mr-2'>" +
@@ -92,7 +95,7 @@
 				<% if(Integer.parseInt(status_id) != 4){ %>
 					<div class="row">
 						<div class="col-2 offset-md-10">
-							<input type="text" name="status_id" id="status_id" value="<%= status_id %>" />
+							<input type="hidden" name="status_id" id="status_id" value="<%= status_id %>" />
 							<input type="hidden" name="action" id="action" value="UPDATE" />
 							<input class="btn btn-primary btn-block" type="submit" value="Alterar Status" />
 		       			</div>

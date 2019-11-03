@@ -261,12 +261,16 @@ public class PhoneDAO extends AbstractJdbcDAO{
 				p.setLactive(rs.getBoolean("lactive"));
 				p.setCostPrice(rs.getDouble("cost_price"));
 				p.setSalePrice(rs.getDouble("sale_price"));
+				p.setFrontImage(rs.getString("front_image"));
+				p.setBackImage(rs.getString("back_image"));
+				p.setDetailsImage(rs.getString("details_image"));
 				
 				p.setBrand(new Brand(rs.getInt("brand_id"), rs.getString("brand_description")));
 				p.setPricingGroup(new PricingGroup(rs.getInt("pricing_group_id"), rs.getString("pricing_group_description")
 						, rs.getDouble("pricing_group_percentage")));
 				p.setProcessor(new Processor(rs.getInt("processor_id"), rs.getString("processor_description")));
 				p.setSo(new SO(rs.getInt("so_id"), rs.getString("so_description")));
+				
 				
 				if (phone.getId() != null) {
 

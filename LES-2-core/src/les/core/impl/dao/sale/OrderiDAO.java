@@ -126,12 +126,27 @@ public class OrderiDAO extends AbstractJdbcDAO{
 	            	sql += "?,";
 	            }
 	        }		
+		} else if(! orderi.getOrderIds().isEmpty() && orderi.getExchangeCategory() != null) {
+			sql += " WHERE order_items.order_id IN (";	
+			
+	        int size = orderi.getOrderIds().size();
+	        
+			for (int i = 0; i < size; i++) {
+	            if (i + 1 == size) {
+	            	sql += "?)";
+	            } else {
+	            	sql += "?,";
+	            }
+	        }	
+
+			sql += " AND exchange_categories_id is not null";			
+
 		} else if(orderi.getExchangeCategory() != null) {
 			sql += " WHERE exchange_categories_id is not null";			
 		}
 		
 		sql += " ORDER BY orders.order_date";
-		
+				
 		// executa consulta
 		try {
 			openConnection();
@@ -147,8 +162,13 @@ public class OrderiDAO extends AbstractJdbcDAO{
 					pst.setInt(i++, value);
 		        }	
 				
-			}
-						
+			} else if(! orderi.getOrderIds().isEmpty() && orderi.getExchangeCategory() != null) {
+				int i = 1;
+		        
+				for (Integer value : orderi.getOrderIds()) {
+					pst.setInt(i++, value);
+		        }
+			}						
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
 

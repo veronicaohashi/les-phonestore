@@ -144,7 +144,6 @@ public class AddressDAO extends AbstractJdbcDAO{
 				pst.setInt(1, address.getClient().getId());
 			}
 			
-			System.out.println(pst);
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
 

@@ -9,6 +9,7 @@ import les.domain.client.Client;
 public class Order extends DomainEntity {
 	private Double price;
 	private String orderDate;
+	private String orderDateEnd;
 	private String deliveryDate;
 	private Integer quantity;
 	private Payment payment;
@@ -133,4 +134,11 @@ public class Order extends DomainEntity {
 	public void setTotalDiscountPrice(double totalDiscountPrice) {
 		this.totalDiscountPrice = totalDiscountPrice;
 	}
+	public String getOrderDateEnd() {
+		return orderDateEnd;
+	}
+	public void setOrderDateEnd(String orderDateEnd) {
+		this.orderDateEnd = orderDateEnd;
+	}
+	
 }

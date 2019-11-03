@@ -1,3 +1,5 @@
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="java.time.LocalDate"%>
 <%@page import="les.domain.stock.Movstock"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -38,7 +40,7 @@
 						out.println("<td>R$" + m.getPrice() +"</td>");
 						out.println("<td>" + m.getQuantity() +"</td>");
 						out.println("<td>" + m.getSupplier().getName() +"</td>");
-						out.println("<td>" + m.getDate() +"</td>");
+						out.println("<td>" + LocalDate.parse(m.getDate()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +"</td>");
 						out.println("<td>" + m.getMovstockType().getDescription() +"</td>");
 						out.println("<td>" + m.getOrigin() +"</td>");						
 						out.println("</tr>");

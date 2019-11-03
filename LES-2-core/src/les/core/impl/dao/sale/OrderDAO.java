@@ -337,9 +337,12 @@ public class OrderDAO extends AbstractJdbcDAO{
 			sql += "WHERE orders.status_id=?";					
 		} else if(order.getId() == null && order.getClient() != null) {
 			sql += "WHERE orders.clients_id=?";					
+		} else if(order.getOrderDateEnd() != null) {
+			sql += "WHERE orders.order_date >= ? AND orders.order_date <= ?";
 		}
 		
 		sql += " ORDER BY orders.order_date";
+		
 		// executa consulta
 		try {
 			openConnection();
@@ -350,10 +353,13 @@ public class OrderDAO extends AbstractJdbcDAO{
 				pst.setInt(1, order.getStatus().getId());					
 			} else if(order.getId() == null && order.getClient() != null) {
 				pst.setInt(1, order.getClient().getId());					
-			}
+			} else if(order.getOrderDateEnd() != null) {
+				pst.setString(1, order.getOrderDate());
+				pst.setString(2, order.getOrderDateEnd());
+			}			
+			
 			List<DomainEntity> all = new ArrayList<DomainEntity>();
 			ResultSet rs = pst.executeQuery();
-
 			while (rs.next()) {
 				Order o = new Order();
 				o.setId(rs.getInt("id"));

@@ -93,7 +93,7 @@
 				<% if(Integer.parseInt(status_id) != 8){ %>
 					<div class="row">
 						<div class="col-2 offset-md-10">
-							<input type="text" name="status_id" id="status_id" value="<%= status_id %>" />
+							<input type="hidden" name="status_id" id="status_id" value="<%= status_id %>" />
 							<input type="hidden" name="action" id="action" value="UPDATE" />
 							<input class="btn btn-primary btn-block" type="submit" value="Alterar Status" />
 		       			</div>

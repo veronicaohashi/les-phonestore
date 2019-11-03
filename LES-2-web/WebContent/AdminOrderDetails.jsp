@@ -69,7 +69,7 @@
 				  				int count = 1;
 				  				for(PaymentData p : order.getPayment().getPaymentDatas()){
                				%>
-			  					<div class="col-4" style="padding-bottom: 15px;">
+			  					<div class="col-4" style="padding: 15px;">
 		  							<p class="text"><b><%= count %>º Cartão</b></p>                				
 				  					<p class="text"><b><%=p.getCard().getNumber()%></b></p>
 				  					<p class="text"><b>Parcelas: <%= p.getQuantity() %> x R$<%= p.getPrice() %></b></p>
@@ -84,7 +84,7 @@
       						<% //if(order.getOrderCoupons() != null){
      								out.println("<div class='row'>");
       							for(Coupon c : order.getOrderCoupons().getCoupons()){
-      								out.println("<div class='col-4'>");
+      								out.println("<div class='col-4' style='padding: 15px;'>");
       								if(c.getCouponCategory().getId() == 1)     								
                   						out.println("<p class='text'><b>Cupom de Troca</b></p>");
                  						else                   										

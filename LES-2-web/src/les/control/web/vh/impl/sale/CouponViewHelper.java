@@ -74,7 +74,6 @@ public class CouponViewHelper implements IViewHelper{
 					headers.add("Pedido");
 					headers.add("Valor");
 					headers.add("Validade");
-					headers.add("Status");
 					request.setAttribute("headers", headers);
 					
 					if(page != null) {

@@ -126,7 +126,7 @@
 									</div>
 								</div>
 			                  	<div class="row">
-			                    	<div class="col-md-6">
+			                    	<div class="col-md-12">
 				                        <div class="form-group">
 				                            <label for="cbFreight">Frete</label>
 				                            <select class="custom-select" id="cbFreight" name="cbFreight">

@@ -22,7 +22,7 @@
         <div class="col-12 col-lg-6">
             <div class="card mb-3">
                 <div class="card-body">                    
-                 <img class="img-fluid" src="https://dummyimage.com/600x600/55595c/fff" />
+                 <img class="img-fluid" src="<%= phone.getDetailsImage() %>" />
                </div>
             </div>
         </div>

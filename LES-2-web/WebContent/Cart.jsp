@@ -40,7 +40,7 @@
 				  		<div class="card-body">
 				  			<div class="row">
 				  				<div class="col-2">
-		                 			<img class="img-fluid" src="https://dummyimage.com/800x800/55595c/fff" />
+		                 			<img class="img-fluid" src="<%= item.getReference().getPhone().getDetailsImage() %>"  />
 				  				</div>
 				  				<div class="col-10">		  					
 				                    <ul class="social">

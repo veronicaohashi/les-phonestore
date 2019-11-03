@@ -14,33 +14,32 @@ public class OrderCouponValueValidation implements IStrategy {
 			Order order = (Order)entity;
 
 			if(order.getOrderCoupons() != null) {
-				int discount = 0;
+				int discountExchange = 0;
+				int discountPromotional = 0;
+				
 				List<Coupon> new_order_coupons = new ArrayList<Coupon>();
-				int count = 0;
+
 				for(Coupon c : order.getOrderCoupons().getCoupons()) {
-					if(c.getCouponCategory().getId() == 2)
-						count++;
-				}
-				
-				if(count == order.getOrderCoupons().getCoupons().size()) {
-					order.setPrice(0.0);
-				} else {
-				
-					for(Coupon c : order.getOrderCoupons().getCoupons()) {
-						
-						discount += c.getValue();		
-						new_order_coupons.add(c);			
-	
-						if(discount > order.getTotalItemsPrice()) {						
-							order.setTotalDiscountPrice(discount);
-							order.setPrice(order.getTotalItemsPrice() - discount);
-							order.getOrderCoupons().setCoupons(new_order_coupons);
-							break;
-						}
+					if(c.getCouponCategory().getId() == 2) {
+						discountPromotional += c.getValue();		
+						new_order_coupons.add(c);		
 					}
 				}
-				
-				
+								
+				for(Coupon c : order.getOrderCoupons().getCoupons()) {
+					if(c.getCouponCategory().getId() == 1) {
+						discountExchange += c.getValue();		
+						new_order_coupons.add(c);	
+					}
+				}
+				if(discountExchange > order.getTotalItemsPrice()) {		
+					order.setPrice(order.getTotalItemsPrice() - discountExchange);	
+				} else if(discountExchange + discountPromotional > order.getTotalItemsPrice()) {			
+					order.setPrice(0.0);
+				}
+								
+				order.setTotalDiscountPrice(discountExchange);
+				order.getOrderCoupons().setCoupons(new_order_coupons);				
 			}
 		}
 		return null;

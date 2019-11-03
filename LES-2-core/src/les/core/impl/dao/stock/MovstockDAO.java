@@ -90,15 +90,13 @@ public class MovstockDAO extends AbstractJdbcDAO{
 				+ "JOIN phone_references ON phone_references.id = movstocks.phone_reference_id ";
 
 		if(movstock.getReference() != null && movstock.getMovstockType() != null && movstock.getOrigin() == null){
-			sql += "WHERE phone_reference_id=? AND movstock_type_id=? ORDER BY date ";
+			sql += "WHERE phone_reference_id=? AND movstock_type_id=? ORDER BY movstocks.created_at";
 		} else if(movstock.getReference() != null && movstock.getOrigin() != null){
-			sql += "WHERE phone_reference_id=? AND origin=? ORDER BY date ";
+			sql += "WHERE phone_reference_id=? AND origin=? ORDER BY movstocks.created_at";
 		} else if(movstock.getReference() != null) {
-			sql += "WHERE phone_reference_id=? ORDER BY date ";			
+			sql += "WHERE phone_reference_id=? ORDER BY movstocks.created_at ";			
 		}
-		
-		System.out.println(sql);
-		
+				
 		// executa consulta
 		try {
 			openConnection();

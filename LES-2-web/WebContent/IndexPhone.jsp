@@ -87,8 +87,8 @@
 			            <div class="product-grid3">
 			                <div class="product-image3">
 			                    <a href="#">
-			                        <img class="pic-1" src="https://dummyimage.com/800x800/55595c/fff">
-			                        <img class="pic-2" src="https://dummyimage.com/800x800/55595c/fff">
+			                        <img class="pic-1" src="<%= p.getFrontImage() %>">
+			                        <img class="pic-2" src="<%= p.getBackImage() %>">
 			                    </a>
 			                    <ul class="social">			                    
 			                        <% out.println("<li><a href='Phones?action=CONSULT&id=" + p.getId() +"'><i class='fa fa-eye'></i></a></li>"); %>

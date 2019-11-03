@@ -59,7 +59,6 @@ public class OrderAddressViewHelper implements IViewHelper{
 			}
 		}
 		if(action.equals("SAVE")){
-			System.out.println("city " + city);
 			address.setName(name);
 			address.setPostalCode(postalCode);
 			address.setStreet(street);

@@ -1,4 +1,6 @@
 
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="java.time.LocalDate"%>
 <%@page import="les.domain.sale.Coupon"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -55,12 +57,16 @@
 						for (Coupon c : coupons){
 							out.println("<tr>");
 							out.println("<td>" + c.getName() +"</td>");
-							out.println("<td>" + c.getClient().getCpf() +"</td>");
-							out.println("<td>" + c.getClient().getFirstname() +"</td>");
+							if(c.getClient().getCpf() == null){
+								out.println("<td></td>");
+								out.println("<td></td>");								
+							} else {
+								out.println("<td>" + c.getClient().getCpf() +"</td>");
+								out.println("<td>" + c.getClient().getFirstname() +"</td>");								
+							}
 							out.println("<td>" + c.getOrder().getId() +"</td>");
 							out.println("<td>R$ " + c.getValue() +"</td>");
-							out.println("<td>" + c.getValidity() +"</td>");
-						
+							out.println("<td>" + LocalDate.parse(c.getValidity()).format(DateTimeFormatter	.ofPattern("dd/MM/yyyy")) +"</td>");						
 							out.println("</tr>");
 						}
 						out.println("</tbody>");

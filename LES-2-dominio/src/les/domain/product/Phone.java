@@ -32,6 +32,9 @@ public class Phone extends DomainEntity{
 	private double salePrice;
 	private InactivationCategory inactivationCategory;
 	private ActivationCategory activationCategory;
+	private String frontImage;
+	private String backImage;
+	private String detailsImage;
 
 	public Phone() {
 		this.references = new ArrayList<Reference>();
@@ -45,6 +48,13 @@ public class Phone extends DomainEntity{
 	public Phone(String model, double salePrice) {
 		this.model = model;
 		this.salePrice = salePrice;
+	}
+	public Phone(String model, double salePrice, String frontImage, String backImage, String detailsImage) {
+		this.model = model;
+		this.salePrice = salePrice;
+		this.frontImage = frontImage;
+		this.backImage = backImage;
+		this.detailsImage = detailsImage;
 	}
 	
 	public String getModel() {
@@ -210,4 +220,45 @@ public class Phone extends DomainEntity{
 	public void setActivationCategory(ActivationCategory activationCategory) {
 		this.activationCategory = activationCategory;
 	}
+
+	public List<Reference> getReferences() {
+		return references;
+	}
+
+	public void setReferences(List<Reference> references) {
+		this.references = references;
+	}
+
+	public List<ConnectionType> getConnectionsType() {
+		return connectionsType;
+	}
+
+	public void setConnectionsType(List<ConnectionType> connectionsType) {
+		this.connectionsType = connectionsType;
+	}
+
+	public String getFrontImage() {
+		return frontImage;
+	}
+
+	public void setFrontImage(String frontImage) {
+		this.frontImage = frontImage;
+	}
+
+	public String getBackImage() {
+		return backImage;
+	}
+
+	public void setBackImage(String backImage) {
+		this.backImage = backImage;
+	}
+
+	public String getDetailsImage() {
+		return detailsImage;
+	}
+
+	public void setDetailsImage(String detailsImage) {
+		this.detailsImage = detailsImage;
+	}
+	
 }
